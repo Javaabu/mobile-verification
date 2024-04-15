@@ -7,19 +7,6 @@
 
 Adds mobile number verification to Laravel projects.
 
-
-## Package setup instructions
-1. Search and replace the following:
-mobile-verification
-MobileVerification
-Mobile Verification
-Adds mobile number verification to Laravel projects.
-
-2. Rename MobileVerificationServiceProvider.php
-
-3. Remove these instructions
-
-
 ## Documentation
 
 You'll find the documentation on [https://docs.javaabu.com/docs/mobile-verification](https://docs.javaabu.com/docs/mobile-verification).
