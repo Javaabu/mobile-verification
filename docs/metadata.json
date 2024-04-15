@@ -1,5 +1,5 @@
 {
-    "name": "{Your Package}",
-    "description": "{package description}",
+    "name": "Mobile Verification",
+    "description": "Adds mobile number verification to Laravel projects.",
     "version": "1"
 }

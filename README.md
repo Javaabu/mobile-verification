@@ -1,28 +1,28 @@
-# {Your Package}
+# Mobile Verification
 
-[![Latest Version on Packagist](https://img.shields.io/packagist/v/javaabu/{your-package}.svg?style=flat-square)](https://packagist.org/packages/javaabu/{your-package})
+[![Latest Version on Packagist](https://img.shields.io/packagist/v/javaabu/mobile-verification.svg?style=flat-square)](https://packagist.org/packages/javaabu/mobile-verification)
 [![Test Status](../../actions/workflows/run-tests.yml/badge.svg)](../../actions/workflows/run-tests.yml)
-[![Quality Score](https://img.shields.io/scrutinizer/g/javaabu/{your-package}.svg?style=flat-square)](https://scrutinizer-ci.com/g/javaabu/{your-package})
-[![Total Downloads](https://img.shields.io/packagist/dt/javaabu/{your-package}.svg?style=flat-square)](https://packagist.org/packages/javaabu/{your-package})
+[![Quality Score](https://img.shields.io/scrutinizer/g/javaabu/mobile-verification.svg?style=flat-square)](https://scrutinizer-ci.com/g/javaabu/mobile-verification)
+[![Total Downloads](https://img.shields.io/packagist/dt/javaabu/mobile-verification.svg?style=flat-square)](https://packagist.org/packages/javaabu/mobile-verification)
 
-{package description}
+Adds mobile number verification to Laravel projects.
 
 
 ## Package setup instructions
 1. Search and replace the following:
-{your-package}
-{YourPackage}
-{Your Package}
-{package description}
+mobile-verification
+MobileVerification
+Mobile Verification
+Adds mobile number verification to Laravel projects.
 
-2. Rename {YourPackage}ServiceProvider.php
+2. Rename MobileVerificationServiceProvider.php
 
 3. Remove these instructions
 
 
 ## Documentation
 
-You'll find the documentation on [https://docs.javaabu.com/docs/{your-package}](https://docs.javaabu.com/docs/{your-package}).
+You'll find the documentation on [https://docs.javaabu.com/docs/mobile-verification](https://docs.javaabu.com/docs/mobile-verification).
 
 Find yourself stuck using the package? Found a bug? Do you have general questions or suggestions for improving this package? Feel free to create an [issue](../../issues) on GitHub, we'll try to address it as soon as possible.
 
