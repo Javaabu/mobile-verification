@@ -14,6 +14,10 @@ class MobileVerificationServiceProvider extends ServiceProvider
         // declare publishes
         if ($this->app->runningInConsole()) {
             $this->publishes([
+                __DIR__.'/../database/migrations' => database_path('migrations'),
+            ], 'mobile-verification-migrations');
+
+            $this->publishes([
                 __DIR__ . '/../config/mobile-verification.php' => config_path('mobile-verification.php'),
             ], 'mobile-verification-config');
         }
