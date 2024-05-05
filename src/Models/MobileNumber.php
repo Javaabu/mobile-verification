@@ -4,12 +4,14 @@ namespace Javaabu\MobileVerification\Models;
 
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
+use Javaabu\MobileVerification\Factories\MobileNumberFactory;
 use Javaabu\MobileVerification\MobileVerification;
 use Javaabu\MobileVerification\Contracts\MobileNumber as MobileNumberContract;
 use Javaabu\SmsNotifications\Notifiable\HasSmsNumber;
@@ -18,6 +20,7 @@ class MobileNumber extends Model implements MobileNumberContract
 {
     use Notifiable;
     use HasSmsNumber;
+    use HasFactory;
 
     /**
      * The attributes that are mass assignable.
@@ -57,6 +60,16 @@ class MobileNumber extends Model implements MobileNumberContract
         'formatted_number',
         'token_expires_in'
     ];
+
+    /**
+     * Create a new factory instance for the model.
+     *
+     * @return \Illuminate\Database\Eloquent\Factories\Factory<static>
+     */
+    protected static function newFactory()
+    {
+        return new MobileNumberFactory();
+    }
 
     /**
      * Convert dates to Carbon
@@ -147,6 +160,16 @@ class MobileNumber extends Model implements MobileNumberContract
     public function randomToken(): string
     {
         return str_pad(rand(0, 999999), 6, 0, STR_PAD_LEFT);
+    }
+
+    /**
+     * Clear the token fields
+     */
+    public function clearToken(): void
+    {
+        $this->attempts = 0;
+        $this->token = null;
+        $this->token_created_at = null;
     }
 
     /**

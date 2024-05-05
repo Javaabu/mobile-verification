@@ -21,6 +21,8 @@ interface MobileNumber extends SmsNotifiable
 
     public function generateToken(): string;
 
+    public function clearToken(): void;
+
     public function isSame(self $other): bool;
 
     public function getShortFormattedNumberAttribute(): string;
