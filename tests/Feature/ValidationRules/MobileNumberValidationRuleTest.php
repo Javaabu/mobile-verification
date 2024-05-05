@@ -16,6 +16,7 @@ class MobileNumberValidationRuleTest extends TestCase
     /** @test */
     public function it_can_validate_maldivian_mobile_numbers(): void
     {
+
         $this->assertFalse(true);
     }
 

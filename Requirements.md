@@ -9,6 +9,7 @@
 - A guest user will enter their mobile number
 - The system will check if the mobile number is already registered
 - If the mobile number is already registered, the system will return a message that the mobile number is already registered
+- If the mobile number is not registered, the system will return a message that the mobile number is available
 
 ## Registration With Mobile Number
 - Should not be logged in
