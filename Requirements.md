@@ -60,5 +60,13 @@ SendsMobileVerificationCode;
 - sendOtp to any number
 
 LoginWithOtp
+Add a grant type: (see: https://github.com/adaojunior/passport-social-grant)
+MobileNumberGrant
 
--
+For api, 
+when a user sends their registration details with an otp,
+provide a trait to register the user and return an access token
+**Note:** Here the developer will control the end point and the controller, the given trait is implemented within the controller
+
+UpdatesMobileNumber
+SendMobileNumberForgotPasswordLink
