@@ -13,6 +13,8 @@ class MobileVerificationServiceProvider extends ServiceProvider
     {
         // declare publishes
         if ($this->app->runningInConsole()) {
+            $this->registerMigrations();
+
             $this->publishes([
                 __DIR__.'/../database/migrations' => database_path('migrations'),
             ], 'mobile-verification-migrations');
@@ -20,6 +22,24 @@ class MobileVerificationServiceProvider extends ServiceProvider
             $this->publishes([
                 __DIR__ . '/../config/mobile-verification.php' => config_path('mobile-verification.php'),
             ], 'mobile-verification-config');
+
+            $this->publishes([
+                __DIR__ . '/../lang' => lang_path('vendor/mobile-verification'),
+            ], 'mobile-verification-translations');
+        }
+
+        $this->loadTranslationsFrom(__DIR__.'/../lang', 'mobile-verification');
+    }
+
+    /**
+     * Register migration files.
+     *
+     * @return void
+     */
+    protected function registerMigrations()
+    {
+        if (MobileVerification::$runsMigrations) {
+            $this->loadMigrationsFrom(__DIR__.'/../database/migrations');
         }
     }
 

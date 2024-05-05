@@ -12,9 +12,11 @@ use Javaabu\MobileVerification\Contracts\HasMobileNumber;
 use Javaabu\MobileVerification\Contracts\MobileNumber;
 use Javaabu\MobileVerification\Events\MobileNumberUpdated;
 use Javaabu\MobileVerification\MobileVerification;
+use Javaabu\SmsNotifications\Notifiable\HasSmsNumber;
 
 trait InteractsWithMobileNumbers
 {
+    use HasSmsNumber;
 
     /**
      * Boot the model.
@@ -185,12 +187,6 @@ trait InteractsWithMobileNumbers
             $phone = $model::whereId($phone)->first();
         }
 
-        // abort if new phone not found
-        if (! $phone) {
-            Log::error('Cannot update phone: '.$phone);
-            return;
-        }
-
         $old_phone = $this->formatted_mobile_number;
         $new_phone = $phone->formatted_number;
 
@@ -198,6 +194,7 @@ trait InteractsWithMobileNumbers
         $this->clearPhones();
 
         // assign the new phone
+        $phone->clearToken();
         $phone->user()->associate($this);
         $phone->save();
 

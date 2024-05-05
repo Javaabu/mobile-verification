@@ -130,4 +130,15 @@ return [
     */
 
     'verified' => env('MOBILE_NUMBER_VERIFIED', true),
+
+    /*
+    |--------------------------------------------------------------------------
+    | Use Recaptcha
+    |--------------------------------------------------------------------------
+    |
+    | Whether the use Recaptcha to prevent SPAM OTP requests
+    |
+    */
+
+    'use_recaptcha' => env('MOBILE_NUMBER_USE_RECAPTCHA', true),
 ];
