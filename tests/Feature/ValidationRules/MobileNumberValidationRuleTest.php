@@ -8,7 +8,7 @@ use Javaabu\MobileVerification\Models\MobileNumber;
 use Javaabu\MobileVerification\Tests\TestCase;
 use Javaabu\MobileVerification\Tests\TestSupport\Models\User;
 
-class ValidationRulesTest extends TestCase
+class MobileNumberValidationRuleTest extends TestCase
 {
     use RefreshDatabase;
 

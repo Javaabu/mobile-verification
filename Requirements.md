@@ -41,7 +41,24 @@
 - Request for OTP
 - Verify OTP, after verification the record will be associated with the user_id
 
+Sending OTP
+- Send to any number
+- Send to a number that is not associated with any user_id
+- Send to a number that is associated with a user_id
 
+Verifying OTP
+- Verify OTP for a number that is not associated with any user_id
+- Verify OTP for a number that is associated with a user_id
+- Verify OTP for any number
 
+- In controller
+- - one trait to send otp
+- - base trait,
 
+trait
+SendsMobileVerificationCode;
+- sendOtp to any number
 
+LoginWithOtp
+
+-
