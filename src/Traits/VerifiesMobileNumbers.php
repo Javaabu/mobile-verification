@@ -2,7 +2,6 @@
 
 namespace Javaabu\MobileVerification\Traits;
 
-
 use Illuminate\Foundation\Auth\RedirectsUsers;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -14,7 +13,6 @@ use Javaabu\MobileVerification\MobileVerification;
 
 trait VerifiesMobileNumbers
 {
-
     use RedirectsUsers;
     use HasUserType;
 
@@ -88,7 +86,7 @@ trait VerifiesMobileNumbers
             ],
             'country_code' => [
                 'required',
-                Rule::in(MobileNumber::allowedCountryCodes())
+                Rule::in(MobileNumber::allowedCountryCodes()),
             ],
         ];
 
@@ -115,7 +113,7 @@ trait VerifiesMobileNumbers
     /**
      * Check whether recaptcha should be verified
      *
-     * @return boolean
+     * @return bool
      */
     public function enableRecaptcha(): bool
     {
@@ -223,7 +221,8 @@ trait VerifiesMobileNumbers
         if ($phone->was_sent_recently) {
             throw new MobileNumberException(
                 __('A verification code was sent to this number too recently. '.
-                'Please wait a few moments before resending.'));
+                'Please wait a few moments before resending.')
+            );
         }
 
         //generate the token

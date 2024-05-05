@@ -3,13 +3,14 @@
 namespace Javaabu\MobileVerification\Events;
 
 use App\Models\User;
-use Illuminate\Queue\SerializesModels;
 use Illuminate\Foundation\Events\Dispatchable;
+use Illuminate\Queue\SerializesModels;
 use Javaabu\MobileVerification\Contracts\HasMobileNumber;
 
 class MobileNumberUpdated
 {
-    use Dispatchable, SerializesModels;
+    use Dispatchable;
+    use SerializesModels;
 
     /**
      * @var User

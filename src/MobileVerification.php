@@ -22,7 +22,7 @@ class MobileVerification
     {
         static::$runsMigrations = false;
 
-        return new static;
+        return new static();
     }
 
     /**
@@ -33,6 +33,7 @@ class MobileVerification
     public static function config(string $key = '')
     {
         $key = $key ? '.'.$key : '';
+
         return config('mobile-verification'.$key);
     }
 
@@ -40,7 +41,7 @@ class MobileVerification
     /**
      * Whether to verify
      *
-     * @return boolean
+     * @return bool
      */
     public static function shouldVerify(): bool
     {

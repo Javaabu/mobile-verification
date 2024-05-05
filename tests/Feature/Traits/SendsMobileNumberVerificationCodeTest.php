@@ -64,7 +64,7 @@ class SendsMobileNumberVerificationCodeTest extends TestCase
             ->assertStatus(200)
             ->assertJsonMissing([
                 'user_id' => null,
-                'user_type' => 'user'
+                'user_type' => 'user',
             ])
             ->assertJsonFragment([
                 'country_code' => '960',

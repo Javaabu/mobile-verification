@@ -4,13 +4,12 @@ namespace Javaabu\MobileVerification\Tests;
 
 use Biscolab\ReCaptcha\Facades\ReCaptcha;
 use Illuminate\Support\Facades\Notification;
+use Javaabu\MobileVerification\MobileVerificationServiceProvider;
 use Javaabu\MobileVerification\Tests\TestSupport\Providers\TestServiceProvider;
 use Orchestra\Testbench\TestCase as BaseTestCase;
-use Javaabu\MobileVerification\MobileVerificationServiceProvider;
 
 abstract class TestCase extends BaseTestCase
 {
-
     public function setUp(): void
     {
         parent::setUp();
@@ -26,7 +25,7 @@ abstract class TestCase extends BaseTestCase
     {
         return [
             MobileVerificationServiceProvider::class,
-            TestServiceProvider::class
+            TestServiceProvider::class,
         ];
     }
 

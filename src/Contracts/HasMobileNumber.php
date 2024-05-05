@@ -11,7 +11,6 @@ use Javaabu\SmsNotifications\Notifiable\SmsNotifiable;
 
 interface HasMobileNumber extends SmsNotifiable
 {
-
     /**
      * A user has one mobile number
      *
@@ -58,7 +57,7 @@ interface HasMobileNumber extends SmsNotifiable
     /**
      * Check if the current user state allows the user to be verified
      *
-     * @return boolean
+     * @return bool
      */
     public function getShouldVerifyPhoneAttribute(): bool;
 
@@ -73,7 +72,7 @@ interface HasMobileNumber extends SmsNotifiable
     /**
      * Check if needs phone verification
      *
-     * @return boolean
+     * @return bool
      */
     public function getNeedsPhoneVerificationAttribute(): bool;
 
@@ -96,7 +95,7 @@ interface HasMobileNumber extends SmsNotifiable
     /**
      * Check if phone verified
      *
-     * @return boolean
+     * @return bool
      */
     public function getPhoneVerifiedAttribute(): bool;
 
