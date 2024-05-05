@@ -73,4 +73,16 @@ class InteractsWithMobileNumbersTest extends TestCase
             'token' => null,
         ]);
     }
+
+    /** @test */
+    public function it_logs_to_activity_log_when_mobile_number_is_updated(): void
+    {
+        $this->assertFalse(true);
+    }
+
+    /** @test */
+    public function it_deletes_the_associated_mobile_number_when_the_user_is_deleted(): void
+    {
+        $this->assertFalse(true);
+    }
 }
