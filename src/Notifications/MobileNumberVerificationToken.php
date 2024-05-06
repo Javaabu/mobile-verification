@@ -3,6 +3,8 @@
 namespace Javaabu\MobileVerification\Notifications;
 
 use Illuminate\Notifications\Notification;
+use Javaabu\SmsNotifications\Notifications\SendsSms;
+use Javaabu\SmsNotifications\Notifications\SmsNotification;
 
 class MobileNumberVerificationToken extends Notification implements SmsNotification
 {
@@ -10,25 +12,21 @@ class MobileNumberVerificationToken extends Notification implements SmsNotificat
 
     /**
      * The password reset token.
-     *
-     * @var string
      */
-    public $token;
+    public string $token;
 
     /**
      * The name of the intended user
-     *
-     * @var string
      */
-    public $name;
+    public string $name;
 
     /**
      * Create a new notification instance.
      *
-     * @param $token
+     * @param string $token
      * @param string $name
      */
-    public function __construct($token, $name = '')
+    public function __construct(string $token, string $name = '')
     {
         $this->token = $token;
         $this->name = $name;
@@ -51,7 +49,7 @@ class MobileNumberVerificationToken extends Notification implements SmsNotificat
      * @param  mixed  $notifiable
      * @return string
      */
-    public function toSms($notifiable)
+    public function toSms($notifiable): string
     {
         return  "Dear ".($this->name ?: 'User').",\n".
                 'Your '.get_setting('app_name').' account verification code is '.$this->token;

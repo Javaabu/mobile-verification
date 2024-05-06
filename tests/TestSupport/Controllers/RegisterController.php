@@ -8,7 +8,7 @@ use Javaabu\MobileVerification\Models\MobileNumber;
 use Javaabu\MobileVerification\Traits\CanValidateMobileNumber;
 use Javaabu\MobileVerification\Support\DataObjects\MobileNumberData;
 use Javaabu\MobileVerification\Support\Services\MobileNumberService;
-use App\Helpers\MobileNumber\Notifications\MobileNumberVerificationToken;
+use Javaabu\MobileVerification\Notifications\MobileNumberVerificationToken;
 
 class RegisterController
 {
@@ -42,9 +42,6 @@ class RegisterController
         // Send OTP
         $this->sendSmsNotification($token, $mobile_number);
 
-
-
-
         if ($request->expectsJson()) {
             return response()->json(['message' => __('The mobile number is valid')]);
         }
@@ -52,11 +49,10 @@ class RegisterController
         return redirect()->back();
     }
 
-    protected function sendSmsNotification($code, $phone): void
+    protected function sendSmsNotification($token, $phone): void
     {
         $user_name = $phone->user ? $phone->user->name : '';
-
-        $phone->notify(new MobileNumberVerificationToken($code, $user_name));
+        $phone->notify(new MobileNumberVerificationToken($token, $user_name));
     }
 
 }

@@ -7,7 +7,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Javaabu\MobileVerification\Models\MobileNumber;
 use Javaabu\MobileVerification\Tests\TestSupport\Models\User;
 use Javaabu\MobileVerification\Tests\TestCase;
-use App\Helpers\MobileNumber\Notifications\MobileNumberVerificationToken;
+use Javaabu\MobileVerification\Notifications\MobileNumberVerificationToken;
 
 class RegisterControllerTest extends TestCase
 {
@@ -61,10 +61,12 @@ class RegisterControllerTest extends TestCase
             'user_id' => null,
         ]);
 
-//        Notification::assertSentTo(
-//            [$phone],
-//            MobileNumberVerificationToken::class
-//        );
+        $phone = MobileNumber::where('number', '7326655')->first();
+
+        Notification::assertSentTo(
+            [$phone],
+            MobileNumberVerificationToken::class
+        );
     }
 
 }
