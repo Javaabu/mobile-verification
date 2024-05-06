@@ -11,9 +11,9 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
+use Javaabu\MobileVerification\Contracts\MobileNumber as MobileNumberContract;
 use Javaabu\MobileVerification\Factories\MobileNumberFactory;
 use Javaabu\MobileVerification\MobileVerification;
-use Javaabu\MobileVerification\Contracts\MobileNumber as MobileNumberContract;
 use Javaabu\SmsNotifications\Notifiable\HasSmsNumber;
 
 class MobileNumber extends Model implements MobileNumberContract
@@ -30,7 +30,7 @@ class MobileNumber extends Model implements MobileNumberContract
     protected $fillable = [
         'number',
         'country_code',
-        'user_type'
+        'user_type',
     ];
 
     /**
@@ -48,7 +48,7 @@ class MobileNumber extends Model implements MobileNumberContract
      * @var array
      */
     protected $hidden = [
-        'token'
+        'token',
     ];
 
     /**
@@ -58,7 +58,7 @@ class MobileNumber extends Model implements MobileNumberContract
      */
     protected $appends = [
         'formatted_number',
-        'token_expires_in'
+        'token_expires_in',
     ];
 
     /**
@@ -189,7 +189,7 @@ class MobileNumber extends Model implements MobileNumberContract
 
     /**
      * Check if was sent recently
-     * @return boolean
+     * @return bool
      */
     public function getWasSentRecentlyAttribute(): bool
     {
@@ -201,9 +201,9 @@ class MobileNumber extends Model implements MobileNumberContract
      */
     public function getIsTokenExpiredAttribute(): bool
     {
-        return !$this->token ||
-            ( $this->token_created_at &&
-                $this->token_created_at->diffInMinutes() >= $this->token_expires_in );
+        return ! $this->token ||
+            ($this->token_created_at &&
+                $this->token_created_at->diffInMinutes() >= $this->token_expires_in);
     }
 
     /**

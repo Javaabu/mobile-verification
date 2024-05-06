@@ -2,12 +2,8 @@
 
 namespace Javaabu\MobileVerification\Contracts;
 
-use Carbon\Carbon;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
-use Javaabu\SmsNotifications\Notifiable\SmsNotifiable;
 
 interface MobileNumberVerificationContract
 {
@@ -66,7 +62,7 @@ interface MobileNumberVerificationContract
     /**
      * Check whether recaptcha should be verified
      *
-     * @return boolean
+     * @return bool
      */
     public function enableRecaptcha(): bool;
 

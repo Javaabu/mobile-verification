@@ -25,7 +25,7 @@ class MobileNumberFactory extends Factory
         return [
             'number' => $this->faker->regexify('(9|7)[0-9]{6}'),
             'country_code' => $this->faker->randomElement(config('mobile-verification.allowed_country_codes')),
-            'user_type' => $this->faker->randomElement(CauserTypes::getKeys())
+            'user_type' => $this->faker->randomElement(CauserTypes::getKeys()),
         ];
     }
 }

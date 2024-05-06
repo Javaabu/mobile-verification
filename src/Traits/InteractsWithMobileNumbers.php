@@ -7,7 +7,6 @@ namespace Javaabu\MobileVerification\Traits;
 
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\MorphOne;
-use Illuminate\Support\Facades\Log;
 use Javaabu\MobileVerification\Contracts\HasMobileNumber;
 use Javaabu\MobileVerification\Contracts\MobileNumber;
 use Javaabu\MobileVerification\Events\MobileNumberUpdated;
@@ -109,7 +108,7 @@ trait InteractsWithMobileNumbers
 
     /**
      * Check if needs phone verification
-     * @return boolean
+     * @return bool
      */
     public function getNeedsPhoneVerificationAttribute(): bool
     {
@@ -135,7 +134,7 @@ trait InteractsWithMobileNumbers
     /**
      * Check if phone verified
      *
-     * @return boolean
+     * @return bool
      */
     public function getPhoneVerifiedAttribute(): bool
     {
