@@ -10,13 +10,13 @@ use Javaabu\MobileVerification\Support\DataObjects\MobileNumberData;
 use Javaabu\MobileVerification\Support\Services\MobileNumberService;
 use Javaabu\MobileVerification\Notifications\MobileNumberVerificationToken;
 
-class RegisterController
+class SendTokenController
 {
     protected string $user_class = 'user';
 
     use CanValidateMobileNumber;
 
-    public function register(Request $request)
+    public function mobileNumberOtp(Request $request)
     {
         $rules = $this->getMobileNumberValidationRules($request->all());
         $messages = $this->getMobileNumberValidationErrorMessages();

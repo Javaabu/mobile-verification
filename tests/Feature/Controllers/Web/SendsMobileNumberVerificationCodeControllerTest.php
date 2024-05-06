@@ -1,56 +1,47 @@
 <?php
 
-namespace Javaabu\MobileVerification\Tests\Feature\Traits;
+namespace Javaabu\MobileVerification\Tests\Feature\Controllers\Web;
 
 use Carbon\Carbon;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Notification;
-use Javaabu\MobileVerification\Models\MobileNumber;
-use Javaabu\MobileVerification\Tests\Feature\Customer;
-use Javaabu\MobileVerification\Tests\Feature\MobileNumberVerificationToken;
-use Javaabu\MobileVerification\Tests\Feature\User;
 use Javaabu\MobileVerification\Tests\TestCase;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Javaabu\MobileVerification\Models\MobileNumber;
+use Javaabu\MobileVerification\Notifications\MobileNumberVerificationToken;
 
-class SendsMobileNumberVerificationCodeTest extends TestCase
+class SendsMobileNumberVerificationCodeControllerTest extends TestCase
 {
     use RefreshDatabase;
-
-    public function setUp(): void
-    {
-        $this->markTestIncomplete();
-    }
 
     /** @test */
     public function it_can_send_the_mobile_number_verification_code_as_web_guest()
     {
         $this->withoutExceptionHandling();
-        $this->withRecaptchaPassing();
+//        $this->withRecaptchaPassing();
 
         $this->post('/mobile-number-otp', [
-            'phone' => '7528222',
+            'number' => '7528222',
             'country_code' => '960',
         ])
-            ->assertSessionMissing('errors')
-            ->assertStatus(200)
-            ->assertSee('We have sent a verification code to your number');
+             ->assertSessionMissing('errors')
+             ->assertStatus(200);
 
-        $id = MobileNumber::max('id');
+        $phone = MobileNumber::max('id');
 
         $this->assertDatabaseHas('mobile_numbers', [
-            'id' => $id,
-            'country_code' => '960',
+            'id' => $phone->id,
             'number' => '7528222',
+            'country_code' => '960',
             'user_id' => null,
             'user_type' => 'user',
         ]);
 
-        $phone = MobileNumber::find($id);
-
         Notification::assertSentTo(
             [$phone],
-            MobileNumberVerificationCode::class
+            MobileNumberVerificationToken::class
         );
     }
+
 
     /** @test */
     public function it_can_send_the_mobile_number_verification_code_as_api_guest()
