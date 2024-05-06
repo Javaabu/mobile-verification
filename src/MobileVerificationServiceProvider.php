@@ -26,6 +26,7 @@ class MobileVerificationServiceProvider extends ServiceProvider
             $this->publishes([
                 __DIR__ . '/../lang' => lang_path('vendor/mobile-verification'),
             ], 'mobile-verification-translations');
+
         }
 
         $this->loadTranslationsFrom(__DIR__.'/../lang', 'mobile-verification');

@@ -14,10 +14,41 @@ class MobileNumberValidationRuleTest extends TestCase
 
 
     /** @test */
+    // it can validate country code
+    public function it_can_validate_country_code()
+    {
+        $this->post('validate', [
+            'country_code' => 'MV'
+        ]);
+    }
+
+    /** @test */
+    // it can validate number is required
+    public function it_can_validate_number_is_required()
+    {
+        $this->post('validate', [
+            'number' => ''
+        ])->assertSessionHas('number', trans('mobile-verification::strings.validation.number.required', ['attribute' => 'number']));
+    }
+
+
+    /** @test
+     * @throws \JsonException
+     */
     public function it_can_validate_maldivian_mobile_numbers(): void
     {
+        $this->post('validate', [
+            'number' => '7326655'
+        ])->assertSessionHasNoErrors();
 
-        $this->assertFalse(true);
+        $this->post('validate', [
+            'number' => '9326655'
+        ])->assertSessionHasNoErrors();
+
+
+        $this->post('/validate', [
+            'number' => '3326655'
+        ])->assertSessionHas('number', trans('mobile-verification::strings.validation.number.invalid', ['attribute' => 'number']));
     }
 
     /** @test */
