@@ -9,7 +9,7 @@ class IsValidMobileNumber implements ValidationRule
 {
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
-        if (!in_array(substr($value, 0, 1), ['7', '9'])) {
+        if (! in_array(substr($value, 0, 1), ['7', '9'])) {
             $fail(trans('mobile-verification::strings.validation.number.invalid', ['attribute' => $attribute]));
         }
     }

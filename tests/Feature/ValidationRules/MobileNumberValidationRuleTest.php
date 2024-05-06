@@ -3,10 +3,7 @@
 namespace Javaabu\MobileVerification\Tests\Feature\ValidationRules;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Support\Facades\Hash;
-use Javaabu\MobileVerification\Models\MobileNumber;
 use Javaabu\MobileVerification\Tests\TestCase;
-use Javaabu\MobileVerification\Tests\TestSupport\Models\User;
 
 class MobileNumberValidationRuleTest extends TestCase
 {
@@ -18,7 +15,7 @@ class MobileNumberValidationRuleTest extends TestCase
     public function it_can_validate_country_code()
     {
         $this->post('validate', [
-            'country_code' => 'MV'
+            'country_code' => 'MV',
         ]);
     }
 
@@ -27,7 +24,7 @@ class MobileNumberValidationRuleTest extends TestCase
     public function it_can_validate_number_is_required()
     {
         $this->post('validate', [
-            'number' => ''
+            'number' => '',
         ])->assertSessionHas('number', trans('mobile-verification::strings.validation.number.required', ['attribute' => 'number']));
     }
 
@@ -38,16 +35,16 @@ class MobileNumberValidationRuleTest extends TestCase
     public function it_can_validate_maldivian_mobile_numbers(): void
     {
         $this->post('validate', [
-            'number' => '7326655'
+            'number' => '7326655',
         ])->assertSessionHasNoErrors();
 
         $this->post('validate', [
-            'number' => '9326655'
+            'number' => '9326655',
         ])->assertSessionHasNoErrors();
 
 
         $this->post('/validate', [
-            'number' => '3326655'
+            'number' => '3326655',
         ])->assertSessionHas('number', trans('mobile-verification::strings.validation.number.invalid', ['attribute' => 'number']));
     }
 

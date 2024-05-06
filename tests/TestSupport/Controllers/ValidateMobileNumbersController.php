@@ -8,16 +8,15 @@ use Javaabu\MobileVerification\Rules\IsValidMobileNumber;
 
 class ValidateMobileNumbersController
 {
-
     public function validate(Request $request)
     {
         $request = Validator::make(
             $request->all(),
             [
-                'number' => ['required', new IsValidMobileNumber]
+                'number' => ['required', new IsValidMobileNumber()],
             ],
             [
-                'number.required' => trans('mobile-verification::strings.validation.number.required', ['attribute' => 'number'])
+                'number.required' => trans('mobile-verification::strings.validation.number.required', ['attribute' => 'number']),
             ]
         );
 
