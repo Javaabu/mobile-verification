@@ -6,22 +6,22 @@
 - Need to know user type
 
 ### Workflow
-- A guest user will enter their mobile number
-- The system will check if the mobile number is already registered
-- If the mobile number is already registered, the system will return a message that the mobile number is already registered
-- If the mobile number is not registered, the system will return a message that the mobile number is available
+- [x] A guest user will enter their mobile number
+- [x] The system will check if the mobile number is already registered
+- [x] If the mobile number is already registered, the system will return a message that the mobile number is already registered
+- [x] If the mobile number is not registered, the system will return a message that the mobile number is available
 
 ## Registration With Mobile Number
 - Should not be logged in
 - Need to know user type
 
 ### Workflow
-- A guest user will enter their mobile number
-- The system will check if the mobile number is already registered
-- If the mobile number is already registered, the system will return a message that the mobile number is already registered
-- If the mobile number is not registered, the system will send an OTP to the mobile number
-- The user will enter the OTP (and any other details required)
-- The system will verify the OTP (and the developer will verify the other details and register the user)
+- [ ] A guest user will enter their mobile number
+- [ ] The system will check if the mobile number is already registered
+- [ ] If the mobile number is already registered, the system will return a message that the mobile number is already registered
+- [ ] If the mobile number is not registered, the system will send an OTP to the mobile number
+- [ ] The user will enter the OTP (and any other details required)
+- [ ] The system will verify the OTP (and the developer will verify the other details and register the user)
 
 ## Mobile Number Login
 - Should not be logged in
