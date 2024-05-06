@@ -108,7 +108,7 @@ class MobileNumber extends Model implements MobileNumberContract
      */
     public function scopeSearch(Builder $query, string $search): Builder
     {
-        return $query->where(DB::raw('CONCAT(\''.MobileVerification::config('number_prefix').'\', country_code, number)'), 'like', '%'.$search.'%');
+        return $query->where(DB::raw('CONCAT(\'' . MobileVerification::config('number_prefix') . '\', country_code, number)'), 'like', '%' . $search . '%');
     }
 
     /**
@@ -134,6 +134,14 @@ class MobileNumber extends Model implements MobileNumberContract
         // otherwise check against the default country code
         return $query->where('number', $search)
                      ->where('country_code', MobileVerification::defaultCountryCode());
+    }
+
+    public function scopeHasPhoneNumber($query, string $country_code, string $number, string $user_type): void
+    {
+        $query->where('country_code', $country_code)
+              ->where('number', $number)
+              ->where('user_type', $user_type)
+              ->where('user_id', '!=', null);
     }
 
     /**
@@ -299,7 +307,7 @@ class MobileNumber extends Model implements MobileNumberContract
      */
     public function getPrefixAttribute(): string
     {
-        return $this->country_code ? MobileVerification::config('number_prefix').$this->country_code : '';
+        return $this->country_code ? MobileVerification::config('number_prefix') . $this->country_code : '';
     }
 
     /**
@@ -307,7 +315,7 @@ class MobileNumber extends Model implements MobileNumberContract
      */
     public function getFormattedNumberAttribute(): string
     {
-        return $this->prefix.$this->number;
+        return $this->prefix . $this->number;
     }
 
     /**
@@ -316,8 +324,8 @@ class MobileNumber extends Model implements MobileNumberContract
     public function getShortFormattedNumberAttribute(): string
     {
         return $this->country_code == MobileVerification::defaultCountryCode() ?
-                $this->number :
-                $this->prefix.$this->number;
+            $this->number :
+            $this->prefix . $this->number;
     }
 
     /**

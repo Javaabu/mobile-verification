@@ -3,6 +3,8 @@
 namespace Javaabu\MobileVerification\Tests\TestSupport\Providers;
 
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Database\Eloquent\Relations\Relation;
+use Javaabu\MobileVerification\Tests\TestSupport\Models\User;
 
 class TestServiceProvider extends ServiceProvider
 {
@@ -14,6 +16,11 @@ class TestServiceProvider extends ServiceProvider
         $this->loadMigrationsFrom(__DIR__ . '/../database');
 
         $this->loadRoutesFrom(__DIR__ . '/../routes/web.php');
+
+        // morph map
+        Relation::morphMap([
+            'user' => User::class,
+        ]);
     }
 
     /**
