@@ -28,7 +28,7 @@ class VerifyMobileNumberAvailabilityControllerTest extends TestCase
         ]);
 
         $this->post('verify', [
-            'mobile_number' => '1234567890'
+            'mobile_number' => '1234567890',
         ])
             ->assertSessionHas('mobile_number', 'The mobile number is already in use.');
     }

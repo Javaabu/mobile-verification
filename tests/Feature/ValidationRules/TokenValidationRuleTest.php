@@ -3,10 +3,7 @@
 namespace Javaabu\MobileVerification\Tests\Feature\ValidationRules;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Support\Facades\Hash;
-use Javaabu\MobileVerification\Models\MobileNumber;
 use Javaabu\MobileVerification\Tests\TestCase;
-use Javaabu\MobileVerification\Tests\TestSupport\Models\User;
 
 class TokenValidationRuleTest extends TestCase
 {
@@ -31,7 +28,7 @@ class TokenValidationRuleTest extends TestCase
     }
 
     /** @test */
-  // TODO: check etukuri and add all the token validation tests
+    // TODO: check etukuri and add all the token validation tests
 
 
 }
