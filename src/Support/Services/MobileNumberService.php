@@ -7,7 +7,6 @@ use Javaabu\MobileVerification\Support\DataObjects\MobileNumberData;
 
 class MobileNumberService
 {
-
     public function store(MobileNumberData $mobile_number_data): MobileNumber
     {
         $mobile_number = new MobileNumber();

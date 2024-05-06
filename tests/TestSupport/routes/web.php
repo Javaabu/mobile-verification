@@ -12,4 +12,3 @@ Route::get('/', function () {
 Route::post('/validate', [ValidateMobileNumbersController::class, 'validate'])->name('validate');
 Route::get('/verify', [VerifyMobileNumberAvailabilityController::class, 'verify'])->name('verify');
 Route::post('/register', [RegisterController::class, 'register'])->name('register');
-

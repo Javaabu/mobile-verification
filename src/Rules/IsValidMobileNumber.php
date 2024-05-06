@@ -6,16 +6,13 @@ use Closure;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Javaabu\MobileVerification\Models\MobileNumber;
 use Javaabu\MobileVerification\Support\Enums\Countries;
-use Javaabu\MobileVerification\Contracts\HasMobileNumber;
 
 class IsValidMobileNumber implements ValidationRule
 {
-
     public function __construct(
         public string | null $user_type = null,
         public string | null $country_code = null,
-    )
-    {
+    ) {
         $this->country_code ??= Countries::Maldives->getCountryCode();
     }
 
@@ -30,7 +27,7 @@ class IsValidMobileNumber implements ValidationRule
             return;
         }
 
-        if (!in_array(substr($value, 0, 1), ['7', '9'])) {
+        if (! in_array(substr($value, 0, 1), ['7', '9'])) {
             $fail(trans('mobile-verification::strings.validation.number.invalid', ['attribute' => $attribute]));
         }
 

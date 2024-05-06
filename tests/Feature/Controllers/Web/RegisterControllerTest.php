@@ -2,12 +2,12 @@
 
 namespace Javaabu\MobileVerification\Tests\Feature\Controllers\Web;
 
-use Illuminate\Support\Facades\Notification;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Notification;
 use Javaabu\MobileVerification\Models\MobileNumber;
-use Javaabu\MobileVerification\Tests\TestSupport\Models\User;
-use Javaabu\MobileVerification\Tests\TestCase;
 use Javaabu\MobileVerification\Notifications\MobileNumberVerificationToken;
+use Javaabu\MobileVerification\Tests\TestCase;
+use Javaabu\MobileVerification\Tests\TestSupport\Models\User;
 
 class RegisterControllerTest extends TestCase
 {

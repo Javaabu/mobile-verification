@@ -4,7 +4,6 @@ namespace Javaabu\MobileVerification\Models;
 
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
-use Javaabu\SmsNotifications\Notifiable\HasSmsNumber;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
@@ -15,6 +14,7 @@ use Illuminate\Support\Str;
 use Javaabu\MobileVerification\Contracts\MobileNumber as MobileNumberContract;
 use Javaabu\MobileVerification\Factories\MobileNumberFactory;
 use Javaabu\MobileVerification\MobileVerification;
+use Javaabu\SmsNotifications\Notifiable\HasSmsNumber;
 
 class MobileNumber extends Model implements MobileNumberContract
 {

@@ -4,17 +4,15 @@ namespace Javaabu\MobileVerification\Tests\TestSupport\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
-use Javaabu\MobileVerification\Models\MobileNumber;
-use Javaabu\MobileVerification\Traits\CanValidateMobileNumber;
+use Javaabu\MobileVerification\Notifications\MobileNumberVerificationToken;
 use Javaabu\MobileVerification\Support\DataObjects\MobileNumberData;
 use Javaabu\MobileVerification\Support\Services\MobileNumberService;
-use Javaabu\MobileVerification\Notifications\MobileNumberVerificationToken;
+use Javaabu\MobileVerification\Traits\CanValidateMobileNumber;
 
 class RegisterController
 {
-    protected string $user_class = 'user';
-
     use CanValidateMobileNumber;
+    protected string $user_class = 'user';
 
     public function register(Request $request)
     {
