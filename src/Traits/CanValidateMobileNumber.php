@@ -2,8 +2,8 @@
 
 namespace Javaabu\MobileVerification\Traits;
 
-use Javaabu\MobileVerification\Support\Enums\Countries;
 use Javaabu\MobileVerification\Rules\IsValidMobileNumber;
+use Javaabu\MobileVerification\Support\Enums\Countries;
 
 trait CanValidateMobileNumber
 {
@@ -19,7 +19,7 @@ trait CanValidateMobileNumber
                     }
                 },
             ],
-            'number'       => ['required', new IsValidMobileNumber($this->getUserClass(), data_get($request_data, 'country_code'))],
+            'number' => ['required', new IsValidMobileNumber($this->getUserClass(), data_get($request_data, 'country_code'))],
         ];
     }
 

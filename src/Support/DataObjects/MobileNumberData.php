@@ -6,14 +6,12 @@ use Javaabu\MobileVerification\Support\Enums\Countries;
 
 class MobileNumberData
 {
-
     public function __construct(
         public string $number,
         public ?string $country_code,
         public string $user_type,
         public ?int $user_id,
-    )
-    {
+    ) {
     }
 
     public static function fromRequestData(array $data): static
