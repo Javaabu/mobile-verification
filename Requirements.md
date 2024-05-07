@@ -71,3 +71,10 @@ provide a trait to register the user and return an access token
 
 UpdatesMobileNumber
 SendMobileNumberForgotPasswordLink
+
+## Controllers
+- [x] Validating Mobile Number: ValidateMobileNumberControllerTest.php // This is for the mobile number availability check
+- [ ] Registering with mobile number: RegisterControllerTest.php
+- [ ] Updating mobile number: MobileNumberUpdateControllerTest.php
+- [ ] Sending OTP: SendTokenControllerTest.php
+- [ ] Verifying OTP: VerifyTokenControllerTest.php

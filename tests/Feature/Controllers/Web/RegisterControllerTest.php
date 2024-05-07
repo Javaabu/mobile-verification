@@ -20,7 +20,7 @@ class RegisterControllerTest extends TestCase
     {
         $this->get('/');
 
-        $this->post(route('register'), [
+        $this->post(route('mobile-number-otp'), [
             'number' => '7326655',
         ])
         ->assertSessionHasNoErrors();
@@ -38,10 +38,15 @@ class RegisterControllerTest extends TestCase
             'user_id' => $user->id,
         ]);
 
-        $this->post(route('register'), [
+        $this->post(route('mobile-number-otp'), [
             'number' => $mobileNumber->number,
         ])
         ->assertSessionHasErrors(['number']);
+
+        Notification::assertNotSentTo(
+            [$mobileNumber],
+            MobileNumberVerificationToken::class
+        );
     }
 
     /** @test */
@@ -49,7 +54,7 @@ class RegisterControllerTest extends TestCase
     {
         $this->assertDatabaseCount('mobile_numbers', 0);
 
-        $this->post(route('register'), [
+        $this->post(route('mobile-number-otp'), [
             'number' => '7326655',
         ])
         ->assertSessionHasNoErrors();
@@ -69,4 +74,43 @@ class RegisterControllerTest extends TestCase
         );
     }
 
+    /** @test */
+    public function it_wont_send_the_verification_code_if_the_mobile_number_has_too_many_attempts()
+    {
+        $user = $this->getActiveCustomer();
+
+        $this->actingAsCustomer($user);
+
+        $phone = \App\Helpers\MobileNumber\MobileNumber::factory()->create([
+            'number' => '7645530',
+            'country_code' => '960',
+            'attempts' => 6,
+            'user_type' => 'customer',
+        ]);
+
+        $this->get('/my/mobile-number');
+
+        $response = $this->post('/my/mobile-number', [
+            'phone' => '7645530',
+            'country_code' => '960',
+        ])
+                         ->assertSessionHasErrors('mobile_number');
+
+        $this->get($response->headers->get('Location'))
+             ->assertSee('Too many verification attempts.');
+
+        $this->assertDatabaseHas('mobile_numbers', [
+            'id' => $phone->id,
+            'number' => '7645530',
+            'country_code' => '960',
+            'attempts' => 6,
+            'user_id' => null,
+            'user_type' => 'customer',
+        ]);
+
+        Notification::assertNotSentTo(
+            [$phone],
+            \App\Helpers\MobileNumber\Notifications\MobileNumberVerificationToken::class
+        );
+    }
 }

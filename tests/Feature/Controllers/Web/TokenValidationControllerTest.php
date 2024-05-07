@@ -1,13 +1,14 @@
 <?php
 
-namespace Javaabu\MobileVerification\Tests\Feature\ValidationRules;
+namespace Javaabu\MobileVerification\Tests\Feature\Controllers\Web;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Javaabu\MobileVerification\Tests\TestCase;
 
-class TokenValidationRuleTest extends TestCase
+class TokenValidationControllerTest extends TestCase
 {
     use RefreshDatabase;
+
 
     /** @test */
     public function it_can_validate_the_token(): void
@@ -29,6 +30,5 @@ class TokenValidationRuleTest extends TestCase
 
     /** @test */
     // TODO: check etukuri and add all the token validation tests
-
 
 }
