@@ -21,7 +21,7 @@ class IsValidMobileNumber implements ValidationRule
 
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
-        $mobile_number = MobileNumber::query()->hasPhoneNumber($this->country_code, $value, $this->user_type)->exists();
+        $mobile_number = MobileNumber::query()->hasPhoneNumberWithOwner($this->country_code, $value, $this->user_type)->exists();
         if ($mobile_number) {
             $fail(trans('mobile-verification::strings.validation.number.exists', ['attribute' => $attribute]));
         }

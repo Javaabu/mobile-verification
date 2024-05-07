@@ -28,7 +28,12 @@ trait ValidatesMobileNumbers
             return redirect()->back()->withErrors($validator->errors())->withInput();
         }
 
-        if ($request->expectsJson()) {
+        return $this->redirectUrl();
+    }
+
+    public function redirectUrl(): RedirectResponse|JsonResponse
+    {
+        if (request()->expectsJson()) {
             return response()->json(['message' => __('The mobile number is valid')]);
         }
 

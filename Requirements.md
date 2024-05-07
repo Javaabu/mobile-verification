@@ -13,7 +13,7 @@
 
 ## Registration With Mobile Number
 - Should not be logged in
-- Need to know user type
+- Need to know user type 
 
 ### Workflow
 - [x] A guest user will enter their mobile number

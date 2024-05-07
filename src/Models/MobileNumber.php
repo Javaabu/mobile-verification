@@ -136,12 +136,27 @@ class MobileNumber extends Model implements MobileNumberContract
                      ->where('country_code', MobileVerification::defaultCountryCode());
     }
 
-    public function scopeHasPhoneNumber($query, string $country_code, string $number, string $user_type): void
+    public function scopeHasPhoneNumberWithOwner($query, string $country_code, string $number, string $user_type): void
     {
         $query->where('country_code', $country_code)
               ->where('number', $number)
               ->where('user_type', $user_type)
               ->where('user_id', '!=', null);
+    }
+
+    public function scopeHasPhoneNumberWithoutOwner($query, string $country_code, string $number, string $user_type): void
+    {
+        $query->where('country_code', $country_code)
+              ->where('number', $number)
+              ->where('user_type', $user_type)
+              ->where('user_id', '==', null);
+    }
+
+    public function scopeHasPhoneNumber($query, string $country_code, string $number, string $user_type): void
+    {
+        $query->where('country_code', $country_code)
+              ->where('number', $number)
+              ->where('user_type', $user_type);
     }
 
     /**

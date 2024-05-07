@@ -16,6 +16,48 @@ Find yourself stuck using the package? Found a bug? Do you have general question
 If you've found a bug regarding security please mail [info@javaabu.com](mailto:info@javaabu.com) instead of using the issue tracker.
 
 
+## Installation
+
+Publishing Migrations
+```bash
+php artisan vendor:publish --provider="Javaabu\MobileVerification\MobileVerificationServiceProvider" --tag="mobile-verification-migrations"
+```
+
+Publishing Config
+```bash
+php artisan vendor:publish --provider="Javaabu\MobileVerification\MobileVerificationServiceProvider" --tag="mobile-verification-config"
+```
+
+Publishing Translations
+```bash
+php artisan vendor:publish --provider="Javaabu\MobileVerification\MobileVerificationServiceProvider" --tag="mobile-verification-translations"
+```
+
+### Verifying Mobile Number Availability
+Create a route to verify mobile number availability
+```php
+Route::post('validate', [MobileNumberAvailibilityController::class, 'validate']);
+```
+
+In your controller
+```php
+use Javaabu\MobileVerification\Traits\ValidatesMobileNumbers;
+
+// Specify the user type
+protected string $user_class = 'user';
+```
+
+To redirect the user if the mobile number is available, you can override the `redirectUrl` method
+```php
+    public function redirectUrl(): RedirectResponse|JsonResponse
+    {
+        return to_route('web.home')->with(['message' => __('The mobile number is valid')]);
+    }
+```
+When you call the `validate` method, it will return a message that the mobile number is already registered or that the mobile number is available.
+
+
+
 ## Testing
 
 You can run the tests with

@@ -10,6 +10,10 @@ return [
         ],
         'country_code' => [
             'invalid' => 'The country code is invalid.'
+        ],
+        'token' => [
+            'invalid' => 'The token is invalid.',
+            'expired' => 'The token has expired.',
         ]
     ]
 ];

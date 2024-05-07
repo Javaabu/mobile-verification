@@ -3,56 +3,84 @@
 namespace Javaabu\MobileVerification\Tests\TestSupport\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Validator;
+use Javaabu\MobileVerification\Rules\IsValidToken;
 use Javaabu\MobileVerification\Models\MobileNumber;
+use Javaabu\MobileVerification\Support\Enums\Countries;
+use Javaabu\MobileVerification\Rules\IsValidMobileNumber;
+use Javaabu\MobileVerification\Tests\TestSupport\Models\User;
 use Javaabu\MobileVerification\Traits\CanValidateMobileNumber;
 use Javaabu\MobileVerification\Support\DataObjects\MobileNumberData;
 use Javaabu\MobileVerification\Support\Services\MobileNumberService;
 use Javaabu\MobileVerification\Notifications\MobileNumberVerificationToken;
+use Javaabu\MobileVerification\Support\Actions\AssociateUserWithMobileNumberAction;
 
 class RegisterController
 {
     protected string $user_class = 'user';
 
-    use CanValidateMobileNumber;
 
-    public function register(Request $request)
+    public function register(Request $request): RedirectResponse | JsonResponse
     {
-        $rules = $this->getMobileNumberValidationRules($request->all());
-        $messages = $this->getMobileNumberValidationErrorMessages();
-        $validator = Validator::make($request->all(), $rules, $messages);
+        $validator = $this->validate($request->all());
 
         if ($validator->fails()) {
-            if ($request->expectsJson()) {
-                return response()->json(['errors' => $validator->errors()], 422);
-            }
-
-            return redirect()->back()->withErrors($validator->errors())->withInput();
+            return redirect()->back()->withErrors($validator->errors());
         }
 
-        $mobile_number_data = MobileNumberData::fromRequestData(array_merge($request->all(), [
-            'user_type' => $this->user_class,
-        ]));
+        // Token is valid
 
-        $mobile_number = (new MobileNumberService())->store($mobile_number_data);
+        $data = $validator->validated();
 
-        //generate the token
-        $token = $mobile_number->generateToken();
+        $user = $this->registerUser($data);
 
-        // Send OTP
-        $this->sendSmsNotification($token, $mobile_number);
+        $country_code = $data['country_code'] ?? null;
+        $phone_number = $data['number'] ?? null;
+        $mobileNumber = (new AssociateUserWithMobileNumberAction($this->user_class, $country_code))->handle($user->id, $phone_number);
 
-        if ($request->expectsJson()) {
-            return response()->json(['message' => __('A verification code has been sent to your mobile number. Please enter the code to verify your mobile number.')]);
-        }
-
-        return redirect()->back()->with('success', __('A verification code has been sent to your mobile number. Please enter the code to verify your mobile number.'));
+        $this->redirectAfterRegistration();
     }
 
-    protected function sendSmsNotification($token, $phone): void
+    public function registerUser(array $data): User
     {
-        $user_name = $phone->user ? $phone->user->name : '';
-        $phone->notify(new MobileNumberVerificationToken($token, $user_name));
+        $user = new User();
+        $user->name = $data['name'];
+        $user->email = $data['email'];
+        $user->save();
+
+        return $user;
+    }
+
+    protected function validate(array $request_data)
+    {
+        return Validator::make($request_data, $this->getValidationRules($request_data));
+    }
+
+    public function redirectAfterRegistration(): RedirectResponse | JsonResponse
+    {
+        if (request()->wantsJson()) {
+            return response()->json(['message' => 'User registered successfully']);
+        }
+
+        return redirect()->back()->with('success', 'User registered successfully');
+    }
+
+    /**
+     * @param array $request_data
+     * @return array
+     */
+    public function getValidationRules(array $request_data): array
+    {
+        $number = $request_data['number'] ?? null;
+        return [
+            'country_code' => ['nullable', 'numeric', 'in:' . Countries::getCountryCodesString()],
+            'number'       => ['required', new IsValidMobileNumber($this->user_class)],
+            'token'        => ['required', 'numeric', new IsValidToken($this->user_class, $number)],
+            'name'         => ['required'],
+            'email'        => ['required', 'email'],
+        ];
     }
 
 }

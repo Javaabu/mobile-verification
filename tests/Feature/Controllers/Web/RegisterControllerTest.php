@@ -13,104 +13,55 @@ class RegisterControllerTest extends TestCase
 {
     use RefreshDatabase;
 
-
     /** @test */
-    // can send a post request to register a user with a mobile number
-    public function can_send_a_post_request_to_register_a_user_with_a_mobile_number()
+    // can send a post request to register a user with a token number and other details
+    public function can_send_a_post_request_to_register_a_user_with_a_token_number_and_other_details()
     {
         $this->get('/');
 
-        $this->post(route('mobile-number-otp'), [
-            'number' => '7326655',
+        $this->post(route('register'), [
+            'number' => '7528222',
+            'token' => '123456',
+            'name' => 'John Doe',
+            'email' => 'admin@example.com',
         ])
         ->assertSessionHasNoErrors();
     }
 
+
+    // it can register a user if the token is correct
     /** @test */
-    // if the number provided is already registered then the user is redirected back with an error
-    public function if_the_number_provided_is_already_registered_then_the_user_is_redirected_back_with_an_error()
+    public function it_can_register_a_user_if_the_token_is_correct()
     {
-        $user = User::factory()->create();
         $mobileNumber = MobileNumber::factory()->create([
-            'number' => '7326655',
-            'country_code' => '960',
-            'user_type' => 'user',
-            'user_id' => $user->id,
-        ]);
-
-        $this->post(route('mobile-number-otp'), [
-            'number' => $mobileNumber->number,
-        ])
-        ->assertSessionHasErrors(['number']);
-
-        Notification::assertNotSentTo(
-            [$mobileNumber],
-            MobileNumberVerificationToken::class
-        );
-    }
-
-    /** @test */
-    public function if_the_number_provided_is_valid_then_system_sends_an_otp_to_the_number()
-    {
-        $this->assertDatabaseCount('mobile_numbers', 0);
-
-        $this->post(route('mobile-number-otp'), [
-            'number' => '7326655',
-        ])
-        ->assertSessionHasNoErrors();
-
-        $this->assertDatabaseHas('mobile_numbers', [
-            'number' => '7326655',
-            'country_code' => '960',
             'user_type' => 'user',
             'user_id' => null,
+            'number'  => '7528222',
+            'token'   => '123456',
         ]);
 
-        $phone = MobileNumber::where('number', '7326655')->first();
-
-        Notification::assertSentTo(
-            [$phone],
-            MobileNumberVerificationToken::class
-        );
-    }
-
-    /** @test */
-    public function it_wont_send_the_verification_code_if_the_mobile_number_has_too_many_attempts()
-    {
-        $user = $this->getActiveCustomer();
-
-        $this->actingAsCustomer($user);
-
-        $phone = \App\Helpers\MobileNumber\MobileNumber::factory()->create([
-            'number' => '7645530',
-            'country_code' => '960',
-            'attempts' => 6,
-            'user_type' => 'customer',
-        ]);
-
-        $this->get('/my/mobile-number');
-
-        $response = $this->post('/my/mobile-number', [
-            'phone' => '7645530',
-            'country_code' => '960',
+        $this->post(route('register'), [
+            'number' => '7528222',
+            'token'  => '123456',
+            'name'   => 'John Doe',
+            'email'  => 'admin@example.com'
         ])
-                         ->assertSessionHasErrors('mobile_number');
+             ->assertSessionHasNoErrors();
 
-        $this->get($response->headers->get('Location'))
-             ->assertSee('Too many verification attempts.');
+        $this->assertDatabaseHas('users', [
+            'name'  => 'John Doe',
+            'email' => 'admin@example.com',
+        ]);
+
+        $user_id = User::max('id');
 
         $this->assertDatabaseHas('mobile_numbers', [
-            'id' => $phone->id,
-            'number' => '7645530',
-            'country_code' => '960',
-            'attempts' => 6,
-            'user_id' => null,
-            'user_type' => 'customer',
+            'number'    => '7528222',
+            'user_id'   => $user_id,
+            'user_type' => 'user',
         ]);
-
-        Notification::assertNotSentTo(
-            [$phone],
-            \App\Helpers\MobileNumber\Notifications\MobileNumberVerificationToken::class
-        );
     }
+
+
+    // it will not register a user if the token is incorrect
 }

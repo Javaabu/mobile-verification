@@ -14,4 +14,5 @@ Route::get('/', function () {
 Route::post('/validate', [ValidateMobileNumbersController::class, 'validate'])->name('validate');
 Route::post('/mobile-number-otp', [SendTokenController::class, 'mobileNumberOtp'])->name('mobile-number-otp');
 Route::post('/verify', [VerifyTokenController::class, 'verify'])->name('verify');
+Route::post('/register', [RegisterController::class, 'register'])->name('register');
 
