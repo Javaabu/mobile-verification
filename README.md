@@ -57,6 +57,19 @@ To redirect the user if the mobile number is available, you can override the `re
 When you call the `validate` method, it will return a message that the mobile number is already registered or that the mobile number is available.
 
 
+## Getting Mobile Number Verification Code
+Create a route to get the mobile number verification code
+```php
+Route::post('send-otp', [MobileNumberVerificationController::class, 'sendOtp']);
+```
+
+In your controller
+```php
+    protected string $user_class = 'user';
+    
+    use CanSendVerificationCode;
+```
+
 
 ## Testing
 

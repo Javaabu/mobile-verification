@@ -72,24 +72,6 @@ class MobileNumber extends Model implements MobileNumberContract
     }
 
     /**
-     * Convert dates to Carbon
-     * @param $date
-     */
-    public function setTokenCreatedAtAttribute($date)
-    {
-        $this->attributes['token_created_at'] = empty($date) ? null : Carbon::parse($date);
-    }
-
-    /**
-     * Normalize mobile numbers before saving
-     * @param $number
-     */
-    public function setNumberAttribute($number)
-    {
-        $this->attributes['number'] = MobileVerification::normalizeNumber($number);
-    }
-
-    /**
      * A mobile number belongs to a user
      *
      * @return MorphTo
@@ -98,6 +80,7 @@ class MobileNumber extends Model implements MobileNumberContract
     {
         return $this->morphTo('user');
     }
+
 
     /**
      * A search scope
@@ -157,6 +140,25 @@ class MobileNumber extends Model implements MobileNumberContract
         $query->where('country_code', $country_code)
               ->where('number', $number)
               ->where('user_type', $user_type);
+    }
+
+
+    /**
+     * Convert dates to Carbon
+     * @param $date
+     */
+    public function setTokenCreatedAtAttribute($date)
+    {
+        $this->attributes['token_created_at'] = empty($date) ? null : Carbon::parse($date);
+    }
+
+    /**
+     * Normalize mobile numbers before saving
+     * @param $number
+     */
+    public function setNumberAttribute($number)
+    {
+        $this->attributes['number'] = MobileVerification::normalizeNumber($number);
     }
 
     /**
