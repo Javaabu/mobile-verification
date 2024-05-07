@@ -22,7 +22,6 @@ class AssociateUserWithMobileNumberAction
         $mobileNumber = MobileNumber::query()
                                     ->hasPhoneNumberWithoutOwner($this->country_code, $number, $this->user_type)
                                     ->first();
-        dd($this->country_code, $number, $this->user_type);
 
         if (!$mobileNumber) {
             throw new \Exception(__('mobile-verification::strings.validation.number.exists', ['attribute' => 'number']));

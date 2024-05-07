@@ -13,8 +13,8 @@ class IsValidToken implements ValidationRule
 
     public function __construct(
         public string | null $user_type = null,
-        public string | null $country_code = null,
         public string | null $number = null,
+        public string | null $country_code = null,
     )
     {
         $this->country_code ??= Countries::Maldives->getCountryCode();
@@ -28,15 +28,19 @@ class IsValidToken implements ValidationRule
 
         $mobile_number = MobileNumber::query()
             ->hasPhoneNumber($this->country_code, $this->number, $this->user_type)
-            ->where('token', $value)
             ->first();
 
         if (! $mobile_number) {
             $fail(trans('mobile-verification::strings.validation.token.invalid'));
+            return;
         }
 
         if ($mobile_number->is_token_expired) {
             $fail(trans('mobile-verification::strings.validation.token.expired'));
+        }
+
+        if (! $mobile_number->verifyToken($value)) {
+            $fail(trans('mobile-verification::strings.validation.token.invalid'));
         }
     }
 }

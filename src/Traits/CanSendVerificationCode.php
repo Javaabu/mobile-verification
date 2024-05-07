@@ -3,6 +3,8 @@
 namespace Javaabu\MobileVerification\Traits;
 
 use Illuminate\Http\Request;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Validator;
 use Javaabu\MobileVerification\Support\DataObjects\MobileNumberData;
 use Javaabu\MobileVerification\Support\Services\MobileNumberService;
@@ -12,7 +14,7 @@ trait CanSendVerificationCode
 {
     use CanValidateMobileNumber;
 
-    public function mobileNumberOtp(Request $request)
+    public function mobileNumberOtp(Request $request): RedirectResponse|JsonResponse
     {
         $rules = $this->getMobileNumberValidationRules($request->all());
         $messages = $this->getMobileNumberValidationErrorMessages();
@@ -38,16 +40,21 @@ trait CanSendVerificationCode
         // Send OTP
         $this->sendSmsNotification($token, $mobile_number);
 
-        if ($request->expectsJson()) {
-            return response()->json(['message' => __('A verification code has been sent to your mobile number. Please enter the code to verify your mobile number.')]);
-        }
-
-        return redirect()->back()->with('success', __('A verification code has been sent to your mobile number. Please enter the code to verify your mobile number.'));
+        return $this->redirectUrl($request);
     }
 
     protected function sendSmsNotification($token, $phone): void
     {
         $user_name = $phone->user ? $phone->user->name : '';
         $phone->notify(new MobileNumberVerificationToken($token, $user_name));
+    }
+
+    public function redirectUrl(Request $request): RedirectResponse|JsonResponse
+    {
+        if ($request->expectsJson()) {
+            return response()->json(['message' => __('A verification code has been sent to your mobile number. Please enter the code to verify your mobile number.')]);
+        }
+
+        return redirect()->back()->with('success', __('A verification code has been sent to your mobile number. Please enter the code to verify your mobile number.'));
     }
 }

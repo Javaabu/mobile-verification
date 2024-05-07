@@ -132,7 +132,7 @@ class MobileNumber extends Model implements MobileNumberContract
         $query->where('country_code', $country_code)
               ->where('number', $number)
               ->where('user_type', $user_type)
-              ->where('user_id', '==', null);
+              ->whereNull('user_id');
     }
 
     public function scopeHasPhoneNumber($query, string $country_code, string $number, string $user_type): void

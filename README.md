@@ -70,6 +70,34 @@ In your controller
     use CanSendVerificationCode;
 ```
 
+## Registering Using OTP
+Create a route to register using OTP
+```php
+Route::post('register', [RegistrationController::class, 'register']);
+```
+
+In your controller add the `CanRegisterUsingToken` trait and implement the `IsRegistrationController` interface.
+```php
+    protected string $user_class = 'user';
+    
+    use CanRegisterUsingToken;
+
+    /*
+     * Override the below method as required
+     * */
+    public function registerUser(array $data): HasMobileNumber
+    {
+        $user = new User();
+        $user->name = $data['name'];
+        $user->email = $data['email'];
+        $user->save();
+
+        return $user;
+    }
+```
+
+
+
 
 ## Testing
 
