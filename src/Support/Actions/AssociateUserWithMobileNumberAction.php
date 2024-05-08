@@ -4,16 +4,13 @@ namespace Javaabu\MobileVerification\Support\Actions;
 
 use Javaabu\MobileVerification\Models\MobileNumber;
 use Javaabu\MobileVerification\Support\Enums\Countries;
-use Javaabu\MobileVerification\Contracts\HasMobileNumber;
 
 class AssociateUserWithMobileNumberAction
 {
-
     public function __construct(
         public string $user_type,
         public string | null $country_code = null,
-    )
-    {
+    ) {
         $this->country_code ??= Countries::Maldives->getCountryCode();
     }
 
@@ -23,7 +20,7 @@ class AssociateUserWithMobileNumberAction
                                     ->hasPhoneNumberWithoutOwner($this->country_code, $number, $this->user_type)
                                     ->first();
 
-        if (!$mobileNumber) {
+        if (! $mobileNumber) {
             throw new \Exception(__('mobile-verification::strings.validation.number.exists', ['attribute' => 'number']));
         }
 

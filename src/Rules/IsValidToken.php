@@ -6,17 +6,14 @@ use Closure;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Javaabu\MobileVerification\Models\MobileNumber;
 use Javaabu\MobileVerification\Support\Enums\Countries;
-use Javaabu\MobileVerification\Contracts\HasMobileNumber;
 
 class IsValidToken implements ValidationRule
 {
-
     public function __construct(
         public string | null $user_type = null,
         public string | null $number = null,
         public string | null $country_code = null,
-    )
-    {
+    ) {
         $this->country_code ??= Countries::Maldives->getCountryCode();
     }
 
@@ -32,6 +29,7 @@ class IsValidToken implements ValidationRule
 
         if (! $mobile_number) {
             $fail(trans('mobile-verification::strings.validation.token.invalid'));
+
             return;
         }
 

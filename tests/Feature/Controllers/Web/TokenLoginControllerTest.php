@@ -2,9 +2,9 @@
 
 namespace Javaabu\MobileVerification\Tests\Feature\Controllers\Web;
 
-use Javaabu\MobileVerification\Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Javaabu\MobileVerification\Models\MobileNumber;
+use Javaabu\MobileVerification\Tests\TestCase;
 use Javaabu\MobileVerification\Tests\TestSupport\Models\User;
 
 class TokenLoginControllerTest extends TestCase
@@ -28,13 +28,13 @@ class TokenLoginControllerTest extends TestCase
 
         $user = User::factory()->create([
             'name' => 'John Doe',
-            'email' => 'john@example.com'
+            'email' => 'john@example.com',
         ]);
 
         $mobile_number = MobileNumber::factory()->create([
             'user_type' => 'user',
             'user_id' => $user->id,
-            'number' => '7528222'
+            'number' => '7528222',
         ]);
 
         $token = $mobile_number->generateToken();

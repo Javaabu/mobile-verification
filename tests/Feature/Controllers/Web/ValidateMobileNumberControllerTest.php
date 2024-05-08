@@ -2,9 +2,9 @@
 
 namespace Javaabu\MobileVerification\Tests\Feature\Controllers\Web;
 
-use Javaabu\MobileVerification\Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Javaabu\MobileVerification\Models\MobileNumber;
+use Javaabu\MobileVerification\Tests\TestCase;
 use Javaabu\MobileVerification\Tests\TestSupport\Models\User;
 
 class ValidateMobileNumberControllerTest extends TestCase
@@ -20,19 +20,19 @@ class ValidateMobileNumberControllerTest extends TestCase
     {
         $this->post('validate', [
             'country_code' => '960',
-            'number'       => '7326655',
+            'number' => '7326655',
         ])
              ->assertSessionHasNoErrors();
 
         $this->post('validate', [
             'country_code' => '',
-            'number'       => '7326655',
+            'number' => '7326655',
         ])
              ->assertSessionHasNoErrors();
 
         $this->post('validate', [
             'country_code' => '9999999',
-            'number'       => '7326655',
+            'number' => '7326655',
         ])
              ->assertRedirect()
              ->assertSessionHasErrors(['country_code']);
@@ -59,7 +59,7 @@ class ValidateMobileNumberControllerTest extends TestCase
 
         $this->post('validate', [
             'country_code' => '960',
-            'number'       => '9326655',
+            'number' => '9326655',
         ])->assertSessionHasNoErrors();
 
         $this->post('validate', [
@@ -76,7 +76,7 @@ class ValidateMobileNumberControllerTest extends TestCase
     {
         $this->post('validate', [
             'country_code' => '966',
-            'number'       => '5407256891500',
+            'number' => '5407256891500',
         ])->assertSessionHasNoErrors();
     }
 
@@ -85,9 +85,9 @@ class ValidateMobileNumberControllerTest extends TestCase
     {
         $other_user = User::factory()->create();
         $mobile_number = MobileNumber::factory()->create([
-            'user_id'      => $other_user->id,
-            'user_type'    => 'user',
-            'number'       => '7326655',
+            'user_id' => $other_user->id,
+            'user_type' => 'user',
+            'number' => '7326655',
             'country_code' => '960',
         ]);
 
@@ -95,7 +95,7 @@ class ValidateMobileNumberControllerTest extends TestCase
         $this->actingAs($user);
 
         $this->post('validate', [
-            'number'       => '7326655',
+            'number' => '7326655',
             'country_code' => '960',
         ])->assertSessionHasErrors(['number']);
     }
@@ -104,9 +104,9 @@ class ValidateMobileNumberControllerTest extends TestCase
     public function it_can_validate_if_the_mobile_number_is_already_in_use_by_another_user_of_a_different_type(): void
     {
         $mobile_number = MobileNumber::factory()->create([
-            'user_id'      => 1,
-            'user_type'    => 'public_user',
-            'number'       => '7326655',
+            'user_id' => 1,
+            'user_type' => 'public_user',
+            'number' => '7326655',
             'country_code' => '960',
         ]);
 
@@ -114,7 +114,7 @@ class ValidateMobileNumberControllerTest extends TestCase
         $this->actingAs($user);
 
         $this->post('validate', [
-            'number'       => '7326655',
+            'number' => '7326655',
             'country_code' => '960',
         ])->assertSessionHasNoErrors();
     }
@@ -124,9 +124,9 @@ class ValidateMobileNumberControllerTest extends TestCase
     {
         $other_user = User::factory()->create();
         $mobile_number = MobileNumber::factory()->create([
-            'user_id'      => $other_user->id,
-            'user_type'    => 'user',
-            'number'       => '7326655',
+            'user_id' => $other_user->id,
+            'user_type' => 'user',
+            'number' => '7326655',
             'country_code' => '966',
         ]);
 
@@ -134,7 +134,7 @@ class ValidateMobileNumberControllerTest extends TestCase
         $this->actingAs($user);
 
         $this->post('validate', [
-            'number'       => '7326655',
+            'number' => '7326655',
             'country_code' => '960',
         ])->assertSessionHasNoErrors();
     }

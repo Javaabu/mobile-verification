@@ -3,9 +3,7 @@
 namespace Javaabu\MobileVerification\Tests\Feature\Controllers\Web;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Support\Facades\Notification;
 use Javaabu\MobileVerification\Models\MobileNumber;
-use Javaabu\MobileVerification\Notifications\MobileNumberVerificationToken;
 use Javaabu\MobileVerification\Tests\TestCase;
 use Javaabu\MobileVerification\Tests\TestSupport\Models\User;
 
@@ -36,28 +34,28 @@ class RegisterControllerTest extends TestCase
         $mobileNumber = MobileNumber::factory()->create([
             'user_type' => 'user',
             'user_id' => null,
-            'number'  => '7528222',
-            'token'   => '123456',
+            'number' => '7528222',
+            'token' => '123456',
         ]);
 
         $this->post(route('register'), [
             'number' => '7528222',
-            'token'  => '123456',
-            'name'   => 'John Doe',
-            'email'  => 'admin@example.com'
+            'token' => '123456',
+            'name' => 'John Doe',
+            'email' => 'admin@example.com',
         ])
              ->assertSessionHasNoErrors();
 
         $this->assertDatabaseHas('users', [
-            'name'  => 'John Doe',
+            'name' => 'John Doe',
             'email' => 'admin@example.com',
         ]);
 
         $user_id = User::max('id');
 
         $this->assertDatabaseHas('mobile_numbers', [
-            'number'    => '7528222',
-            'user_id'   => $user_id,
+            'number' => '7528222',
+            'user_id' => $user_id,
             'user_type' => 'user',
         ]);
     }

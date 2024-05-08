@@ -2,15 +2,14 @@
 
 namespace Javaabu\MobileVerification\Traits;
 
-use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
-use Javaabu\MobileVerification\Rules\IsValidToken;
-use Javaabu\MobileVerification\Support\Enums\Countries;
 use Javaabu\MobileVerification\Rules\IsValidMobileNumber;
-use Javaabu\MobileVerification\Tests\TestSupport\Models\User;
+use Javaabu\MobileVerification\Rules\IsValidToken;
 use Javaabu\MobileVerification\Support\Actions\AssociateUserWithMobileNumberAction;
+use Javaabu\MobileVerification\Support\Enums\Countries;
 
 trait CanRegisterUsingToken
 {
@@ -55,12 +54,13 @@ trait CanRegisterUsingToken
     public function getValidationRules(array $request_data): array
     {
         $number = $request_data['number'] ?? null;
+
         return [
             'country_code' => ['nullable', 'numeric', 'in:' . Countries::getCountryCodesString()],
-            'number'       => ['required', new IsValidMobileNumber($this->user_class)],
-            'token'        => ['required', 'numeric', new IsValidToken($this->user_class, $number)],
-            'name'         => ['required'],
-            'email'        => ['required', 'email'],
+            'number' => ['required', new IsValidMobileNumber($this->user_class)],
+            'token' => ['required', 'numeric', new IsValidToken($this->user_class, $number)],
+            'name' => ['required'],
+            'email' => ['required', 'email'],
         ];
     }
 }

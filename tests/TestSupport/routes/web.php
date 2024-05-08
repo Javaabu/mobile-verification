@@ -4,9 +4,8 @@ use Illuminate\Support\Facades\Route;
 use Javaabu\MobileVerification\Tests\TestSupport\Controllers\LoginController;
 use Javaabu\MobileVerification\Tests\TestSupport\Controllers\RegisterController;
 use Javaabu\MobileVerification\Tests\TestSupport\Controllers\SendTokenController;
-use Javaabu\MobileVerification\Tests\TestSupport\Controllers\VerifyTokenController;
 use Javaabu\MobileVerification\Tests\TestSupport\Controllers\ValidateMobileNumbersController;
-use Javaabu\MobileVerification\Tests\TestSupport\Controllers\VerifyMobileNumberAvailabilityController;
+use Javaabu\MobileVerification\Tests\TestSupport\Controllers\VerifyTokenController;
 
 Route::get('/', function () {
     return "Testing Javaabu Mobile Verification";
@@ -21,4 +20,3 @@ Route::post('/login', [LoginController::class, 'login'])->name('login');
 Route::get('/protected', function () {
     return "Protected Route";
 })->name('protected')->middleware('auth:web');
-
