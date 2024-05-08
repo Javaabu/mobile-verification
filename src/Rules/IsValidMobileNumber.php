@@ -14,8 +14,7 @@ class IsValidMobileNumber implements ValidationRule
         public string|null $country_code = null,
         public bool|null   $can_be_taken_by_user = null,
         public bool $can_send_otp = false,
-    )
-    {
+    ) {
         $this->country_code ??= Countries::Maldives->getCountryCode();
     }
 
