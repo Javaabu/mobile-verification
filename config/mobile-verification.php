@@ -15,8 +15,6 @@ return [
     'database_connection' => env('MOBILE_NUMBER_DB_CONNECTION'),
 
     'features' => [
-//        Features::registerMobileNumbers(),
-//        Features::loginViaOneTimePassword(),
 //        Features::updateMobileNumber(),
     ],
 

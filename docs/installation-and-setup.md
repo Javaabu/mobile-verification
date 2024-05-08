@@ -25,4 +25,3 @@ Publishing Translations
 ```bash
 php artisan vendor:publish --provider="Javaabu\MobileVerification\MobileVerificationServiceProvider" --tag="mobile-verification-translations"
 ```
-```
