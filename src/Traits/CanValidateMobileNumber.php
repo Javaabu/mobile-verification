@@ -19,7 +19,14 @@ trait CanValidateMobileNumber
                     }
                 },
             ],
-            'number' => ['required', new IsValidMobileNumber($this->getUserClass(), data_get($request_data, 'country_code'))],
+            'number'       => [
+                'required',
+                new IsValidMobileNumber(
+                    $this->getUserClass(),
+                    data_get($request_data, 'country_code'),
+                    false,
+                ),
+            ],
         ];
     }
 

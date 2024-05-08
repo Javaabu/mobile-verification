@@ -47,4 +47,16 @@ abstract class TestCase extends BaseTestCase
             ->once()
             ->andReturnFalse();
     }
+
+    public function checkRule(mixed $rule, string $attribute, mixed $value): bool
+    {
+        $passed = true;
+        $fail = function () use (&$passed) {
+            $passed = false;
+        };
+
+        $rule->validate($attribute, $value, $fail);
+
+        return $passed;
+    }
 }

@@ -26,6 +26,24 @@ class MobileNumberUpdateController
     protected string $user_class = User::class;
     protected string $guard = 'web';
 
+    public function requestOtp(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'country_code' => ['nullable', 'numeric', 'in:' . Countries::getCountryCodesString()],
+            'number'       => ['required', new IsValidMobileNumber($this->user_class)],
+        ]);
+
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors($validator->errors());
+        }
+
+        $data = $validator->validated();
+
+        dd($data);
+
+
+    }
+
     public function update(Request $request): RedirectResponse | JsonResponse
     {
         $validator = $this->validate($request->all());

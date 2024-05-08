@@ -23,6 +23,10 @@ Route::get('/protected', function () {
     return "Protected Route";
 })->name('protected')->middleware('auth:web');
 
+Route::post('/request-top', [MobileNumberUpdateController::class, 'requestOtp'])
+     ->name('request-number-change-otp')
+     ->middleware('auth:web');
+
 Route::post('/update-mobile-number', [MobileNumberUpdateController::class, 'update'])
     ->name('update-mobile-number')
     ->middleware('auth:web');
