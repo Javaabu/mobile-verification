@@ -2,24 +2,17 @@
 
 namespace Javaabu\MobileVerification\Tests\TestSupport\Controllers;
 
-use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
-use Javaabu\MobileVerification\Rules\IsValidToken;
-use Javaabu\MobileVerification\Models\MobileNumber;
-use Javaabu\MobileVerification\Support\Enums\Countries;
 use Javaabu\MobileVerification\Rules\IsValidMobileNumber;
-use Javaabu\MobileVerification\Contracts\HasMobileNumber;
-use Javaabu\MobileVerification\Traits\CanRegisterUsingToken;
-use Javaabu\MobileVerification\Tests\TestSupport\Models\User;
-use Javaabu\MobileVerification\Traits\CanValidateMobileNumber;
-use Javaabu\MobileVerification\Contracts\IsRegistrationController;
+use Javaabu\MobileVerification\Rules\IsValidToken;
 use Javaabu\MobileVerification\Support\DataObjects\MobileNumberData;
+use Javaabu\MobileVerification\Support\Enums\Countries;
 use Javaabu\MobileVerification\Support\Services\MobileNumberService;
-use Javaabu\MobileVerification\Notifications\MobileNumberVerificationToken;
-use Javaabu\MobileVerification\Support\Actions\AssociateUserWithMobileNumberAction;
+use Javaabu\MobileVerification\Tests\TestSupport\Models\User;
 
 class LoginController
 {
@@ -39,8 +32,8 @@ class LoginController
 
         $mobile_number_data = MobileNumberData::fromRequestData([
             'country_code' => $data['country_code'] ?? null,
-            'number'       => $data['number'],
-            'user_type'    => $this->getUserType(),
+            'number' => $data['number'],
+            'user_type' => $this->getUserType(),
         ]);
 
         $mobile_number = (new MobileNumberService())->getMobileNumber($mobile_number_data);
@@ -68,15 +61,16 @@ class LoginController
     public function getValidationRules(array $request_data): array
     {
         $number = $request_data['number'] ?? null;
+
         return [
             'country_code' => ['nullable', 'numeric', 'in:' . Countries::getCountryCodesString()],
-            'number'       => ['required', new IsValidMobileNumber($this->user_class)],
-            'token'        => ['required', 'numeric', new IsValidToken($this->getUserType(), $number)],
+            'number' => ['required', new IsValidMobileNumber($this->user_class)],
+            'token' => ['required', 'numeric', new IsValidToken($this->getUserType(), $number)],
         ];
     }
 
     public function getUserType(): string
     {
-        return (new $this->user_class)->getMorphClass();
+        return (new $this->user_class())->getMorphClass();
     }
 }

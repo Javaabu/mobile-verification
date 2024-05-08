@@ -9,7 +9,6 @@ use Javaabu\MobileVerification\Contracts\MobileNumber as MobileNumberContract;
 
 class MobileNumberService
 {
-
     public function firstOrCreate(MobileNumberData $mobile_number_data): MobileNumber
     {
         $mobile_number = MobileNumber::query()
