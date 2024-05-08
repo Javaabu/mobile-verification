@@ -25,7 +25,7 @@ class ApiTokenLoginControllerTest extends TestCase
         $this->get(route('api-protected'))
             ->assertStatus(401)
             ->assertExactJson([
-                'error' => 'Unauthenticated.'
+                'error' => 'Unauthenticated.',
             ]);
     }
 
