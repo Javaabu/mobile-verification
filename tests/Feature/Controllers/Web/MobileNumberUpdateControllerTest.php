@@ -2,13 +2,13 @@
 
 namespace Javaabu\MobileVerification\Tests\Feature\Controllers\Web;
 
-use JsonException;
-use Illuminate\Support\Facades\Notification;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Javaabu\MobileVerification\Tests\TestCase;
+use Illuminate\Support\Facades\Notification;
 use Javaabu\MobileVerification\Models\MobileNumber;
-use Javaabu\MobileVerification\Tests\TestSupport\Models\User;
 use Javaabu\MobileVerification\Notifications\MobileNumberVerificationToken;
+use Javaabu\MobileVerification\Tests\TestCase;
+use Javaabu\MobileVerification\Tests\TestSupport\Models\User;
+use JsonException;
 
 class MobileNumberUpdateControllerTest extends TestCase
 {
@@ -32,10 +32,10 @@ class MobileNumberUpdateControllerTest extends TestCase
     {
         $user = User::factory()->create();
         MobileNumber::factory()->create([
-            'number'       => '7528222',
+            'number' => '7528222',
             'country_code' => '960',
-            'user_type'    => 'user',
-            'user_id'      => $user->id,
+            'user_type' => 'user',
+            'user_id' => $user->id,
         ]);
 
         $this->actingAs($user);
@@ -45,10 +45,10 @@ class MobileNumberUpdateControllerTest extends TestCase
              ->assertRedirect();
 
         $this->assertDatabaseHas('mobile_numbers', [
-            'number'       => '7326655',
+            'number' => '7326655',
             'country_code' => '960',
-            'user_type'    => 'user',
-            'user_id'      => null,
+            'user_type' => 'user',
+            'user_id' => null,
         ]);
 
         $mobile_number = MobileNumber::where('number', '7326655')->first();
@@ -64,33 +64,33 @@ class MobileNumberUpdateControllerTest extends TestCase
     {
         $user = User::factory()->create();
         $mobile_number = MobileNumber::factory()->create([
-            'number'       => '7528222',
+            'number' => '7528222',
             'country_code' => '960',
-            'user_type'    => 'user',
-            'user_id'      => $user->id,
+            'user_type' => 'user',
+            'user_id' => $user->id,
         ]);
 
         $new_mobile_number = MobileNumber::factory()->create([
-            'number'       => '7326655',
+            'number' => '7326655',
             'country_code' => '960',
-            'user_type'    => 'user',
-            'user_id'      => null,
+            'user_type' => 'user',
+            'user_id' => null,
         ]);
 
         $this->actingAs($user);
 
         $this->post(route('update-mobile-number'), [
             'number' => '7326655',
-            'token'  => $new_mobile_number->generateToken(),
+            'token' => $new_mobile_number->generateToken(),
         ])
              ->assertSessionHasNoErrors()
              ->assertRedirect();
 
         $this->assertDatabaseHas('mobile_numbers', [
-            'number'       => '7326655',
+            'number' => '7326655',
             'country_code' => '960',
-            'user_type'    => 'user',
-            'user_id'      => $user->id,
+            'user_type' => 'user',
+            'user_id' => $user->id,
         ]);
     }
 }

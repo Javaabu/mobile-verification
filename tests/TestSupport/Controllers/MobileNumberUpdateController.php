@@ -2,24 +2,18 @@
 
 namespace Javaabu\MobileVerification\Tests\TestSupport\Controllers;
 
-use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
-use Javaabu\MobileVerification\Rules\IsValidToken;
-use Javaabu\MobileVerification\Models\MobileNumber;
-use Javaabu\MobileVerification\Support\Enums\Countries;
-use Javaabu\MobileVerification\Rules\IsValidMobileNumber;
 use Javaabu\MobileVerification\Contracts\HasMobileNumber;
-use Javaabu\MobileVerification\Traits\CanRegisterUsingToken;
-use Javaabu\MobileVerification\Tests\TestSupport\Models\User;
-use Javaabu\MobileVerification\Traits\CanValidateMobileNumber;
-use Javaabu\MobileVerification\Contracts\IsRegistrationController;
+use Javaabu\MobileVerification\Rules\IsValidMobileNumber;
+use Javaabu\MobileVerification\Rules\IsValidToken;
 use Javaabu\MobileVerification\Support\DataObjects\MobileNumberData;
+use Javaabu\MobileVerification\Support\Enums\Countries;
 use Javaabu\MobileVerification\Support\Services\MobileNumberService;
-use Javaabu\MobileVerification\Notifications\MobileNumberVerificationToken;
-use Javaabu\MobileVerification\Support\Actions\AssociateUserWithMobileNumberAction;
+use Javaabu\MobileVerification\Tests\TestSupport\Models\User;
 
 class MobileNumberUpdateController
 {
@@ -30,8 +24,8 @@ class MobileNumberUpdateController
     {
         $validator = Validator::make($request->all(), [
             'country_code' => ['nullable', 'numeric', 'in:' . Countries::getCountryCodesString()],
-            'number'       => ['required', new IsValidMobileNumber($this->getUserType(), can_be_taken_by_user: false)],
-            'token'        => ['required', new IsValidToken($this->getUserType(), $request->input('number'))],
+            'number' => ['required', new IsValidMobileNumber($this->getUserType(), can_be_taken_by_user: false)],
+            'token' => ['required', new IsValidToken($this->getUserType(), $request->input('number'))],
         ]);
 
         if ($validator->fails()) {
@@ -41,17 +35,17 @@ class MobileNumberUpdateController
         $data = $validator->validated();
 
         $mobile_number_data = MobileNumberData::fromRequestData([
-            'number'     => $data['number'],
+            'number' => $data['number'],
             'country_code' => $data['country_code'] ?? null,
-            'user_type'  => $this->getUserType(),
+            'user_type' => $this->getUserType(),
         ]);
 
         /* @var HasMobileNumber $user */
         $user = Auth::guard($this->guard)->user();
         $previous_number = $user->phone;
 
-        $mobile_number = (new MobileNumberService)->getMobileNumber($mobile_number_data);
-        (new MobileNumberService)->updateMobileNumber(
+        $mobile_number = (new MobileNumberService())->getMobileNumber($mobile_number_data);
+        (new MobileNumberService())->updateMobileNumber(
             $mobile_number,
             $previous_number,
             $user
@@ -71,7 +65,6 @@ class MobileNumberUpdateController
 
     public function getUserType(): string
     {
-        return (new $this->user_class)->getMorphClass();
+        return (new $this->user_class())->getMorphClass();
     }
 }
-

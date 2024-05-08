@@ -19,7 +19,7 @@ trait CanValidateMobileNumber
                     }
                 },
             ],
-            'number'       => [
+            'number' => [
                 'required',
                 new IsValidMobileNumber(
                     $this->getUserClass(),

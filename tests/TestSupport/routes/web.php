@@ -2,13 +2,12 @@
 
 use Illuminate\Support\Facades\Route;
 use Javaabu\MobileVerification\Tests\TestSupport\Controllers\LoginController;
-use Javaabu\MobileVerification\Tests\TestSupport\Controllers\RegisterController;
-use Javaabu\MobileVerification\Tests\TestSupport\Controllers\SendTokenController;
-use Javaabu\MobileVerification\Tests\TestSupport\Controllers\VerifyTokenController;
 use Javaabu\MobileVerification\Tests\TestSupport\Controllers\MobileNumberUpdateController;
 use Javaabu\MobileVerification\Tests\TestSupport\Controllers\MobileNumberUpdateTokenController;
+use Javaabu\MobileVerification\Tests\TestSupport\Controllers\RegisterController;
+use Javaabu\MobileVerification\Tests\TestSupport\Controllers\SendTokenController;
 use Javaabu\MobileVerification\Tests\TestSupport\Controllers\ValidateMobileNumbersController;
-use Javaabu\MobileVerification\Tests\TestSupport\Controllers\VerifyMobileNumberAvailabilityController;
+use Javaabu\MobileVerification\Tests\TestSupport\Controllers\VerifyTokenController;
 
 Route::get('/', function () {
     return "Testing Javaabu Mobile Verification";
@@ -31,4 +30,3 @@ Route::post('/request-top', [MobileNumberUpdateTokenController::class, 'requestO
 Route::post('/update-mobile-number', [MobileNumberUpdateController::class, 'update'])
     ->name('update-mobile-number')
     ->middleware('auth:web');
-

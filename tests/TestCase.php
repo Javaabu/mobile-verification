@@ -2,9 +2,9 @@
 
 namespace Javaabu\MobileVerification\Tests;
 
-use Illuminate\Support\Traits\Dumpable;
 use Biscolab\ReCaptcha\Facades\ReCaptcha;
 use Illuminate\Support\Facades\Notification;
+use Illuminate\Support\Traits\Dumpable;
 use Javaabu\MobileVerification\MobileVerificationServiceProvider;
 use Javaabu\MobileVerification\Tests\TestSupport\Providers\TestServiceProvider;
 use Javaabu\SmsNotifications\SmsNotificationsServiceProvider;
