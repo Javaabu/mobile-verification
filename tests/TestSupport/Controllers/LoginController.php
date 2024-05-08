@@ -4,6 +4,7 @@ namespace Javaabu\MobileVerification\Tests\TestSupport\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Validator;
 use Javaabu\MobileVerification\Rules\IsValidToken;
@@ -23,8 +24,9 @@ use Javaabu\MobileVerification\Support\Actions\AssociateUserWithMobileNumberActi
 class LoginController
 {
     protected string $user_class = User::class;
+    protected string $guard = 'web';
 
-    public function login(Request $request)
+    public function login(Request $request): RedirectResponse | JsonResponse
     {
         $validator = $this->validate($request->all());
 
@@ -35,14 +37,46 @@ class LoginController
         // Token is valid
         $data = $validator->validated();
 
+        $mobile_number_data = MobileNumberData::fromRequestData([
+            'country_code' => $data['country_code'] ?? null,
+            'number'       => $data['number'],
+            'user_type'    => $this->getUserType(),
+        ]);
 
-        $mobile_number = MobileNumber::query()->hasPhoneNumber($data['country_code'], $data['number'])->first();
+        $mobile_number = (new MobileNumberService())->getMobileNumber($mobile_number_data);
 
+        Auth::guard($this->guard)->login($mobile_number->user, true);
+        $request->session()->regenerate();
 
-        $country_code = $data['country_code'] ?? null;
-        $phone_number = $data['number'] ?? null;
-        $mobileNumber = (new AssociateUserWithMobileNumberAction($this->user_class, $country_code))->handle($user->id, $phone_number);
+        return $this->redirectAfterLogin();
+    }
 
-        return $this->redirectAfterRegistration();
+    public function redirectAfterLogin(): RedirectResponse | JsonResponse
+    {
+        if (request()->wantsJson()) {
+            return response()->json(['message' => 'User logged in successfully']);
+        }
+
+        return redirect()->back()->with('success', 'User logged in successfully');
+    }
+
+    protected function validate(array $request_data)
+    {
+        return Validator::make($request_data, $this->getValidationRules($request_data));
+    }
+
+    public function getValidationRules(array $request_data): array
+    {
+        $number = $request_data['number'] ?? null;
+        return [
+            'country_code' => ['nullable', 'numeric', 'in:' . Countries::getCountryCodesString()],
+            'number'       => ['required', new IsValidMobileNumber($this->user_class)],
+            'token'        => ['required', 'numeric', new IsValidToken($this->getUserType(), $number)],
+        ];
+    }
+
+    public function getUserType(): string
+    {
+        return (new $this->user_class)->getMorphClass();
     }
 }

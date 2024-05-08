@@ -34,7 +34,7 @@ class TokenLoginControllerTest extends TestCase
         $mobile_number = MobileNumber::factory()->create([
             'user_type' => 'user',
             'user_id' => $user->id,
-            'number' => '752822'
+            'number' => '7528222'
         ]);
 
         $token = $mobile_number->generateToken();

@@ -20,5 +20,5 @@ Route::post('/login', [LoginController::class, 'login'])->name('login');
 
 Route::get('/protected', function () {
     return "Protected Route";
-})->name('protected')->middleware('auth');
+})->name('protected')->middleware('auth:web');
 

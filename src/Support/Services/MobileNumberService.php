@@ -31,4 +31,15 @@ class MobileNumberService
 
         return $mobile_number;
     }
+
+    public function getMobileNumber(MobileNumberData $mobile_number_data): ?MobileNumber
+    {
+        return MobileNumber::query()
+                           ->hasPhoneNumber(
+                               $mobile_number_data->country_code,
+                               $mobile_number_data->number,
+                               $mobile_number_data->user_type
+                           )
+                           ->first();
+    }
 }
