@@ -3,22 +3,26 @@ title: Installation & Setup
 sidebar_position: 1.2
 ---
 
+## Installation
+
 You can install the package via composer:
 
 ```bash
 composer require javaabu/mobile-verification
 ```
 
-# Publishing the config file
-
-Publishing the config file is optional:
-
+Publishing Config
 ```bash
 php artisan vendor:publish --provider="Javaabu\MobileVerification\MobileVerificationServiceProvider" --tag="mobile-verification-config"
 ```
 
-This is the default content of the config file:
+Publishing Migrations
+```bash
+php artisan vendor:publish --provider="Javaabu\MobileVerification\MobileVerificationServiceProvider" --tag="mobile-verification-migrations"
+```
 
-```php
-// TODO
+Publishing Translations
+```bash
+php artisan vendor:publish --provider="Javaabu\MobileVerification\MobileVerificationServiceProvider" --tag="mobile-verification-translations"
+```
 ```

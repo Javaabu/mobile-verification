@@ -30,3 +30,8 @@ Route::post('/request-top', [MobileNumberUpdateTokenController::class, 'requestO
 Route::post('/update-mobile-number', [MobileNumberUpdateController::class, 'update'])
     ->name('update-mobile-number')
     ->middleware('auth:web');
+
+Route::post('/api-login', [LoginController::class, 'login'])->name('login');
+Route::get('/api-protected', function () {
+    return "Api Protected Route";
+})->name('api-protected')->middleware('auth:web');
