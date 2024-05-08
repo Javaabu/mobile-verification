@@ -1,5 +1,5 @@
 ---
-title: How to check mobile number availability
+title: Enabling Features
 ---
 
 ## Enable Features
