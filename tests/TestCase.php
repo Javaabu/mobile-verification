@@ -2,6 +2,7 @@
 
 namespace Javaabu\MobileVerification\Tests;
 
+use Illuminate\Support\Traits\Dumpable;
 use Biscolab\ReCaptcha\Facades\ReCaptcha;
 use Illuminate\Support\Facades\Notification;
 use Javaabu\MobileVerification\MobileVerificationServiceProvider;
@@ -11,6 +12,8 @@ use Orchestra\Testbench\TestCase as BaseTestCase;
 
 abstract class TestCase extends BaseTestCase
 {
+    use Dumpable;
+
     public function setUp(): void
     {
         parent::setUp();

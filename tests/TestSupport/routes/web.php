@@ -5,6 +5,7 @@ use Javaabu\MobileVerification\Tests\TestSupport\Controllers\LoginController;
 use Javaabu\MobileVerification\Tests\TestSupport\Controllers\RegisterController;
 use Javaabu\MobileVerification\Tests\TestSupport\Controllers\SendTokenController;
 use Javaabu\MobileVerification\Tests\TestSupport\Controllers\VerifyTokenController;
+use Javaabu\MobileVerification\Tests\TestSupport\Controllers\MobileNumberUpdateController;
 use Javaabu\MobileVerification\Tests\TestSupport\Controllers\ValidateMobileNumbersController;
 use Javaabu\MobileVerification\Tests\TestSupport\Controllers\VerifyMobileNumberAvailabilityController;
 
@@ -21,4 +22,8 @@ Route::post('/login', [LoginController::class, 'login'])->name('login');
 Route::get('/protected', function () {
     return "Protected Route";
 })->name('protected')->middleware('auth:web');
+
+Route::post('/update-mobile-number', [MobileNumberUpdateController::class, 'update'])
+    ->name('update-mobile-number')
+    ->middleware('auth:web');
 

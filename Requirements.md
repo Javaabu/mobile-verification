@@ -28,29 +28,29 @@
 - Need to know user type
 
 ### Workflow
-- [ ] A guest user should have an OTP
-- [ ] The user will enter the OTP
-- [ ] The system will verify the OTP and log in the user
+- [x] A guest user should have an OTP
+- [x] The user will enter the OTP
+- [x] The system will verify the OTP and log in the user
 
 ## Mobile Number Update
-- User needs to be logged in to update mobile number
-- Request for an OTP to be sent to the new mobile number
-- You cannot request for an OTP for an already existing number(with a user_id)
-- When you request for an OTP, a new record will be created but will not be associated with any user_id, so that another user can take the number with verification
+- [x] User needs to be logged in to update mobile number
+- [ ] User can request for an OTP to be sent to the new mobile number
+- [ ] You cannot request for an OTP for an already existing number(with a user_id)
+- [ ] When you request for an OTP, a new record will be created but will not be associated with any user_id, so that another user can take the number with verification
 
 ### Workflow
 - [ ] Request for OTP
 - [ ] Verify OTP, after verification the record will be associated with the user_id
 
 Sending OTP
-- Send to any number
-- Send to a number that is not associated with any user_id
-- Send to a number that is associated with a user_id
+- [ ] Send to any number
+- [ ] Send to a number that is not associated with any user_id
+- [ ] Send to a number that is associated with a user_id
 
 Verifying OTP
-- Verify OTP for a number that is not associated with any user_id
-- Verify OTP for a number that is associated with a user_id
-- Verify OTP for any number
+- [ ] Verify OTP for a number that is not associated with any user_id
+- [ ] Verify OTP for a number that is associated with a user_id
+- [ ] Verify OTP for any number
 
 - In controller
 - - one trait to send otp
@@ -74,7 +74,8 @@ SendMobileNumberForgotPasswordLink
 
 ## Controllers
 - [x] Validating Mobile Number: ValidateMobileNumberControllerTest.php // This is for the mobile number availability check
-- [ ] Registering with mobile number: RegisterControllerTest.php
+- [x] Registering with mobile number: RegisterControllerTest.php
 - [ ] Updating mobile number: MobileNumberUpdateControllerTest.php
-- [ ] Sending OTP: SendTokenControllerTest.php
-- [ ] Verifying OTP: VerifyTokenControllerTest.php
+- [x] Sending OTP: SendTokenControllerTest.php
+- [ ] Verifying OTP: TokenValidationControllerTest.php
+- [x] Login In: TokenLoginControllerTest.php

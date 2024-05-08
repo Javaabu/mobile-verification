@@ -14,6 +14,7 @@ return [
         'token' => [
             'invalid' => 'The token is invalid.',
             'expired' => 'The token has expired.',
+            'locked' => 'The number is locked due to too many attempts.'
         ]
     ]
 ];

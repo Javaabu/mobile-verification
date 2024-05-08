@@ -23,7 +23,7 @@ class IsValidToken implements ValidationRule
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
         if (! $this->number) {
-            return;
+            $fail(trans('mobile-verification::strings.validation.number.required'));
         }
 
         $mobile_number = MobileNumber::query()
@@ -33,6 +33,10 @@ class IsValidToken implements ValidationRule
         if (! $mobile_number) {
             $fail(trans('mobile-verification::strings.validation.token.invalid'));
             return;
+        }
+
+        if ($mobile_number->is_locked) {
+            $fail(trans('mobile-verification::strings.validation.token.locked'));
         }
 
         if ($mobile_number->is_token_expired) {
