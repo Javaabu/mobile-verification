@@ -2,8 +2,8 @@
 
 namespace Javaabu\MobileVerification\Tests\TestSupport\Models;
 
-use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Javaabu\MobileVerification\Contracts\HasMobileNumber;
 use Javaabu\MobileVerification\Tests\TestSupport\Factories\UserFactory;

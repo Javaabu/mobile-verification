@@ -3,8 +3,8 @@
 namespace Javaabu\MobileVerification\Tests\Feature\Controllers\Web;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Javaabu\MobileVerification\Tests\TestCase;
 use Javaabu\MobileVerification\Models\MobileNumber;
+use Javaabu\MobileVerification\Tests\TestCase;
 
 class TokenValidationControllerTest extends TestCase
 {
@@ -18,7 +18,7 @@ class TokenValidationControllerTest extends TestCase
         $mobile_number = MobileNumber::factory()
                                      ->create([
                                          'country_code' => '960',
-                                         'number'       => '7528222',
+                                         'number' => '7528222',
                                          'user_type' => 'user',
                                      ]);
 
@@ -26,7 +26,7 @@ class TokenValidationControllerTest extends TestCase
 
         $this->post('/verify', [
             'number' => '7528222',
-            'token'  => $token,
+            'token' => $token,
         ])
              ->assertSessionHasNoErrors()
              ->assertRedirect();
@@ -39,7 +39,7 @@ class TokenValidationControllerTest extends TestCase
         $mobile_number = MobileNumber::factory()
                                      ->create([
                                          'country_code' => '960',
-                                         'number'       => '7528222',
+                                         'number' => '7528222',
                                          'user_type' => 'user',
                                      ]);
 
@@ -49,7 +49,7 @@ class TokenValidationControllerTest extends TestCase
 
         $this->post('/verify', [
             'number' => '7528222',
-            'token'  => $token,
+            'token' => $token,
         ])
              ->assertSessionHasErrors('token');
     }
@@ -61,7 +61,7 @@ class TokenValidationControllerTest extends TestCase
         $mobile_number = MobileNumber::factory()
                                      ->create([
                                          'country_code' => '960',
-                                         'number'       => '7528222',
+                                         'number' => '7528222',
                                          'user_type' => 'user',
                                      ]);
 
@@ -71,7 +71,7 @@ class TokenValidationControllerTest extends TestCase
 
         $this->post('/verify', [
             'number' => '7528222',
-            'token'  => '545454545',
+            'token' => '545454545',
         ])
              ->assertSessionHasErrors('token');
     }

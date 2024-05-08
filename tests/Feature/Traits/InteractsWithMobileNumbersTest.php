@@ -2,9 +2,7 @@
 
 namespace Javaabu\MobileVerification\Tests\Feature\Traits;
 
-use Javaabu\Activitylog\Models\Activity;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Support\Facades\Hash;
 use Javaabu\MobileVerification\Models\MobileNumber;
 use Javaabu\MobileVerification\Tests\TestCase;
 use Javaabu\MobileVerification\Tests\TestSupport\Models\User;
@@ -20,41 +18,41 @@ class InteractsWithMobileNumbersTest extends TestCase
 
         $user = User::factory()->create();
         $mobile_number = MobileNumber::factory()->create([
-            'number'       => '7528222',
+            'number' => '7528222',
             'country_code' => '960',
-            'user_type'    => 'user',
-            'user_id'      => $user->id,
+            'user_type' => 'user',
+            'user_id' => $user->id,
         ]);
 
         $new_mobile_number = MobileNumber::factory()->create([
-            'number'       => '7326655',
+            'number' => '7326655',
             'country_code' => '960',
-            'user_type'    => 'user',
-            'user_id'      => null,
+            'user_type' => 'user',
+            'user_id' => null,
         ]);
 
         $this->actingAs($user);
 
         $this->post(route('update-mobile-number'), [
             'number' => '7326655',
-            'token'  => $new_mobile_number->generateToken(),
+            'token' => $new_mobile_number->generateToken(),
         ])
              ->assertSessionHasNoErrors()
              ->assertRedirect();
 
         $this->assertDatabaseHas('mobile_numbers', [
-            'number'       => '7326655',
+            'number' => '7326655',
             'country_code' => '960',
-            'user_type'    => 'user',
-            'user_id'      => $user->id,
+            'user_type' => 'user',
+            'user_id' => $user->id,
         ]);
 
         $this->assertDatabaseHas('activity_log', [
             'description' => 'updated',
             'subject_type' => 'mobile_number',
-            'subject_id'  => $mobile_number->id,
+            'subject_id' => $mobile_number->id,
             'causer_type' => 'user',
-            'causer_id'   => $user->id,
+            'causer_id' => $user->id,
             'properties' => json_encode([
                 'attributes' => [
                     'user_id' => null,
@@ -62,15 +60,15 @@ class InteractsWithMobileNumbersTest extends TestCase
                 'old' => [
                     'user_id' => $user->id,
                 ],
-            ])
+            ]),
         ]);
 
         $this->assertDatabaseHas('activity_log', [
             'description' => 'updated',
             'subject_type' => 'mobile_number',
-            'subject_id'  => $new_mobile_number->id,
+            'subject_id' => $new_mobile_number->id,
             'causer_type' => 'user',
-            'causer_id'   => $user->id,
+            'causer_id' => $user->id,
             'properties' => json_encode([
                 'attributes' => [
                     'user_id' => $user->id,
@@ -78,7 +76,7 @@ class InteractsWithMobileNumbersTest extends TestCase
                 'old' => [
                     'user_id' => null,
                 ],
-            ])
+            ]),
         ]);
     }
 
@@ -87,10 +85,10 @@ class InteractsWithMobileNumbersTest extends TestCase
     {
         $user = User::factory()->create();
         $mobile_number = MobileNumber::factory()->create([
-            'number'       => '7528222',
+            'number' => '7528222',
             'country_code' => '960',
-            'user_type'    => 'user',
-            'user_id'      => $user->id,
+            'user_type' => 'user',
+            'user_id' => $user->id,
         ]);
 
         $this->assertDatabaseCount('mobile_numbers', 1);

@@ -4,7 +4,6 @@ namespace Javaabu\MobileVerification\Models;
 
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
-use Javaabu\Activitylog\Traits\LogsActivity;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
@@ -12,6 +11,7 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
+use Javaabu\Activitylog\Traits\LogsActivity;
 use Javaabu\MobileVerification\Contracts\MobileNumber as MobileNumberContract;
 use Javaabu\MobileVerification\Factories\MobileNumberFactory;
 use Javaabu\MobileVerification\MobileVerification;
