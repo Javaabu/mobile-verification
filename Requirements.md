@@ -34,13 +34,13 @@
 
 ## Mobile Number Update
 - [x] User needs to be logged in to update mobile number
-- [ ] User can request for an OTP to be sent to the new mobile number
-- [ ] You cannot request for an OTP for an already existing number(with a user_id)
-- [ ] When you request for an OTP, a new record will be created but will not be associated with any user_id, so that another user can take the number with verification
+- [x] User can request for an OTP to be sent to the new mobile number
+- [x] You cannot request for an OTP for an already existing number(with a user_id)
+- [x] When you request for an OTP, a new record will be created but will not be associated with any user_id, so that another user can take the number with verification
 
 ### Workflow
-- [ ] Request for OTP
-- [ ] Verify OTP, after verification the record will be associated with the user_id
+- [x] Request for OTP
+- [x] Verify OTP, after verification the record will be associated with the user_id
 
 Sending OTP
 - [ ] Send to any number
@@ -75,7 +75,7 @@ SendMobileNumberForgotPasswordLink
 ## Controllers
 - [x] Validating Mobile Number: ValidateMobileNumberControllerTest.php // This is for the mobile number availability check
 - [x] Registering with mobile number: RegisterControllerTest.php
-- [ ] Updating mobile number: MobileNumberUpdateControllerTest.php
+- [x] Updating mobile number: MobileNumberUpdateControllerTest.php
 - [x] Sending OTP: SendTokenControllerTest.php
 - [ ] Verifying OTP: TokenValidationControllerTest.php
 - [x] Login In: TokenLoginControllerTest.php

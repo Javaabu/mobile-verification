@@ -21,17 +21,16 @@ use Javaabu\MobileVerification\Support\Services\MobileNumberService;
 use Javaabu\MobileVerification\Notifications\MobileNumberVerificationToken;
 use Javaabu\MobileVerification\Support\Actions\AssociateUserWithMobileNumberAction;
 
-class MobileNumberUpdateController
+class MobileNumberUpdateTokenController
 {
     protected string $user_class = User::class;
     protected string $guard = 'web';
 
-    public function update(Request $request): JsonResponse|RedirectResponse
+    public function requestOtp(Request $request): JsonResponse|RedirectResponse
     {
         $validator = Validator::make($request->all(), [
             'country_code' => ['nullable', 'numeric', 'in:' . Countries::getCountryCodesString()],
             'number'       => ['required', new IsValidMobileNumber($this->getUserType(), can_be_taken_by_user: false)],
-            'token'        => ['required', new IsValidToken($this->getUserType(), $request->input('number'))],
         ]);
 
         if ($validator->fails()) {
@@ -44,34 +43,33 @@ class MobileNumberUpdateController
             'number'     => $data['number'],
             'country_code' => $data['country_code'] ?? null,
             'user_type'  => $this->getUserType(),
+            'user_id'    => null,
         ]);
 
-        /* @var HasMobileNumber $user */
-        $user = Auth::guard($this->guard)->user();
-        $previous_number = $user->phone;
-
-        $mobile_number = (new MobileNumberService)->getMobileNumber($mobile_number_data);
-        (new MobileNumberService)->updateMobileNumber(
-            $mobile_number,
-            $previous_number,
-            $user
-        );
-
-        return $this->redirectUrl($request);
+        $mobile_number = (new MobileNumberService)->firstOrCreate($mobile_number_data);
+        $token = $mobile_number->generateToken();
+        $this->sendSmsNotification($token, $mobile_number);
+        return $this->redirectAfterOtpUrl($request);
     }
 
-    public function redirectUrl(Request $request): RedirectResponse|JsonResponse
+    public function redirectAfterOtpUrl(Request $request): RedirectResponse|JsonResponse
     {
         if ($request->expectsJson()) {
-            return response()->json(['message' => __('Mobile number updated successfully.')]);
+            return response()->json(['message' => __('A verification code has been sent to your mobile number. Please enter the code to verify your mobile number.')]);
         }
 
-        return redirect()->back()->with('success', __('Mobile number updated successfully.'));
+        return redirect()->back()->with('success', __('A verification code has been sent to your mobile number. Please enter the code to verify your mobile number.'));
+    }
+
+    protected function sendSmsNotification($token, $phone): void
+    {
+        $user_name = $phone->user ? $phone->user->name : '';
+        $phone->notify(new MobileNumberVerificationToken($token, $user_name));
     }
 
     public function getUserType(): string
     {
         return (new $this->user_class)->getMorphClass();
     }
-}
 
+}

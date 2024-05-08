@@ -10,6 +10,7 @@ use Javaabu\MobileVerification\Rules\IsValidToken;
 use Javaabu\MobileVerification\Support\Enums\Countries;
 use Javaabu\MobileVerification\Rules\IsValidMobileNumber;
 use Javaabu\MobileVerification\Tests\TestSupport\Models\User;
+use Javaabu\MobileVerification\Support\DataObjects\MobileNumberData;
 use Javaabu\MobileVerification\Support\Actions\AssociateUserWithMobileNumberAction;
 
 trait CanRegisterUsingToken
@@ -27,9 +28,14 @@ trait CanRegisterUsingToken
 
         $user = $this->registerUser($data);
 
-        $country_code = $data['country_code'] ?? null;
-        $phone_number = $data['number'] ?? null;
-        $mobileNumber = (new AssociateUserWithMobileNumberAction($this->user_class, $country_code))->handle($user->id, $phone_number);
+        $mobile_number_data = MobileNumberData::fromRequestData([
+            'number'     => $data['number'],
+            'country_code' => $data['country_code'] ?? null,
+            'user_type'  => $this->user_class,
+            'user_id'    => $user->id,
+        ]);
+
+        $mobileNumber = (new AssociateUserWithMobileNumberAction)->handle($mobile_number_data);
 
         return $this->redirectAfterRegistration();
     }
