@@ -4,6 +4,7 @@ namespace Javaabu\MobileVerification\Tests\Feature\Controllers\Web;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Javaabu\MobileVerification\Tests\TestCase;
+use Javaabu\MobileVerification\Models\MobileNumber;
 
 class TokenValidationControllerTest extends TestCase
 {
@@ -13,22 +14,67 @@ class TokenValidationControllerTest extends TestCase
     /** @test */
     public function it_can_validate_the_token(): void
     {
-        $this->assertFalse(true);
+        $this->withoutExceptionHandling();
+        $mobile_number = MobileNumber::factory()
+                                     ->create([
+                                         'country_code' => '960',
+                                         'number'       => '7528222',
+                                         'user_type' => 'user',
+                                     ]);
+
+        $token = $mobile_number->generateToken();
+
+        $this->post('/verify', [
+            'number' => '7528222',
+            'token'  => $token,
+        ])
+             ->assertSessionHasNoErrors()
+             ->assertRedirect();
     }
 
     /** @test */
     public function it_can_validate_if_the_token_is_expired(): void
     {
-        $this->assertFalse(true);
+        $this->withoutExceptionHandling();
+        $mobile_number = MobileNumber::factory()
+                                     ->create([
+                                         'country_code' => '960',
+                                         'number'       => '7528222',
+                                         'user_type' => 'user',
+                                     ]);
+
+        $token = $mobile_number->generateToken();
+
+        $this->travelTo(now()->addMinutes(config('mobile-verification.token_validity') + 1));
+
+        $this->post('/verify', [
+            'number' => '7528222',
+            'token'  => $token,
+        ])
+             ->assertSessionHasErrors('token');
     }
 
     /** @test */
     public function it_can_validate_if_the_token_is_invalid(): void
     {
-        $this->assertFalse(true);
+        $this->withoutExceptionHandling();
+        $mobile_number = MobileNumber::factory()
+                                     ->create([
+                                         'country_code' => '960',
+                                         'number'       => '7528222',
+                                         'user_type' => 'user',
+                                     ]);
+
+        $mobile_number->generateToken();
+
+        $this->travelTo(now()->addMinutes(config('mobile-verification.token_validity') + 1));
+
+        $this->post('/verify', [
+            'number' => '7528222',
+            'token'  => '545454545',
+        ])
+             ->assertSessionHasErrors('token');
     }
 
-    /** @test */
-    // TODO: check etukuri and add all the token validation tests
 
 }

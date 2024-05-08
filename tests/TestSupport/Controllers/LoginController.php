@@ -64,7 +64,7 @@ class LoginController
 
         return [
             'country_code' => ['nullable', 'numeric', 'in:' . Countries::getCountryCodesString()],
-            'number' => ['required', new IsValidMobileNumber($this->user_class)],
+            'number' => ['required', new IsValidMobileNumber($this->getUserType(), can_be_taken_by_user: true)],
             'token' => ['required', 'numeric', new IsValidToken($this->getUserType(), $number)],
         ];
     }

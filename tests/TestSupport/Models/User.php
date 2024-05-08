@@ -2,6 +2,7 @@
 
 namespace Javaabu\MobileVerification\Tests\TestSupport\Models;
 
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Javaabu\MobileVerification\Contracts\HasMobileNumber;
@@ -12,6 +13,7 @@ class User extends Authenticatable implements HasMobileNumber
 {
     use InteractsWithMobileNumbers;
     use HasFactory;
+    use SoftDeletes;
 
     protected static function newFactory()
     {

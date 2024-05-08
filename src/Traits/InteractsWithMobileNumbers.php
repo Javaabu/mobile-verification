@@ -26,7 +26,7 @@ trait InteractsWithMobileNumbers
     {
         static::deleted(function (HasMobileNumber $user) {
             if (! method_exists($user, 'isForceDeleting') || $user->isForceDeleting()) {
-                $user->clearPhones();
+                $user->phone->delete();
             }
         });
     }

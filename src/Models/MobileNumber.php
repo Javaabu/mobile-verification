@@ -4,6 +4,7 @@ namespace Javaabu\MobileVerification\Models;
 
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
+use Javaabu\Activitylog\Traits\LogsActivity;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
@@ -21,6 +22,7 @@ class MobileNumber extends Model implements MobileNumberContract
     use Notifiable;
     use HasSmsNumber;
     use HasFactory;
+    use LogsActivity;
 
     /**
      * The attributes that are mass assignable.
@@ -59,6 +61,10 @@ class MobileNumber extends Model implements MobileNumberContract
     protected $appends = [
         'formatted_number',
         'token_expires_in',
+    ];
+
+    protected static array $logExceptAttributes = [
+        'token',
     ];
 
     /**

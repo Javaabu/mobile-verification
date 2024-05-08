@@ -2,6 +2,7 @@
 
 namespace Javaabu\MobileVerification\Tests\TestSupport\Providers;
 
+use Javaabu\MobileVerification\Models\MobileNumber;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Support\ServiceProvider;
 use Javaabu\MobileVerification\Tests\TestSupport\Models\User;
@@ -19,7 +20,8 @@ class TestServiceProvider extends ServiceProvider
 
         // morph map
         Relation::morphMap([
-            'user' => User::class,
+            'user'          => User::class,
+            'mobile_number' => MobileNumber::class,
         ]);
     }
 
