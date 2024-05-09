@@ -7,6 +7,8 @@ use Javaabu\MobileVerification\Support\Enums\Countries;
 
 trait CanValidateMobileNumber
 {
+    use CanGetUserType;
+
     public function getMobileNumberValidationRules(array $request_data): array
     {
         return [
@@ -22,7 +24,7 @@ trait CanValidateMobileNumber
             'number' => [
                 'required',
                 new IsValidMobileNumber(
-                    $this->getUserClass(),
+                    $this->getUserType(),
                     data_get($request_data, 'country_code'),
                     false,
                 ),
@@ -35,14 +37,5 @@ trait CanValidateMobileNumber
         return [
             'number.required' => trans('mobile-verification::strings.validation.number.required', ['attribute' => 'number']),
         ];
-    }
-
-    public function getUserClass(): string
-    {
-        if (property_exists($this, 'user_class')) {
-            return $this->user_class;
-        }
-
-        return 'user';
     }
 }

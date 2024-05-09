@@ -29,7 +29,7 @@ trait CanSendVerificationCode
         }
 
         $mobile_number_data = MobileNumberData::fromRequestData(array_merge($request->all(), [
-            'user_type' => $this->user_class,
+            'user_type' => $this->getUserType(),
         ]));
 
         $mobile_number = (new MobileNumberService())->firstOrCreate($mobile_number_data);

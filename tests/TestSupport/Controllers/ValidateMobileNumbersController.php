@@ -2,11 +2,23 @@
 
 namespace Javaabu\MobileVerification\Tests\TestSupport\Controllers;
 
+use Illuminate\View\View;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Javaabu\MobileVerification\Traits\ValidatesMobileNumbers;
+use Javaabu\MobileVerification\Tests\TestSupport\Models\User;
+use Javaabu\MobileVerification\Http\Controllers\MobileNumberVerificationController as BaseMobileNumberVerificationController;
 
-class ValidateMobileNumbersController
+class ValidateMobileNumbersController extends BaseMobileNumberVerificationController
 {
-    use ValidatesMobileNumbers;
+    protected string $user_class = User::class;
 
-    protected string $user_class = 'user';
+    public function redirectUrl(): RedirectResponse|JsonResponse|View
+    {
+        if (request()->expectsJson()) {
+            return response()->json(['message' => __('The mobile number is valid')]);
+        }
+
+        return redirect()->back();
+    }
 }

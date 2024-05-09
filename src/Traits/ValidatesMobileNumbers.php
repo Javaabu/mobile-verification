@@ -19,22 +19,18 @@ trait ValidatesMobileNumbers
         $validator = Validator::make($request->all(), $rules, $messages);
 
         if ($validator->fails()) {
-            if ($request->expectsJson()) {
-                return response()->json(['errors' => $validator->errors()], 422);
-            }
-
-            return redirect()->back()->withErrors($validator->errors())->withInput();
+            return $this->redirectUrlOnValidationError($request, $validator);
         }
 
         return $this->redirectUrl();
     }
 
-    public function redirectUrl(): RedirectResponse|JsonResponse
+    public function redirectUrlOnValidationError(Request $request, \Illuminate\Validation\Validator $validator): RedirectResponse|JsonResponse|View
     {
-        if (request()->expectsJson()) {
-            return response()->json(['message' => __('The mobile number is valid')]);
+        if ($request->expectsJson()) {
+            return response()->json(['errors' => $validator->errors()], 422);
         }
 
-        return redirect()->back();
+        return redirect()->back()->withErrors($validator->errors())->withInput();
     }
 }
