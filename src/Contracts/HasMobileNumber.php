@@ -149,26 +149,4 @@ interface HasMobileNumber extends SmsNotifiable
      * @return mixed
      */
     public function scopeHasPhone(Builder $query, string $search): Builder;
-
-    /**
-     * Get email verification url prefix
-     *
-     * @return string
-     */
-    public function phoneVerificationUrlPrefix(): string;
-
-    /**
-     * Get phone verification redirect url
-     *
-     * @return string
-     */
-    public function phoneVerificationRedirectUrl(): string;
-
-    /**
-     * Get the verification url
-     *
-     * @return string
-     */
-    public function phoneVerificationUrl(): string;
-
 }

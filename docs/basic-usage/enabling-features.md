@@ -1,6 +1,3 @@
----
-title: Enabling Features
----
 
 ## Enable Features
 

@@ -1,0 +1,11 @@
+{
+    "position": 1.4,
+    "label": "Enabling Mobile Verification Features",
+    "collapsible": true,
+    "collapsed": false,
+    "link": {
+        "type": "generated-index",
+        "slug": "/mobile-verification/_categories/enabling-mobile-verification-features",
+        "description": "How to enable each of the mobile verification features in your application."
+    }
+}
