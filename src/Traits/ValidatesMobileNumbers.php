@@ -2,6 +2,7 @@
 
 namespace Javaabu\MobileVerification\Traits;
 
+use Illuminate\View\View;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -11,7 +12,7 @@ trait ValidatesMobileNumbers
 {
     use CanValidateMobileNumber;
 
-    public function validate(Request $request): RedirectResponse|JsonResponse
+    public function validate(Request $request): RedirectResponse|JsonResponse|View
     {
         $rules = $this->getMobileNumberValidationRules($request->all());
         $messages = $this->getMobileNumberValidationErrorMessages();
