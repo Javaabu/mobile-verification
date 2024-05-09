@@ -15,6 +15,13 @@ use Illuminate\Support\Facades\Route;
 Route::post('validate', [App\Http\Controllers\MobileNumberVerificationController::class, 'validate'])->name('mobile-numbers.validate');
 ```
 
+And if you are not doing an API request, you can define the route from which the request is coming from.
+```php
+use Illuminate\Support\Facades\Route;
+
+Route::get('validate-form', [App\Http\Controllers\MobileNumberVerificationController::class, 'show'])->name('mobile-numbers.validate.show');
+```
+
 ## Step 2: Create the Controller
 Create a controller that extends the `Javaabu\MobileVerification\Http\Controllers\MobileNumberVerificationController` class. Below is an example of how you can create the controller in your application.
 
@@ -36,6 +43,11 @@ class MobileNumberVerificationController extends BaseMobileNumberVerificationCon
     public string $user_class = User::class;
     
     /*
+     * When not using an API request, define the view to be used for mobile number validation
+     */
+    public string $form_view = 'web.mobile-numbers.validate-form';
+    
+    /*
      * Define redirectUrl method to return a redirect response or a json response
      * */
     public function redirectUrl(): RedirectResponse|JsonResponse|View
@@ -54,6 +66,18 @@ You also have the option to override the `redirectUrlOnValidationError` method t
     public function redirectUrlOnValidationError(): RedirectResponse|JsonResponse|View
     {
         return back()->withErrors(['message' => __('The mobile number is invalid')]);
+    }
+```
+
+You can also override the view method used to render the view from which the request is coming from.
+
+```php
+    /*
+     * Define the view method to be used for mobile number validation
+     */
+    public function getView(): View
+    {
+        return view('web.mobile-numbers.validate-form', ['custom_value' => 'custom_value']);
     }
 ```
 
