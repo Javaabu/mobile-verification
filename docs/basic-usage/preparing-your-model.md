@@ -1,6 +1,6 @@
 ---
 title: Preparing Your Model
-sidebar_position: 1.6
+sidebar_position: 1.4
 ---
 
 ## Preparing Your Model

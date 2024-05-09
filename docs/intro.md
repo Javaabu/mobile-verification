@@ -11,6 +11,6 @@ The package itself does not register any routes, views, or controllers. Instead,
 
 Since the package is frontend-agnostic, it is meant to be paired with your own routes, user interface, and controllers. We will discuss exactly how to create routes and controllers in the remainder of this documentation.
 
-## Whe Should I Use This Package?
+## When Should I Use This Package?
 You may be wondering when it is appropriate to use this package. This package implements authentication using mobile number verification. If you are looking to implement mobile number verification in your Laravel application, this package is for you. You may use this package to authenticate one or more types of users. This does not restrict you from using other authentication types for other types of users.
 
