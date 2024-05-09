@@ -24,8 +24,8 @@ class MobileNumberUpdateController
     {
         $validator = Validator::make($request->all(), [
             'country_code' => ['nullable', 'numeric', 'in:' . Countries::getCountryCodesString()],
-            'number' => ['required', new IsValidMobileNumber($this->getUserType(), can_be_taken_by_user: false)],
-            'token' => ['required', new IsValidToken($this->getUserType(), $request->input('number'))],
+            'number'       => ['required', new IsValidMobileNumber($this->getUserType(), can_be_taken_by_user: false)],
+            'token'        => ['required', new IsValidToken($this->getUserType(), $request->input('number'))],
         ]);
 
         if ($validator->fails()) {
@@ -35,9 +35,9 @@ class MobileNumberUpdateController
         $data = $validator->validated();
 
         $mobile_number_data = MobileNumberData::fromRequestData([
-            'number' => $data['number'],
+            'number'       => $data['number'],
             'country_code' => $data['country_code'] ?? null,
-            'user_type' => $this->getUserType(),
+            'user_type'    => $this->getUserType(),
         ]);
 
         /* @var HasMobileNumber $user */
