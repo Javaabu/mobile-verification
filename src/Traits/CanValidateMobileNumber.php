@@ -5,8 +5,7 @@ namespace Javaabu\MobileVerification\Traits;
 use Javaabu\MobileVerification\Rules\IsValidMobileNumber;
 use Javaabu\MobileVerification\Support\Enums\Countries;
 
-trait 
-CanValidateMobileNumber
+trait CanValidateMobileNumber
 {
     public function getMobileNumberValidationRules(array $request_data): array
     {
