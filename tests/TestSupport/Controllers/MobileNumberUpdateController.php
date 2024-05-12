@@ -14,8 +14,9 @@ use Javaabu\MobileVerification\Support\DataObjects\MobileNumberData;
 use Javaabu\MobileVerification\Support\Enums\Countries;
 use Javaabu\MobileVerification\Support\Services\MobileNumberService;
 use Javaabu\MobileVerification\Tests\TestSupport\Models\User;
+use Javaabu\MobileVerification\Http\Controllers\UpdateMobileNumberController;
 
-class MobileNumberUpdateController
+class MobileNumberUpdateController extends UpdateMobileNumberController
 {
     protected string $user_class = User::class;
     protected string $guard = 'web';

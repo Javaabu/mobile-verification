@@ -23,7 +23,7 @@
 - [x] The user will enter the OTP (and any other details required)
 - [x] The system will verify the OTP (and the developer will verify the other details and register the user)
 
-## Mobile Number Login
+## Mobile Number Login [DOCUMENTED]
 - Should not be logged in
 - Need to know user type
 

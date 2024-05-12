@@ -9,7 +9,7 @@ You can use this package to log in users with their mobile numbers. Before divin
 ## Login Process
 The login process with mobile number works as follows:
 **Note:** The process assumes that the user has an OTP. To see how to request for an OTP, see [How to Request for OTP](how-to-request-otp.md).
-1. The user then enters the OTP.
+1. The user enters the OTP.
 2. The package verifies the OTP.
 3. The user is then authenticated and logged in.
 

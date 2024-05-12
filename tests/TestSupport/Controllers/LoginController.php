@@ -12,8 +12,9 @@ class LoginController extends BaseLoginController
     protected string $user_class = User::class;
     protected string $guard = 'web';
 
+//    public string $form_view = 'web.mobile-numbers.login-form';
 
-    public function redirectAfterLogin(): RedirectResponse | JsonResponse
+    public function redirectUrl(): RedirectResponse | JsonResponse
     {
         if (request()->wantsJson()) {
             return response()->json(['message' => 'User logged in successfully']);

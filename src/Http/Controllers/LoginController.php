@@ -46,7 +46,7 @@ abstract class LoginController
         Auth::guard($this->guard)->login($mobile_number->user, true);
         $request->session()->regenerate();
 
-        return $this->redirectAfterLogin();
+        return $this->redirectUrl();
     }
 
 
@@ -59,7 +59,7 @@ abstract class LoginController
         return redirect()->back()->withErrors($validator->errors())->withInput();
     }
 
-    public function redirectAfterLogin(): RedirectResponse|JsonResponse
+    public function redirectUrl(): RedirectResponse|JsonResponse
     {
         if (request()->wantsJson()) {
             return response()->json(['message' => 'User logged in successfully']);

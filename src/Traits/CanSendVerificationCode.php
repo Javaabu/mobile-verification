@@ -46,7 +46,7 @@ trait CanSendVerificationCode
         $phone->notify(new MobileNumberVerificationToken($token, $user_name));
     }
 
-    public function redirectUrl(Request $request): RedirectResponse|JsonResponse
+    public function redirectUrl(Request $request): RedirectResponse|JsonResponse|View
     {
         if ($request->expectsJson()) {
             return response()->json(['message' => __('A verification code has been sent to your mobile number. Please enter the code to verify your mobile number.')]);

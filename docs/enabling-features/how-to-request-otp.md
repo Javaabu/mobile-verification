@@ -7,6 +7,7 @@ sidebar_position: 1.6
 When you are using this package you may need to request an OTP for a user. Below are times when you would need to request an OTP:
 1. When a user is registering with their mobile number.
 2. When a user is logging in with their mobile number.
+3. When a user is updating their mobile number.
 
 ## OTP Request Process
 Before diving into the steps, let's see how the OTP request process works. OTP Request process differs based on the use case. 
@@ -23,8 +24,14 @@ Below are the steps for the login process:
     3. If the mobile number is not registered, the package returns a message that the mobile number is not registered.
     4. If the mobile number is registered, the package sends an OTP to the mobile number.
 
+Below are the steps for the update process:
+1. An authenticated user sends a request to the application with their new mobile number.
+2. The package checks if the mobile number is already registered.
+    3. If the mobile number is already registered, the package returns a message that the mobile number is already registered.
+    4. If the mobile number is not registered, the package sends an OTP to the new mobile number.
+
 ## Step 1: Define the Routes
-Define the routes in your application. Below is an example of how you can define the routes in your application.
+Define the routes in your application. Below is an example of how you can define the routes in your application. Remember to auth protect the route if you are requesting an OTP to update the mobile number.
 
 ```php
 use Illuminate\Support\Facades\Route;
