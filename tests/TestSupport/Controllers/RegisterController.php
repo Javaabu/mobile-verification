@@ -6,12 +6,13 @@ use Javaabu\MobileVerification\Contracts\HasMobileNumber;
 use Javaabu\MobileVerification\Contracts\IsRegistrationController;
 use Javaabu\MobileVerification\Tests\TestSupport\Models\User;
 use Javaabu\MobileVerification\Traits\CanRegisterUsingToken;
+use Javaabu\MobileVerification\Http\Controllers\RegistrationController;
 
-class RegisterController implements IsRegistrationController
+class RegisterController extends RegistrationController implements IsRegistrationController
 {
-    use CanRegisterUsingToken;
+    protected string $user_class = User::class;
 
-    protected string $user_class = 'user';
+    protected string $user_guard = 'web';
 
     public function registerUser(array $data): HasMobileNumber
     {
@@ -23,4 +24,11 @@ class RegisterController implements IsRegistrationController
         return $user;
     }
 
+    public function getUserDataValidationRules(array $request_data): array
+    {
+        return [
+            'name' => ['required'],
+            'email' => ['required', 'email'],
+        ];
+    }
 }

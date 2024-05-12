@@ -4,7 +4,7 @@ namespace Javaabu\MobileVerification\Traits;
 
 use Javaabu\Helpers\Exceptions\InvalidOperationException;
 
-trait CanGetUserType
+trait HasUserType
 {
     public function getUserType(): string
     {

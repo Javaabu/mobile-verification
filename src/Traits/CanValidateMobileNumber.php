@@ -7,7 +7,7 @@ use Javaabu\MobileVerification\Support\Enums\Countries;
 
 trait CanValidateMobileNumber
 {
-    use CanGetUserType;
+    use HasUserType;
 
     public function getMobileNumberValidationRules(array $request_data): array
     {

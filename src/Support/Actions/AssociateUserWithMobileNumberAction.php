@@ -3,6 +3,7 @@
 namespace Javaabu\MobileVerification\Support\Actions;
 
 use Javaabu\MobileVerification\Models\MobileNumber;
+use Javaabu\Helpers\Exceptions\InvalidOperationException;
 use Javaabu\MobileVerification\Support\DataObjects\MobileNumberData;
 
 class AssociateUserWithMobileNumberAction
@@ -14,7 +15,7 @@ class AssociateUserWithMobileNumberAction
                                     ->first();
 
         if (! $mobileNumber) {
-            throw new \Exception(__('mobile-verification::strings.validation.number.exists', ['attribute' => 'number']));
+            throw new InvalidOperationException(__('mobile-verification::strings.validation.number.exists', ['attribute' => 'number']));
         }
 
         $mobileNumber->user_id = $mobile_number_data->user_id;

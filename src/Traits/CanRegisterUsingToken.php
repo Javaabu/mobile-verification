@@ -8,12 +8,16 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Javaabu\MobileVerification\Rules\IsValidMobileNumber;
 use Javaabu\MobileVerification\Rules\IsValidToken;
+use Javaabu\MobileVerification\Contracts\HasMobileNumber;
 use Javaabu\MobileVerification\Support\Actions\AssociateUserWithMobileNumberAction;
 use Javaabu\MobileVerification\Support\DataObjects\MobileNumberData;
 use Javaabu\MobileVerification\Support\Enums\Countries;
 
 trait CanRegisterUsingToken
 {
+    use HasUserGuard;
+    use HasUserType;
+
     public function register(Request $request): RedirectResponse | JsonResponse
     {
         $validator = $this->validate($request->all());
@@ -30,13 +34,21 @@ trait CanRegisterUsingToken
         $mobile_number_data = MobileNumberData::fromRequestData([
             'number' => $data['number'],
             'country_code' => $data['country_code'] ?? null,
-            'user_type' => $this->user_class,
+            'user_type' => $this->getUserType(),
             'user_id' => $user->id,
         ]);
 
         $mobileNumber = (new AssociateUserWithMobileNumberAction())->handle($mobile_number_data);
 
+        $this->authenticateUser($user);
+
         return $this->redirectAfterRegistration();
+    }
+
+    protected function authenticateUser(HasMobileNumber $user): void
+    {
+        auth($this->getUserGuard())->login($user);
+        session()->regenerate();
     }
 
     protected function validate(array $request_data)
@@ -61,12 +73,14 @@ trait CanRegisterUsingToken
     {
         $number = $request_data['number'] ?? null;
 
-        return [
+        $token_validation_rules = [
             'country_code' => ['nullable', 'numeric', 'in:' . Countries::getCountryCodesString()],
-            'number' => ['required', new IsValidMobileNumber($this->user_class, can_be_taken_by_user: false, can_send_otp: true)],
-            'token' => ['required', 'numeric', new IsValidToken($this->user_class, $number)],
-            'name' => ['required'],
-            'email' => ['required', 'email'],
+            'number' => ['required', new IsValidMobileNumber($this->getUserType(), can_be_taken_by_user: false, can_send_otp: true)],
+            'token' => ['required', 'numeric', new IsValidToken($this->getUserType(), $number)],
         ];
+
+        $user_data_validation_rules = $this->getUserDataValidationRules($request_data);
+
+        return array_merge($token_validation_rules, $user_data_validation_rules);
     }
 }
