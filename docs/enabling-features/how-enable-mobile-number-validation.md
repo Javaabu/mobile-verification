@@ -63,7 +63,7 @@ You also have the option to override the `redirectUrlOnValidationError` method t
     /*
      * Define redirectUrlOnValidationError method to return a redirect response or a json response
      * */
-    public function redirectUrlOnValidationError(): RedirectResponse|JsonResponse|View
+    public function redirectUrlOnValidationError(Request $request, \Illuminate\Validation\Validator $validator): RedirectResponse|JsonResponse|View
     {
         return back()->withErrors(['message' => __('The mobile number is invalid')]);
     }

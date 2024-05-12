@@ -8,13 +8,10 @@ You can use this package to update a user's mobile number. Before diving into th
 
 ## Update Process
 The update process with mobile number works as follows:
-1. An authenticated user sends a request to the application with their new mobile number.
-2. The package checks if the mobile number is already registered.
-    3. If the mobile number is already registered, the package returns a message that the mobile number is already registered.
-    4. If the mobile number is not registered, the package sends an OTP to the new mobile number.
-5. The user then enters the OTP.
-6. The package verifies the OTP.
-7. The package then assigns the verified mobile number to the user and deletes the old mobile number record from the database.
+**Note:** The process assumes that the OTP has been sent to the user's mobile number. To see how to send an OTP, see [How to Request for OTP](how-to-request-otp.md). The process also assumes that the user is authenticated.
+1. The user then enters the OTP.
+2. The package verifies the OTP.
+3. The package then assigns the verified mobile number to the user and disassociates the previous mobile number from the user.
 
 ## Step 1: Define the Routes
 Define the routes in your application. Below is an example of how you can define the routes in your application.
@@ -22,7 +19,6 @@ Define the routes in your application. Below is an example of how you can define
 ```php
 use Illuminate\Support\Facades\Route;
 
-Route::post('update-mobile-number-otp', [App\Http\Controllers\UpdateMobileNumberController::class, 'requestOtp'])->name('mobile-numbers.update-mobile-number-otp');
 Route::post('update-mobile-number', [App\Http\Controllers\UpdateMobileNumberController::class, 'update'])->name('mobile-numbers.update-mobile-number');
 ```
 
@@ -31,8 +27,7 @@ And if you are not doing an API request, you can define the route from which the
 ```php
 use Illuminate\Support\Facades\Route;
 
-Route::get('update-mobile-number-otp-form', [App\Http\Controllers\UpdateMobileNumberController::class, 'showUpdateOtpRequestForm'])->name('mobile-numbers.update-mobile-number-otp.show');
-Route::get('update-mobile-number-form', [App\Http\Controllers\UpdateMobileNumberController::class, 'showUpdateForm'])->name('mobile-numbers.update-mobile-number.show');
+Route::get('update-mobile-number-form', [App\Http\Controllers\UpdateMobileNumberController::class, 'showUpdateForm'])->name('mobile-numbers.update-mobile-number-form');
 ```
 
 ## Step 2: Create the Controller

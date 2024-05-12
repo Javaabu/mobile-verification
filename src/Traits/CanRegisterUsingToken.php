@@ -42,7 +42,7 @@ trait CanRegisterUsingToken
 
         $this->authenticateUser($user);
 
-        return $this->redirectAfterRegistration();
+        return $this->redirectUrl();
     }
 
     protected function authenticateUser(HasMobileNumber $user): void
@@ -56,7 +56,7 @@ trait CanRegisterUsingToken
         return Validator::make($request_data, $this->getValidationRules($request_data));
     }
 
-    public function redirectAfterRegistration(): RedirectResponse | JsonResponse
+    public function redirectUrl(): RedirectResponse | JsonResponse
     {
         if (request()->wantsJson()) {
             return response()->json(['message' => 'User registered successfully']);
