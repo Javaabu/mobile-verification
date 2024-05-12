@@ -2,9 +2,8 @@
 
 namespace Javaabu\MobileVerification\Tests\TestSupport\Controllers;
 
-use Javaabu\MobileVerification\Tests\TestSupport\Models\User;
-use Javaabu\MobileVerification\Traits\CanSendVerificationCode;
 use Javaabu\MobileVerification\Http\Controllers\OTPController;
+use Javaabu\MobileVerification\Tests\TestSupport\Models\User;
 
 class SendTokenController extends OTPController
 {

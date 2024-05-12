@@ -14,6 +14,6 @@ trait HasFormView
         }
 
         throw new InvalidOperationException('The form view is not defined in the controller.');
-//        return 'mobile-verification::otp.form';
+        //        return 'mobile-verification::otp.form';
     }
 }
