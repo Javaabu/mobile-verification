@@ -8,6 +8,7 @@ You can use this package to update a user's mobile number. Before diving into th
 
 ## Update Process
 The update process with mobile number works as follows:
+
 **Note:** The process assumes that the OTP has been sent to the user's mobile number. To see how to send an OTP, see [How to Request for OTP](how-to-request-otp.md). The process also assumes that the user is authenticated.
 1. The user then enters the OTP.
 2. The package verifies the OTP.

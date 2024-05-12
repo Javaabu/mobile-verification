@@ -8,6 +8,7 @@ You can use this package to register users with their mobile numbers. Before div
 
 ## Registration Process
 The registration process with mobile number works as follows:
+
 **Note:** The process assumes that the OTP has been sent to the user's mobile number. To see how to send an OTP, see [How to Request for OTP](how-to-request-otp.md).
 1. The user then enters the OTP and any other details required for registration.
 2. The package verifies the OTP.
