@@ -1,24 +1,21 @@
 <?php
 
-
 namespace Javaabu\MobileVerification\Http\Controllers;
 
-
-use Illuminate\View\View;
-use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
-use Javaabu\MobileVerification\Traits\HasFormView;
-use Javaabu\MobileVerification\Traits\HasUserType;
-use Javaabu\MobileVerification\Rules\IsValidToken;
-use Javaabu\MobileVerification\Traits\HasUserGuard;
-use Javaabu\MobileVerification\Support\Enums\Countries;
+use Illuminate\View\View;
 use Javaabu\MobileVerification\Rules\IsValidMobileNumber;
-use Javaabu\MobileVerification\Traits\CanRegisterUsingToken;
+use Javaabu\MobileVerification\Rules\IsValidToken;
 use Javaabu\MobileVerification\Support\DataObjects\MobileNumberData;
+use Javaabu\MobileVerification\Support\Enums\Countries;
 use Javaabu\MobileVerification\Support\Services\MobileNumberService;
+use Javaabu\MobileVerification\Traits\HasFormView;
+use Javaabu\MobileVerification\Traits\HasUserGuard;
+use Javaabu\MobileVerification\Traits\HasUserType;
 
 abstract class LoginController
 {
@@ -39,8 +36,8 @@ abstract class LoginController
 
         $mobile_number_data = MobileNumberData::fromRequestData([
             'country_code' => $data['country_code'] ?? null,
-            'number'       => $data['number'],
-            'user_type'    => $this->getUserType(),
+            'number' => $data['number'],
+            'user_type' => $this->getUserType(),
         ]);
 
         $mobile_number = (new MobileNumberService())->getMobileNumber($mobile_number_data);
@@ -82,8 +79,8 @@ abstract class LoginController
 
         return [
             'country_code' => ['nullable', 'numeric', 'in:' . Countries::getCountryCodesString()],
-            'number'       => ['required', new IsValidMobileNumber($this->getUserType(), can_be_taken_by_user: true)],
-            'token'        => ['required', 'numeric', new IsValidToken($this->getUserType(), $number)],
+            'number' => ['required', new IsValidMobileNumber($this->getUserType(), can_be_taken_by_user: true)],
+            'token' => ['required', 'numeric', new IsValidToken($this->getUserType(), $number)],
         ];
     }
 
