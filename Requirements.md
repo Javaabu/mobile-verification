@@ -11,7 +11,7 @@
 - [x] If the mobile number is already registered, the system will return a message that the mobile number is already registered
 - [x] If the mobile number is not registered, the system will return a message that the mobile number is available
 
-## Registration With Mobile Number 
+## Registration With Mobile Number [DOCUMENTED]
 - Should not be logged in
 - Need to know user type 
 
