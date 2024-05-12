@@ -12,7 +12,7 @@ class LoginController extends BaseLoginController
     protected string $user_class = User::class;
     protected string $guard = 'web';
 
-//    public string $form_view = 'web.mobile-numbers.login-form';
+    //    public string $form_view = 'web.mobile-numbers.login-form';
 
     public function redirectUrl(): RedirectResponse | JsonResponse
     {
