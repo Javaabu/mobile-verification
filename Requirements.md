@@ -32,7 +32,7 @@
 - [x] The user will enter the OTP
 - [x] The system will verify the OTP and log in the user
 
-## Mobile Number Update
+## Mobile Number Update [DOCUMENTED]
 - [x] User needs to be logged in to update mobile number
 - [x] User can request for an OTP to be sent to the new mobile number
 - [x] You cannot request for an OTP for an already existing number(with a user_id)
@@ -43,14 +43,14 @@
 - [x] Verify OTP, after verification the record will be associated with the user_id
 
 Sending OTP
-- [ ] Send to any number
-- [ ] Send to a number that is not associated with any user_id
-- [ ] Send to a number that is associated with a user_id
+- [x] Send to any number
+- [x] Send to a number that is not associated with any user_id
+- [x] Send to a number that is associated with a user_id
 
 Verifying OTP
-- [ ] Verify OTP for a number that is not associated with any user_id
-- [ ] Verify OTP for a number that is associated with a user_id
-- [ ] Verify OTP for any number
+- [x] Verify OTP for a number that is not associated with any user_id
+- [x] Verify OTP for a number that is associated with a user_id
+- [x] Verify OTP for any number
 
 - In controller
 - - one trait to send otp
@@ -77,5 +77,5 @@ SendMobileNumberForgotPasswordLink
 - [x] Registering with mobile number: RegisterControllerTest.php
 - [x] Updating mobile number: MobileNumberUpdateControllerTest.php
 - [x] Sending OTP: SendTokenControllerTest.php
-- [ ] Verifying OTP: TokenValidationControllerTest.php
+- [x] Verifying OTP: TokenValidationControllerTest.php
 - [x] Login In: TokenLoginControllerTest.php

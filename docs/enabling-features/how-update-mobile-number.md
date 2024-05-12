@@ -1,5 +1,5 @@
 ---
-title: How to Login with Mobile Number
+title: How to Update with Mobile Number
 sidebar_position: 1.9
 ---
 
