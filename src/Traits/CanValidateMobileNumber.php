@@ -26,7 +26,7 @@ trait CanValidateMobileNumber
                 new IsValidMobileNumber(
                     $this->getUserType(),
                     data_get($request_data, 'country_code'),
-                    false,
+                    $this->mustBeARegisteredMobileNumber($request_data),
                 ),
             ],
         ];

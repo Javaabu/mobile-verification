@@ -1,6 +1,6 @@
 ---
 title: How to Register with Mobile Number
-sidebar_position: 1.6
+sidebar_position: 1.7
 ---
 
 # How to Register with Mobile Number

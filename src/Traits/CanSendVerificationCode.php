@@ -2,6 +2,7 @@
 
 namespace Javaabu\MobileVerification\Traits;
 
+use Illuminate\View\View;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -21,11 +22,7 @@ trait CanSendVerificationCode
         $validator = Validator::make($request->all(), $rules, $messages);
 
         if ($validator->fails()) {
-            if ($request->expectsJson()) {
-                return response()->json(['errors' => $validator->errors()], 422);
-            }
-
-            return redirect()->back()->withErrors($validator->errors())->withInput();
+            return $this->redirectUrlOnValidationError($request, $validator);
         }
 
         $mobile_number_data = MobileNumberData::fromRequestData(array_merge($request->all(), [
@@ -56,5 +53,14 @@ trait CanSendVerificationCode
         }
 
         return redirect()->back()->with('success', __('A verification code has been sent to your mobile number. Please enter the code to verify your mobile number.'));
+    }
+
+    public function redirectUrlOnValidationError(Request $request, \Illuminate\Validation\Validator $validator): RedirectResponse|JsonResponse|View
+    {
+        if ($request->expectsJson()) {
+            return response()->json(['errors' => $validator->errors()], 422);
+        }
+
+        return redirect()->back()->withErrors($validator->errors())->withInput();
     }
 }

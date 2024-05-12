@@ -9,5 +9,138 @@ When you are using this package you may need to request an OTP for a user. Below
 2. When a user is logging in with their mobile number.
 
 ## OTP Request Process
-Before diving into the steps, let's see how the OTP request process works.
+Before diving into the steps, let's see how the OTP request process works. OTP Request process differs based on the use case. 
+
+Below are the steps for the registration process:
+1. A guest user sends a request to the application with their mobile number.
+2. The package checks if the mobile number is already registered.
+    3. If the mobile number is already registered, the package returns a message that the mobile number is already registered.
+    4. If the mobile number is not registered, the package sends an OTP to the mobile number.
+
+Below are the steps for the login process:
 1. A user sends a request to the application with their mobile number.
+2. The package checks if the mobile number is registered.
+    3. If the mobile number is not registered, the package returns a message that the mobile number is not registered.
+    4. If the mobile number is registered, the package sends an OTP to the mobile number.
+
+## Step 1: Define the Routes
+Define the routes in your application. Below is an example of how you can define the routes in your application.
+
+```php
+use Illuminate\Support\Facades\Route;
+
+Route::post('request-otp', [App\Http\Controllers\OTPController::class, 'requestOtp'])->name('otp.request');
+```
+
+And if you are not doing an API request, you can define the route from which the request is coming from.
+
+```php
+use Illuminate\Support\Facades\Route;
+
+Route::get('request-otp-form', [App\Http\Controllers\OTPController::class, 'showOtpRequestForm'])->name('otp.request.show');
+```
+
+## Step 2: Create the Controller
+Create a controller that extends the `Javaabu\MobileVerification\Http\Controllers\OTPController` class. Below is an example of how you can create the controller in your application.
+
+```php
+<?php
+
+namespace App\Http\Controllers;
+
+use Illuminate\View\View;
+use Illuminate\Http\JsonResponse;
+
+use Javaabu\MobileVerification\Http\Controllers\OTPController as BaseOTPController;
+
+class OTPController extends BaseOTPController
+{
+    /*
+     * Define the user class to be used for OTP request
+     */
+    public string $user_class = User::class;
+    
+    /*
+     * When not using an API request, you can define the view to be used for OTP request
+     */
+    public string $form_view = 'web.otp.request-form';
+    
+    /*
+     * Whether the mobile number must be a registered mobile number.
+     * If the mobile number must be a registered mobile number, then the user will be redirected back with an error if the number is already registered.
+     * If the mobile number must not be a registered mobile number, then the user will be redirected back with an error if the number is not registered.
+     * This method should be overridden in the controller to return true if the mobile number must be a registered mobile number.
+     * This method can be used to handle OTP requests for both registration and login.
+     * */
+    public function mustBeARegisteredMobileNumber(array $request_data): bool
+    {
+        // ... your logic here
+    }
+    
+    /*
+     * Define redirectUrl method to return a redirect response, a json response or a view
+     * */
+    public function redirectUrl(): RedirectResponse|JsonResponse|View
+    {
+        return to_route('web.home')->with(['message' => __('The OTP has been sent to your mobile number')]);
+    }
+}
+```
+
+You also have the option to override the `redirectUrlOnValidationError` method to return a redirect response or a json response when the mobile number is invalid.
+
+```php
+    /*
+     * Define redirectUrlOnValidationError method to return a redirect response or a json response
+     * */
+    public function redirectUrlOnValidationError(): RedirectResponse|JsonResponse|View
+    {
+        return back()->with(['message' => __('The mobile number is invalid')]);
+    }
+```
+
+You can also override how the form view is rendered by overriding the `showOtpRequestForm` or `getFormView` method.
+
+```php
+    /*
+     * Define showOtpRequestForm method to return a view
+     * */
+    public function showOtpRequestForm(): View
+    {
+        return view('web.otp.request-form');
+    }
+```
+
+When you are trying to handle OTP requests for both registration and login, you can customize the `mustBeARegisteredMobileNumber` method to handle the request.
+It should return true if the mobile number must be a registered mobile number (login process) and false if the mobile number must not be a registered mobile number (registration process).
+```php
+    public function mustBeARegisteredMobileNumber(array $request_data): bool
+    {
+        // ... your logic here
+    }
+```
+
+## Step 3: Create the Form
+
+If you are not doing an API request, you can create a form to request the OTP. Below is an example of how you can create the form in your application.
+
+```html
+<form action="{{ route('otp.request') }}" method="post">
+    @csrf
+    
+    <!-- You may use your own select, and the country codes form the Countries enum provided by the package -->
+    <input type="text" name="country_code" placeholder="Enter your country code">
+    <input type="text" name="number" placeholder="Enter your mobile number">
+    <button type="submit">Request OTP</button>
+</form>
+```
+
+## Step 4: Make the Request
+Make a POST request to the route you defined in step 1 with the mobile number you want to send the OTP to. Below is the attributes you can send in the request.
+
+| Attribute | Description | Type   | Required |
+| --- | --- |--------| --- |
+| country_code | The country code of the mobile number. | String | Yes |
+| number | The mobile number to validate. | String | Yes |
+
+
