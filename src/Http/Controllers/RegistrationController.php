@@ -1,12 +1,10 @@
 <?php
 
-
 namespace Javaabu\MobileVerification\Http\Controllers;
 
-
 use Illuminate\View\View;
-use Javaabu\MobileVerification\Traits\HasFormView;
 use Javaabu\MobileVerification\Traits\CanRegisterUsingToken;
+use Javaabu\MobileVerification\Traits\HasFormView;
 
 abstract class RegistrationController
 {
