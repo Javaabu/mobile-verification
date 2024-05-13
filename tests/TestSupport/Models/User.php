@@ -2,6 +2,7 @@
 
 namespace Javaabu\MobileVerification\Tests\TestSupport\Models;
 
+use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -14,6 +15,7 @@ class User extends Authenticatable implements HasMobileNumber
     use InteractsWithMobileNumbers;
     use HasFactory;
     use SoftDeletes;
+    use HasApiTokens;
 
     protected static function newFactory()
     {

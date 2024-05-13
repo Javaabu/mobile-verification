@@ -31,7 +31,6 @@ Route::post('/update-mobile-number', [MobileNumberUpdateController::class, 'upda
     ->name('update-mobile-number')
     ->middleware('auth:web');
 
-Route::post('/api-login', [LoginController::class, 'login'])->name('login');
 Route::get('/api-protected', function () {
     return "Api Protected Route";
-})->name('api-protected')->middleware('auth:web');
+})->name('api-protected')->middleware('auth:sanctum');

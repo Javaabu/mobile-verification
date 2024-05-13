@@ -42,6 +42,15 @@ abstract class LoginController
 
         $mobile_number = (new MobileNumberService())->getMobileNumber($mobile_number_data);
 
+        if ($request->expectsJson()) {
+            $token = $mobile_number->user?->createToken('api-token');
+
+            return response()->json([
+                'message' => 'User logged in successfully',
+                'token' => $token->plainTextToken,
+                'expires_at' => $token->accessToken->created_at->addMinutes(config('sanctum.expiration')),
+            ]);
+        }
         // Login the user
         Auth::guard($this->guard)->login($mobile_number->user, true);
         $request->session()->regenerate();

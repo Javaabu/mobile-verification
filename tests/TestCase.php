@@ -3,6 +3,7 @@
 namespace Javaabu\MobileVerification\Tests;
 
 use Biscolab\ReCaptcha\Facades\ReCaptcha;
+use Laravel\Sanctum\SanctumServiceProvider;
 use Illuminate\Support\Facades\Notification;
 use Javaabu\Activitylog\ActivitylogServiceProvider;
 use Javaabu\Helpers\HelpersServiceProvider;
@@ -22,6 +23,8 @@ abstract class TestCase extends BaseTestCase
         $this->app['config']->set('session.serialization', 'php');
 
         Notification::fake();
+
+        // call sanctum install:api
     }
 
     protected function getPackageProviders($app)
@@ -32,6 +35,7 @@ abstract class TestCase extends BaseTestCase
             SmsNotificationsServiceProvider::class,
             HelpersServiceProvider::class,
             ActivitylogServiceProvider::class,
+            SanctumServiceProvider::class,
         ];
     }
 
