@@ -14,6 +14,7 @@ trait CanValidateMobileNumber
         return [
             'country_code' => [
                 'nullable',
+                // TODO: separate the validation to a rule
                 function ($attribute, $value, $fail) {
                     $country_codes = array_values(Countries::countryCodes());
                     if (! in_array($value, $country_codes)) {

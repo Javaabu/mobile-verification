@@ -58,38 +58,20 @@ namespace App\Http\Controllers;
 use Illuminate\View\View;
 use Illuminate\Http\JsonResponse;
 
-use Javaabu\MobileVerification\Http\Controllers\OTPController as BaseOTPController;
+use Javaabu\MobileVerification\Http\Controllers\OTPController as BaseOTPController;use Javaabu\SmsNotifications\Notifications\SendsSms;
 
-class OTPController extends BaseOTPController
+class OTPController
 {
-    /*
-     * Define the user class to be used for OTP request
-     */
-    public string $user_class = User::class;
+    use SendsMobileVerificationCode;
     
-    /*
-     * When not using an API request, you can define the view to be used for OTP request
-     */
-    public string $form_view = 'web.otp.request-form';
-    
-    /*
-     * Whether the mobile number must be a registered mobile number.
-     * If the mobile number must be a registered mobile number, then the user will be redirected back with an error if the number is already registered.
-     * If the mobile number must not be a registered mobile number, then the user will be redirected back with an error if the number is not registered.
-     * This method should be overridden in the controller to return true if the mobile number must be a registered mobile number.
-     * This method can be used to handle OTP requests for both registration and login.
-     * */
-    public function mustBeARegisteredMobileNumber(array $request_data): bool
+    public function getUserClass(Request $request): string
     {
-        // ... your logic here
-    }
+        return User::class;
+    }    
     
-    /*
-     * Define redirectUrl method to return a redirect response, a json response or a view
-     * */
-    public function redirectUrl(): RedirectResponse|JsonResponse|View
+    public function mustBeARegisteredMobileNumber(array $request_data): ?bool
     {
-        return to_route('web.home')->with(['message' => __('The OTP has been sent to your mobile number')]);
+        return null;
     }
 }
 ```

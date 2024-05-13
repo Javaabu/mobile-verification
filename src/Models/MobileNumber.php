@@ -307,13 +307,13 @@ class MobileNumber extends Model implements MobileNumberContract
     /**
      * Verify token
      */
-    public function verifyToken($token): bool
+    public function verifyToken($token, bool $should_reset = false): bool
     {
         if ($token && $this->token && Hash::check($token, $this->token)) {
-            $this->attempts = 0;
-            $this->token = null;
-            $this->token_created_at = null;
-            $this->save();
+
+            if ($should_reset) {
+                $this->resetAttempts();
+            }
 
             return true;
         }
@@ -322,6 +322,14 @@ class MobileNumber extends Model implements MobileNumberContract
         $this->save();
 
         return false;
+    }
+
+    public function resetAttempts(): void
+    {
+        $this->attempts = 0;
+        $this->token = null;
+        $this->token_created_at = null;
+        $this->save();
     }
 
     /**

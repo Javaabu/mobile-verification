@@ -37,7 +37,7 @@ class MobileVerificationServiceProvider extends ServiceProvider
      *
      * @return void
      */
-    protected function registerMigrations()
+    protected function registerMigrations(): void
     {
         if (MobileVerification::$runsMigrations) {
             $this->loadMigrationsFrom(__DIR__.'/../database/migrations');
