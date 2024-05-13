@@ -80,6 +80,8 @@ class IsValidMobileNumberRuleTest extends TestCase
             'attempts' => 0,
         ]);
 
+        $this->travel(config('mobile-verification.attempt_expiry') + 1)->minutes();
+
         $rule = new IsValidMobileNumber('user', can_be_taken_by_user: true, can_send_otp: true);
         $value = $this->checkRule($rule, 'number', '7825222');
         $this->assertTrue($value);

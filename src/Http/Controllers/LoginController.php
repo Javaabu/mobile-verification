@@ -51,6 +51,7 @@ abstract class LoginController
                 'expires_at' => $token->accessToken->created_at->addMinutes(config('sanctum.expiration')),
             ]);
         }
+
         // Login the user
         Auth::guard($this->guard)->login($mobile_number->user, true);
         $request->session()->regenerate();

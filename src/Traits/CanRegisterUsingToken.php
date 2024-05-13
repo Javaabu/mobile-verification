@@ -75,7 +75,7 @@ trait CanRegisterUsingToken
 
         $token_validation_rules = [
             'country_code' => ['nullable', 'numeric', 'in:' . Countries::getCountryCodesString()],
-            'number' => ['required', new IsValidMobileNumber($this->getUserType(), can_be_taken_by_user: false, can_send_otp: true)],
+            'number' => ['required', new IsValidMobileNumber($this->getUserType(), can_be_taken_by_user: false, can_send_otp: false)],
             'token' => ['required', 'numeric', new IsValidToken($this->getUserType(), $number)],
         ];
 

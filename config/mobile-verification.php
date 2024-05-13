@@ -79,7 +79,7 @@ return [
     | The number of minutes that a number would get locked for if there are too
     | many verification attempts for that number.
     */
-    'attempt_expiry' => 30,
+    'attempt_expiry' => 30, // mins
 
     /*
     |--------------------------------------------------------------------------

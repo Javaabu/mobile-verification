@@ -28,7 +28,7 @@ class IsValidMobileNumber implements ValidationRule
             $fail(trans('mobile-verification::strings.validation.number.exists', ['attribute' => $attribute]));
         }
 
-        if ($mobile_number && $this->can_send_otp && $mobile_number->is_locked) {
+        if ($mobile_number && $this->can_send_otp && ! $mobile_number->can_request_code) {
             $fail(trans('mobile-verification::strings.validation.number.locked'));
         }
 
