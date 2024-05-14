@@ -2,10 +2,10 @@
 
 namespace Javaabu\MobileVerification\GrantType;
 
-use Illuminate\Support\Facades\Log;
 use Illuminate\Contracts\Auth\Authenticatable;
-use League\OAuth2\Server\Entities\ClientEntityInterface;
+use Illuminate\Support\Facades\Log;
 use Javaabu\Helpers\Exceptions\InvalidOperationException;
+use League\OAuth2\Server\Entities\ClientEntityInterface;
 
 class UserProvider implements MobileGrantUserProvider
 {

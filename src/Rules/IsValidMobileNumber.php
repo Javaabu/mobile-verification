@@ -3,16 +3,14 @@
 namespace Javaabu\MobileVerification\Rules;
 
 use Closure;
-use Javaabu\MobileVerification\MobileVerification;
 use Illuminate\Contracts\Validation\DataAwareRule;
 use Illuminate\Contracts\Validation\ValidationRule;
-use Javaabu\MobileVerification\Models\MobileNumber;
-use Javaabu\MobileVerification\Support\Enums\Countries;
 use Javaabu\MobileVerification\Contracts\IsANumberFormatValidator;
+use Javaabu\MobileVerification\MobileVerification;
+use Javaabu\MobileVerification\Models\MobileNumber;
 
 class IsValidMobileNumber implements DataAwareRule, ValidationRule
 {
-
     protected bool|null $should_be_registered_number = null;
     protected bool $can_send_otp = false;
     protected string $country_code;
@@ -21,25 +19,27 @@ class IsValidMobileNumber implements DataAwareRule, ValidationRule
     public function __construct(
         protected string $user_type,
         protected string $country_code_input_name = 'country_code',
-    )
-    {
+    ) {
     }
 
     public function registered(): static
     {
         $this->should_be_registered_number = true;
+
         return $this;
     }
 
     public function notRegistered(): static
     {
         $this->should_be_registered_number = false;
+
         return $this;
     }
 
     public function canSendOtp(): static
     {
         $this->can_send_otp = true;
+
         return $this;
     }
 
@@ -56,6 +56,7 @@ class IsValidMobileNumber implements DataAwareRule, ValidationRule
     public function ignore(string $user_id): static
     {
         $this->ignore_user_id = $user_id;
+
         return $this;
     }
 
@@ -106,6 +107,7 @@ class IsValidMobileNumber implements DataAwareRule, ValidationRule
     public function setData(array $data): static
     {
         $this->setCountryCode($data[$this->country_code_input_name] ?? null);
+
         return $this;
     }
 }

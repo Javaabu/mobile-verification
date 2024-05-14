@@ -3,25 +3,22 @@
 namespace Javaabu\MobileVerification\GrantType;
 
 use DateInterval;
-use League\OAuth2\Server\RequestEvent;
-use Psr\Http\Message\ServerRequestInterface;
-use League\OAuth2\Server\Grant\AbstractGrant;
-use Illuminate\Contracts\Auth\Authenticatable;
+use League\OAuth2\Server\Entities\ClientEntityInterface;
 use League\OAuth2\Server\Entities\UserEntityInterface;
 use League\OAuth2\Server\Exception\OAuthServerException;
-use League\OAuth2\Server\Entities\ClientEntityInterface;
-use League\OAuth2\Server\ResponseTypes\ResponseTypeInterface;
-use League\OAuth2\Server\Repositories\RefreshTokenRepositoryInterface;
 use League\OAuth2\Server\Exception\UniqueTokenIdentifierConstraintViolationException;
+use League\OAuth2\Server\Grant\AbstractGrant;
+use League\OAuth2\Server\Repositories\RefreshTokenRepositoryInterface;
+use League\OAuth2\Server\RequestEvent;
+use League\OAuth2\Server\ResponseTypes\ResponseTypeInterface;
+use Psr\Http\Message\ServerRequestInterface;
 
 class MobileGrant extends AbstractGrant
 {
-
     public function __construct(
         private MobileGrantUserProvider $provider,
         RefreshTokenRepositoryInterface $refreshTokenRepository,
-    )
-    {
+    ) {
         $this->setRefreshTokenRepository($refreshTokenRepository);
         $this->refreshTokenTTL = new DateInterval('P1M');
     }
@@ -39,8 +36,7 @@ class MobileGrant extends AbstractGrant
         ServerRequestInterface $request,
         ResponseTypeInterface $responseType,
         DateInterval $accessTokenTTL
-    ): ResponseTypeInterface
-    {
+    ): ResponseTypeInterface {
         $client = $this->validateClient($request);
         $scopes = $this->validateScopes($this->getRequestParameter('scope', $request, $this->defaultScope));
         $user = $this->validateUser($request, $client);
@@ -81,6 +77,7 @@ class MobileGrant extends AbstractGrant
 
         if (! $user instanceof UserEntityInterface) {
             $this->getEmitter()->emit(new RequestEvent(RequestEvent::USER_AUTHENTICATION_FAILED, $request));
+
             throw OAuthServerException::invalidGrant();
         }
 

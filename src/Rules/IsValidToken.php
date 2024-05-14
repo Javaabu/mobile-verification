@@ -4,10 +4,9 @@ namespace Javaabu\MobileVerification\Rules;
 
 use Closure;
 use Illuminate\Contracts\Validation\DataAwareRule;
-use Javaabu\MobileVerification\MobileVerification;
 use Illuminate\Contracts\Validation\ValidationRule;
+use Javaabu\MobileVerification\MobileVerification;
 use Javaabu\MobileVerification\Models\MobileNumber;
-use Javaabu\MobileVerification\Support\Enums\Countries;
 
 class IsValidToken implements DataAwareRule, ValidationRule
 {
@@ -33,6 +32,7 @@ class IsValidToken implements DataAwareRule, ValidationRule
 
         if (! $mobile_number) {
             $fail(trans('mobile-verification::strings.validation.token.invalid'));
+
             return;
         }
 
@@ -73,6 +73,7 @@ class IsValidToken implements DataAwareRule, ValidationRule
     {
         $this->setCountryCode($data[$this->country_code_input_name] ?? null);
         $this->setNumber($data[$this->number_input_name] ?? null);
+
         return $this;
     }
 }
