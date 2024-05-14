@@ -2,7 +2,11 @@
 
 namespace Javaabu\MobileVerification;
 
+use Laravel\Passport\Passport;
 use Illuminate\Support\ServiceProvider;
+use League\OAuth2\Server\AuthorizationServer;
+use Laravel\Passport\Bridge\RefreshTokenRepository;
+use Javaabu\MobileVerification\GrantType\MobileGrant;
 
 class MobileVerificationServiceProvider extends ServiceProvider
 {
@@ -51,5 +55,21 @@ class MobileVerificationServiceProvider extends ServiceProvider
     {
         // merge package config with user defined config
         $this->mergeConfigFrom(__DIR__ . '/../config/mobile-verification.php', 'mobile-verification');
+
+        $this->app->resolving(AuthorizationServer::class, function (AuthorizationServer $server) {
+            $grant = $this->makeGrant();
+            $server->enableGrantType($grant, Passport::tokensExpireIn());
+        });
+    }
+
+    protected function makeGrant(): MobileGrant
+    {
+        $grant = new MobileGrant(
+            $this->app->make(RefreshTokenRepository::class)
+        );
+
+        $grant->setRefreshTokenTTL(Passport::refreshTokensExpireIn());
+
+        return $grant;
     }
 }

@@ -31,19 +31,19 @@ trait CanSendVerificationCode
 
         $mobile_number = (new MobileNumberService())->firstOrCreate($mobile_number_data);
 
-        //generate the token
-        $token = $mobile_number->generateToken();
+        //generate the verification_code
+        $verification_code = $mobile_number->generateVerificationCode();
 
         // Send OTP
-        $this->sendSmsNotification($token, $mobile_number);
+        $this->sendSmsNotification($verification_code, $mobile_number);
 
         return $this->redirectUrl($request);
     }
 
-    protected function sendSmsNotification($token, $phone): void
+    protected function sendSmsNotification($verification_code, $phone): void
     {
         $user_name = $phone->user ? $phone->user->name : '';
-        $phone->notify(new MobileNumberVerificationToken($token, $user_name));
+        $phone->notify(new MobileNumberVerificationToken($verification_code, $user_name));
     }
 
     public function redirectUrl(Request $request): RedirectResponse|JsonResponse|View

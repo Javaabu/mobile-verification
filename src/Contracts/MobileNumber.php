@@ -9,7 +9,6 @@ use Javaabu\SmsNotifications\Notifiable\SmsNotifiable;
 
 interface MobileNumber extends SmsNotifiable
 {
-    public static function blankPhone(string $number, string $country_code = '', string $user_type = 'user'): ?self;
 
     public function user(): MorphTo;
 
@@ -17,11 +16,11 @@ interface MobileNumber extends SmsNotifiable
 
     public function scopeHasNumber(Builder $query, string $search): Builder;
 
-    public function randomToken(): string;
+    public function randomVerificationCode(): string;
 
-    public function generateToken(): string;
+    public function generateVerificationCode(): string;
 
-    public function clearToken(): void;
+    public function clearVerificationCode(): void;
 
     public function isSame(self $other): bool;
 
@@ -31,7 +30,7 @@ interface MobileNumber extends SmsNotifiable
 
     public function getPrefixAttribute(): string;
 
-    public function verifyToken($token): bool;
+    public function verifyVerificationCode($verification_code): bool;
 
     public function getAttemptsExpiryAttribute(): int;
 
@@ -39,17 +38,21 @@ interface MobileNumber extends SmsNotifiable
 
     public function getCanRequestCodeAttribute(): bool;
 
-    public function getTokenInitiatedTime(): Carbon;
+    public function getVerificationCodeInitiatedTime(): Carbon;
 
     public function getIsLockedAttribute(): bool;
 
-    public function getTokenExpiresInAttribute(): int;
+    public function getVerificationCodeExpiresInAttribute(): int;
 
-    public function getTokenExpiryAttribute(): int;
+    public function getVerificationCodeExpiryAttribute(): int;
 
-    public function getTokenExpiresAtAttribute(): Carbon;
+    public function getVerificationCodeExpiresAtAttribute(): Carbon;
 
-    public function getIsTokenExpiredAttribute(): bool;
+    public function getIsVerificationCodeExpiredAttribute(): bool;
 
     public function getWasSentRecentlyAttribute(): bool;
+
+    public static function blankPhone(string $number, string $country_code = '', string $user_type = 'user'): ?self;
+
+    public static function getUserByMobileNumber(string $number, string $country_code = '', string $user_type = 'user'): ?HasMobileNumber;
 }

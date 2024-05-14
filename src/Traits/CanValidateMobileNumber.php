@@ -2,6 +2,7 @@
 
 namespace Javaabu\MobileVerification\Traits;
 
+use Javaabu\MobileVerification\Rules\IsValidCountryCode;
 use Javaabu\MobileVerification\Rules\IsValidMobileNumber;
 use Javaabu\MobileVerification\Support\Enums\Countries;
 
@@ -14,21 +15,12 @@ trait CanValidateMobileNumber
         return [
             'country_code' => [
                 'nullable',
-                // TODO: separate the validation to a rule
-                function ($attribute, $value, $fail) {
-                    $country_codes = array_values(Countries::countryCodes());
-                    if (! in_array($value, $country_codes)) {
-                        $fail(trans('mobile-verification::strings.validation.country_code.invalid'));
-                    }
-                },
+                new IsValidCountryCode(),
             ],
             'number' => [
                 'required',
-                new IsValidMobileNumber(
-                    $this->getUserType(),
-                    data_get($request_data, 'country_code'),
-                    $this->mustBeARegisteredMobileNumber($request_data),
-                ),
+                (new IsValidMobileNumber($this->getUserType()))
+                    ->mustBeARegisteredMobileNumber($this->mustBeARegisteredMobileNumber($request_data)),
             ],
         ];
     }

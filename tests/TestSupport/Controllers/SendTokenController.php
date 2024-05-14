@@ -2,16 +2,31 @@
 
 namespace Javaabu\MobileVerification\Tests\TestSupport\Controllers;
 
+use Javaabu\MobileVerification\Contracts\HasOtpHandling;
 use Javaabu\MobileVerification\Http\Controllers\OTPController;
 use Javaabu\MobileVerification\Tests\TestSupport\Models\User;
+use Javaabu\MobileVerification\Traits\CanSendVerificationCode;
 
-class SendTokenController extends OTPController
+class SendTokenController implements HasOtpHandling
 {
-    protected string $user_class = User::class;
+    use CanSendVerificationCode;
 
-
-    public function mustBeARegisteredMobileNumber(array $request_data): bool
+    public function getUserClass(): string
     {
-        return false;
+        return User::class;
+    }
+
+    public function mustBeARegisteredMobileNumber(array $request_data): ?bool
+    {
+        $purpose = data_get($request_data, 'purpose', null);
+        if ($purpose === 'register') {
+            return false;
+        }
+
+        if ($purpose === 'login') {
+            return true;
+        }
+
+        return null;
     }
 }

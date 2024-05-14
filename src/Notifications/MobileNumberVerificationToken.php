@@ -11,9 +11,9 @@ class MobileNumberVerificationToken extends Notification implements SmsNotificat
     use SendsSms;
 
     /**
-     * The password reset token.
+     * The password reset verification_code.
      */
-    public string $token;
+    public string $verification_code;
 
     /**
      * The name of the intended user
@@ -23,12 +23,12 @@ class MobileNumberVerificationToken extends Notification implements SmsNotificat
     /**
      * Create a new notification instance.
      *
-     * @param string $token
+     * @param string $verification_code
      * @param string $name
      */
-    public function __construct(string $token, string $name = '')
+    public function __construct(string $verification_code, string $name = '')
     {
-        $this->token = $token;
+        $this->verification_code = $verification_code;
         $this->name = $name;
     }
 
@@ -52,6 +52,6 @@ class MobileNumberVerificationToken extends Notification implements SmsNotificat
     public function toSms($notifiable): string
     {
         return  "Dear ".($this->name ?: 'User').",\n".
-                'Your '.get_setting('app_name').' account verification code is '.$this->token;
+                'Your '.get_setting('app_name').' account verification code is '.$this->verification_code;
     }
 }

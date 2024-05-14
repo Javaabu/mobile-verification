@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\View\View;
 use Javaabu\MobileVerification\Contracts\HasMobileNumber;
 use Javaabu\MobileVerification\Rules\IsValidMobileNumber;
-use Javaabu\MobileVerification\Rules\IsValidToken;
+use Javaabu\MobileVerification\Rules\IsValidVerificationCode;
 use Javaabu\MobileVerification\Support\DataObjects\MobileNumberData;
 use Javaabu\MobileVerification\Support\Enums\Countries;
 use Javaabu\MobileVerification\Support\Services\MobileNumberService;
@@ -27,7 +27,7 @@ abstract class UpdateMobileNumberController
         $validator = Validator::make($request->all(), [
             'country_code' => ['nullable', 'numeric', 'in:' . Countries::getCountryCodesString()],
             'number' => ['required', new IsValidMobileNumber($this->getUserType(), can_be_taken_by_user: false)],
-            'token' => ['required', new IsValidToken($this->getUserType(), $request->input('number'))],
+            'verification_code' => ['required', new IsValidVerificationCode($this->getUserType(), $request->input('number'))],
         ]);
 
         if ($validator->fails()) {

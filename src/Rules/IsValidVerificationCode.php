@@ -9,10 +9,11 @@ use Illuminate\Contracts\Validation\ValidationRule;
 use Javaabu\MobileVerification\Models\MobileNumber;
 use Javaabu\MobileVerification\Support\Enums\Countries;
 
-class IsValidToken implements DataAwareRule, ValidationRule
+class IsValidVerificationCode implements DataAwareRule, ValidationRule
 {
     protected string $country_code;
     protected ?string $number = null;
+    protected bool $should_reset_attempts = false;
 
     public function __construct(
         protected string $user_type,
@@ -32,20 +33,20 @@ class IsValidToken implements DataAwareRule, ValidationRule
             ->first();
 
         if (! $mobile_number) {
-            $fail(trans('mobile-verification::strings.validation.token.invalid'));
+            $fail(trans('mobile-verification::strings.validation.verification_code.invalid'));
             return;
         }
 
         if ($mobile_number->is_locked) {
-            $fail(trans('mobile-verification::strings.validation.token.locked'));
+            $fail(trans('mobile-verification::strings.validation.verification_code.locked'));
         }
 
-        if ($mobile_number->is_token_expired) {
-            $fail(trans('mobile-verification::strings.validation.token.expired'));
+        if ($mobile_number->is_verification_code_expired) {
+            $fail(trans('mobile-verification::strings.validation.verification_code.expired'));
         }
 
-        if (! $mobile_number->verifyToken($value)) {
-            $fail(trans('mobile-verification::strings.validation.token.invalid'));
+        if (! $mobile_number->verifyVerificationCode($value, $this->should_reset_attempts)) {
+            $fail(trans('mobile-verification::strings.validation.verification_code.invalid'));
         }
     }
 
@@ -67,6 +68,12 @@ class IsValidToken implements DataAwareRule, ValidationRule
     public function getNumber(): ?string
     {
         return $this->number;
+    }
+
+    public function shouldResetAttempts(): static
+    {
+        $this->should_reset_attempts = true;
+        return $this;
     }
 
     public function setData(array $data): static

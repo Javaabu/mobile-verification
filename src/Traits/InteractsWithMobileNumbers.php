@@ -193,7 +193,7 @@ trait InteractsWithMobileNumbers
         $this->clearPhones();
 
         // assign the new phone
-        $phone->clearToken();
+        $phone->clearVerificationCode();
         $phone->user()->associate($this);
         $phone->save();
 

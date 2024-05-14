@@ -7,7 +7,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Javaabu\MobileVerification\Rules\IsValidMobileNumber;
-use Javaabu\MobileVerification\Rules\IsValidToken;
+use Javaabu\MobileVerification\Rules\IsValidVerificationCode;
 use Javaabu\MobileVerification\Support\Enums\Countries;
 use Javaabu\MobileVerification\Tests\TestSupport\Models\User;
 
@@ -49,7 +49,7 @@ class VerifyTokenController
         return [
             'country_code' => ['nullable', 'numeric', 'in:' . Countries::getCountryCodesString()],
             'number' => ['required', new IsValidMobileNumber($this->getUserType())],
-            'token' => ['required', 'numeric', new IsValidToken($this->getUserType(), $number)],
+            'token' => ['required', 'numeric', new IsValidVerificationCode($this->getUserType(), $number)],
         ];
     }
 

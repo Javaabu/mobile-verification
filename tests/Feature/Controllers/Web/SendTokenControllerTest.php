@@ -13,7 +13,6 @@ class SendTokenControllerTest extends TestCase
 {
     use RefreshDatabase;
 
-
     /** @test */
     // can send a post request to register a user with a mobile number
     public function can_send_a_post_request_to_register_a_user_with_a_mobile_number()
@@ -38,10 +37,12 @@ class SendTokenControllerTest extends TestCase
             'user_id' => $user->id,
         ]);
 
-        $this->post(route('mobile-number-otp'), [
+        $response = $this->post(route('mobile-number-otp'), [
             'number' => $mobileNumber->number,
-        ])
-        ->assertSessionHasErrors(['number']);
+            'purpose' => 'register',
+        ]);
+
+        $response->assertSessionHasErrors(['number']);
 
         Notification::assertNotSentTo(
             [$mobileNumber],

@@ -79,3 +79,7 @@ SendMobileNumberForgotPasswordLink
 - [x] Sending OTP: SendTokenControllerTest.php
 - [x] Verifying OTP: TokenValidationControllerTest.php
 - [x] Login In: TokenLoginControllerTest.php
+
+
+Verification Code -> OTP
+Token -> Access Token API

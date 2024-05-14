@@ -37,7 +37,7 @@ class TokenLoginControllerTest extends TestCase
             'number' => '7528222',
         ]);
 
-        $token = $mobile_number->generateToken();
+        $token = $mobile_number->generateVerificationCode();
 
         $this->post(route('login'), [
             'number' => '7528222',

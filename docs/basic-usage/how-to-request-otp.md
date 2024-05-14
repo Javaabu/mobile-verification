@@ -60,7 +60,7 @@ use Illuminate\Http\JsonResponse;
 
 use Javaabu\MobileVerification\Http\Controllers\OTPController as BaseOTPController;use Javaabu\SmsNotifications\Notifications\SendsSms;
 
-class OTPController
+class OTPController implements 
 {
     use SendsMobileVerificationCode;
     

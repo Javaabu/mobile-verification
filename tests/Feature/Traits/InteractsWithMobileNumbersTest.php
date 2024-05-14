@@ -35,7 +35,7 @@ class InteractsWithMobileNumbersTest extends TestCase
 
         $this->post(route('update-mobile-number'), [
             'number' => '7326655',
-            'token' => $new_mobile_number->generateToken(),
+            'token' => $new_mobile_number->generateVerificationCode(),
         ])
              ->assertSessionHasNoErrors()
              ->assertRedirect();

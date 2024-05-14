@@ -20,8 +20,8 @@ class CreateMobileNumbersTable extends Migration
                 $table->unsignedInteger('attempts')->default(0);
                 $table->string('number')->index();
                 $table->string('country_code');
-                $table->string('token')->nullable();
-                $table->dateTime('token_created_at')->nullable();
+                $table->string('verification_code')->nullable();
+                $table->dateTime('verification_code_created_at')->nullable();
                 $table->timestamps();
 
                 // 1 number per user

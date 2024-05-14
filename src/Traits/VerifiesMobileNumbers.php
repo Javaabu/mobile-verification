@@ -217,7 +217,7 @@ trait VerifiesMobileNumbers
             ));
         }
 
-        // check if the token was sent recently
+        // check if the verification_code was sent recently
         if ($phone->was_sent_recently) {
             throw new MobileNumberException(
                 __('A verification code was sent to this number too recently. '.
@@ -225,11 +225,11 @@ trait VerifiesMobileNumbers
             );
         }
 
-        //generate the token
-        $token = $phone->generateToken();
+        //generate the verification_code
+        $verification_code = $phone->generateVerificationCode();
 
-        //send the token to the user
-        $this->sendSmsNotification($token, $phone);
+        //send the verification_code to the user
+        $this->sendSmsNotification($verification_code, $phone);
 
         return $this->showVerificationForm($request, $phone);
     }
@@ -318,13 +318,13 @@ trait VerifiesMobileNumbers
                 ));
             }
 
-            //check if the token is expired
-            if ($phone->is_token_expired) {
+            //check if the verification_code is expired
+            if ($phone->is_verification_code_expired) {
                 throw new MobileNumberException(__('The verification code for this number is expired.'));
             }
 
             //verify the code
-            if ($phone->verifyToken($request->code)) {
+            if ($phone->verifyVerificationCode($request->code)) {
                 $this->assignPhone($phone, $user);
             } else {
                 throw new MobileNumberException('The code is invalid.');

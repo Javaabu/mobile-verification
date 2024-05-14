@@ -22,7 +22,7 @@ class TokenValidationControllerTest extends TestCase
                                          'user_type' => 'user',
                                      ]);
 
-        $token = $mobile_number->generateToken();
+        $token = $mobile_number->generateVerificationCode();
 
         $this->post('/verify', [
             'number' => '7528222',
@@ -43,9 +43,9 @@ class TokenValidationControllerTest extends TestCase
                                          'user_type' => 'user',
                                      ]);
 
-        $token = $mobile_number->generateToken();
+        $token = $mobile_number->generateVerificationCode();
 
-        $this->travelTo(now()->addMinutes(config('mobile-verification.token_validity') + 1));
+        $this->travelTo(now()->addMinutes(config('mobile-verification.verification_code_validity') + 1));
 
         $this->post('/verify', [
             'number' => '7528222',
@@ -65,9 +65,9 @@ class TokenValidationControllerTest extends TestCase
                                          'user_type' => 'user',
                                      ]);
 
-        $mobile_number->generateToken();
+        $mobile_number->generateVerificationCode();
 
-        $this->travelTo(now()->addMinutes(config('mobile-verification.token_validity') + 1));
+        $this->travelTo(now()->addMinutes(config('mobile-verification.verification_code_validity') + 1));
 
         $this->post('/verify', [
             'number' => '7528222',

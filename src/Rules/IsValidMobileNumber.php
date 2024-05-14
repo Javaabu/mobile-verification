@@ -37,6 +37,12 @@ class IsValidMobileNumber implements DataAwareRule, ValidationRule
         return $this;
     }
 
+    public function mustBeARegisteredMobileNumber(?bool $value): static
+    {
+        $this->should_be_registered_number = $value;
+        return $this;
+    }
+
     public function canSendOtp(): static
     {
         $this->can_send_otp = true;
@@ -59,22 +65,27 @@ class IsValidMobileNumber implements DataAwareRule, ValidationRule
         return $this;
     }
 
+    public function getIgnoreUserId(): ?string
+    {
+        return $this->ignore_user_id ?? null;
+    }
+
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
+
         $value = MobileVerification::normalizeNumber($value);
 
         /* @var IsANumberFormatValidator $mobile_number_format_validator */
         $mobile_number_format_validator = config('mobile-verification.mobile_number_format_validator');
-        if (! $mobile_number_format_validator->handle($this->getCountryCode(), $value)) {
+        if (! (new $mobile_number_format_validator)->handle($this->getCountryCode(), $value)) {
             $fail(trans('mobile-verification::strings.validation.number.invalid', ['attribute' => $attribute]));
         }
 
         if ((! $this->can_send_otp) && is_null($this->should_be_registered_number)) {
             return;
         }
-
         $mobile_number = MobileNumber::query()
-                                     ->when($this->ignore_user_id, function ($query) {
+                                     ->when($this->getIgnoreUserId(), function ($query) {
                                          $query->where('user_id', '!=', $this->ignore_user_id); // todo : test
                                      })
                                      ->hasPhoneNumber($this->getCountryCode(), $value, $this->user_type)

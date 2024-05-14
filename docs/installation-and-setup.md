@@ -90,7 +90,7 @@ return [
     | The number of minutes that a mobile number verification token
     | would be valid for.
     */
-    'token_validity' => 10, // minutes
+    'verification_code_validity' => 10, // minutes
 
     /*
     |--------------------------------------------------------------------------

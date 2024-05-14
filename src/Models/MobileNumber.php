@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use Javaabu\Activitylog\Traits\LogsActivity;
+use Javaabu\MobileVerification\Contracts\HasMobileNumber;
 use Javaabu\MobileVerification\Contracts\MobileNumber as MobileNumberContract;
 use Javaabu\MobileVerification\Factories\MobileNumberFactory;
 use Javaabu\MobileVerification\MobileVerification;
@@ -41,7 +42,7 @@ class MobileNumber extends Model implements MobileNumberContract
      * @var array
      */
     protected $casts = [
-        'token_created_at' => 'datetime',
+        'verification_code_created_at' => 'datetime',
     ];
 
     /**
@@ -50,7 +51,7 @@ class MobileNumber extends Model implements MobileNumberContract
      * @var array
      */
     protected $hidden = [
-        'token',
+        'verification_code',
     ];
 
     /**
@@ -60,11 +61,11 @@ class MobileNumber extends Model implements MobileNumberContract
      */
     protected $appends = [
         'formatted_number',
-        'token_expires_in',
+        'verification_code_expires_in',
     ];
 
     protected static array $logExceptAttributes = [
-        'token',
+        'verification_code',
     ];
 
     /**
@@ -155,7 +156,7 @@ class MobileNumber extends Model implements MobileNumberContract
      */
     public function setTokenCreatedAtAttribute($date)
     {
-        $this->attributes['token_created_at'] = empty($date) ? null : Carbon::parse($date);
+        $this->attributes['verification_code_created_at'] = empty($date) ? null : Carbon::parse($date);
     }
 
     /**
@@ -177,45 +178,45 @@ class MobileNumber extends Model implements MobileNumberContract
     }
 
     /**
-     * Hash the token before saving
+     * Hash the verification_code before saving
      * @param $value
      */
     public function setTokenAttribute($value)
     {
-        $this->attributes['token'] = $value ? Hash::make($value) : null;
+        $this->attributes['verification_code'] = $value ? Hash::make($value) : null;
     }
 
     /**
-     * Generate the token
+     * Generate the verification_code
      */
-    public function randomToken(): string
+    public function randomVerificationCode(): string
     {
         return str_pad(rand(0, 999999), 6, 0, STR_PAD_LEFT);
     }
 
     /**
-     * Clear the token fields
+     * Clear the verification_code fields
      */
-    public function clearToken(): void
+    public function clearVerificationCode(): void
     {
         $this->attempts = 0;
-        $this->token = null;
-        $this->token_created_at = null;
+        $this->verification_code = null;
+        $this->verification_code_created_at = null;
     }
 
     /**
-     * Generate the token and save
+     * Generate the verification_code and save
      */
-    public function generateToken(): string
+    public function generateVerificationCode(): string
     {
-        $token = $this->randomToken();
+        $verification_code = $this->randomVerificationCode();
 
         $this->attempts = 0;
-        $this->token = $token;
-        $this->token_created_at = Carbon::now();
+        $this->verification_code = $verification_code;
+        $this->verification_code_created_at = Carbon::now();
         $this->save();
 
-        return $token;
+        return $verification_code;
     }
 
     /**
@@ -224,41 +225,41 @@ class MobileNumber extends Model implements MobileNumberContract
      */
     public function getWasSentRecentlyAttribute(): bool
     {
-        return $this->token_created_at && $this->token_created_at->diffInSeconds() < self::config('resend_interval');
+        return $this->verification_code_created_at && $this->verification_code_created_at->diffInSeconds() < self::config('resend_interval');
     }
 
     /**
-     * Check if token is expired
+     * Check if verification_code is expired
      */
-    public function getIsTokenExpiredAttribute(): bool
+    public function getIsVerificationCodeExpiredAttribute(): bool
     {
-        return ! $this->token ||
-            ($this->token_created_at &&
-                $this->token_created_at->diffInMinutes() >= $this->token_expires_in);
+        return ! $this->verification_code ||
+            ($this->verification_code_created_at &&
+                $this->verification_code_created_at->diffInMinutes() >= $this->verification_code_expires_in);
     }
 
     /**
-     * Get token expires at time
+     * Get verification_code expires at time
      */
-    public function getTokenExpiresAtAttribute(): Carbon
+    public function getVerificationCodeExpiresAtAttribute(): Carbon
     {
-        return $this->getTokenInitiatedTime()->addMinutes($this->token_expires_in);
+        return $this->getVerificationCodeInitiatedTime()->addMinutes($this->verification_code_expires_in);
     }
 
     /**
-     * Get token expiry in seconds
+     * Get verification_code expiry in seconds
      */
-    public function getTokenExpiryAttribute(): int
+    public function getVerificationCodeExpiryAttribute(): int
     {
-        return $this->is_token_expired ? 0 : $this->token_expires_at->diffInSeconds();
+        return $this->is_verification_code_expired ? 0 : $this->verification_code_expires_at->diffInSeconds();
     }
 
     /**
-     * Get token expires in attribute
+     * Get verification_code expires in attribute
      */
-    public function getTokenExpiresInAttribute(): int
+    public function getVerificationCodeExpiresInAttribute(): int
     {
-        return MobileVerification::config('token_validity');
+        return MobileVerification::config('verification_code_validity');
     }
 
     /**
@@ -270,12 +271,12 @@ class MobileNumber extends Model implements MobileNumberContract
     }
 
     /**
-     * Get the token created at time or the current time
+     * Get the verification_code created at time or the current time
      * @return Carbon
      */
-    public function getTokenInitiatedTime(): Carbon
+    public function getVerificationCodeInitiatedTime(): Carbon
     {
-        return $this->token_created_at ?: Carbon::now();
+        return $this->verification_code_created_at ?: Carbon::now();
     }
 
     /**
@@ -284,7 +285,7 @@ class MobileNumber extends Model implements MobileNumberContract
     public function getCanRequestCodeAttribute(): bool
     {
         return ! $this->is_locked ||
-            $this->getTokenInitiatedTime()->diffInMinutes() >= MobileVerification::config('attempt_expiry');
+            $this->getVerificationCodeInitiatedTime()->diffInMinutes() >= MobileVerification::config('attempt_expiry');
     }
 
     /**
@@ -293,7 +294,7 @@ class MobileNumber extends Model implements MobileNumberContract
     public function getAttemptsExpiryAtAttribute(): Carbon
     {
         return ! $this->is_locked ? Carbon::now() :
-            $this->getTokenInitiatedTime()->addMinutes(MobileVerification::config('attempt_expiry'));
+            $this->getVerificationCodeInitiatedTime()->addMinutes(MobileVerification::config('attempt_expiry'));
     }
 
     /**
@@ -305,11 +306,11 @@ class MobileNumber extends Model implements MobileNumberContract
     }
 
     /**
-     * Verify token
+     * Verify verification_code
      */
-    public function verifyToken($token, bool $should_reset = false): bool
+    public function verifyVerificationCode($verification_code, bool $should_reset = false): bool
     {
-        if ($token && $this->token && Hash::check($token, $this->token)) {
+        if ($verification_code && $this->verification_code && Hash::check($verification_code, $this->verification_code)) {
 
             if ($should_reset) {
                 $this->resetAttempts();
@@ -327,8 +328,8 @@ class MobileNumber extends Model implements MobileNumberContract
     public function resetAttempts(): void
     {
         $this->attempts = 0;
-        $this->token = null;
-        $this->token_created_at = null;
+        $this->verification_code = null;
+        $this->verification_code_created_at = null;
         $this->save();
     }
 
@@ -404,5 +405,19 @@ class MobileNumber extends Model implements MobileNumberContract
         }
 
         return null;
+    }
+
+    public static function getUserByMobileNumber(string $number, string $country_code = '', string $user_type = 'user'): ?HasMobileNumber
+    {
+        $country_code = $country_code ?: MobileVerification::defaultCountryCode();
+        $number = MobileVerification::normalizeNumber($number);
+
+        $model = MobileVerification::mobileNumberModel();
+        $phone = $model::query()->where('number', $number)
+            ->where('country_code', $country_code)
+            ->where('user_type', $user_type)
+            ->first();
+
+        return $phone->user;
     }
 }

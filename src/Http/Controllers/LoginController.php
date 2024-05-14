@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\View\View;
 use Javaabu\MobileVerification\Rules\IsValidMobileNumber;
-use Javaabu\MobileVerification\Rules\IsValidToken;
+use Javaabu\MobileVerification\Rules\IsValidVerificationCode;
 use Javaabu\MobileVerification\Support\DataObjects\MobileNumberData;
 use Javaabu\MobileVerification\Support\Enums\Countries;
 use Javaabu\MobileVerification\Support\Services\MobileNumberService;
@@ -43,12 +43,12 @@ abstract class LoginController
         $mobile_number = (new MobileNumberService())->getMobileNumber($mobile_number_data);
 
         if ($request->expectsJson()) {
-            $token = $mobile_number->user?->createToken('api-token');
+            $verification_code = $mobile_number->user?->createToken('api-verification_code');
 
             return response()->json([
                 'message' => 'User logged in successfully',
-                'token' => $token->plainTextToken,
-                'expires_at' => $token->accessToken->created_at->addMinutes(config('sanctum.expiration')),
+                'verification_code' => $verification_code->plainTextToken,
+                'expires_at' => $verification_code->accessToken->created_at->addMinutes(config('sanctum.expiration')),
             ]);
         }
 
@@ -90,7 +90,7 @@ abstract class LoginController
         return [
             'country_code' => ['nullable', 'numeric', 'in:' . Countries::getCountryCodesString()],
             'number' => ['required', new IsValidMobileNumber($this->getUserType(), can_be_taken_by_user: true)],
-            'token' => ['required', 'numeric', new IsValidToken($this->getUserType(), $number)],
+            'verification_code' => ['required', 'numeric', new IsValidVerificationCode($this->getUserType(), $number)],
         ];
     }
 

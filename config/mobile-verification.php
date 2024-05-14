@@ -48,6 +48,14 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Mobile grant allowed client providers
+    |--------------------------------------------------------------------------
+    | List of user providers that can be used to be authenticated using mobile number grant type
+     * */
+    'mobile_grant_allowed_providers' => ['users'],
+
+    /*
+    |--------------------------------------------------------------------------
     | Number prefix
     |--------------------------------------------------------------------------
     | The prefix to add before fully qualified numbers
@@ -64,12 +72,12 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Token validity
+    | Verification code validity
     |--------------------------------------------------------------------------
-    | The number of minutes that a mobile number verification token
+    | The number of minutes that a mobile number verification code
     | would be valid for.
     */
-    'token_validity' => 10, // minutes
+    'verification_code_validity' => 10, // minutes
 
     /*
     |--------------------------------------------------------------------------

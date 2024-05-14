@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Javaabu\MobileVerification\Contracts\HasMobileNumber;
 use Javaabu\MobileVerification\Rules\IsValidMobileNumber;
-use Javaabu\MobileVerification\Rules\IsValidToken;
+use Javaabu\MobileVerification\Rules\IsValidVerificationCode;
 use Javaabu\MobileVerification\Support\Actions\AssociateUserWithMobileNumberAction;
 use Javaabu\MobileVerification\Support\DataObjects\MobileNumberData;
 use Javaabu\MobileVerification\Support\Enums\Countries;
@@ -73,14 +73,14 @@ trait CanRegisterUsingToken
     {
         $number = $request_data['number'] ?? null;
 
-        $token_validation_rules = [
+        $verification_code_validation_rules = [
             'country_code' => ['nullable', 'numeric', 'in:' . Countries::getCountryCodesString()],
             'number' => ['required', new IsValidMobileNumber($this->getUserType(), can_be_taken_by_user: false, can_send_otp: false)],
-            'token' => ['required', 'numeric', new IsValidToken($this->getUserType(), $number)],
+            'verification_code' => ['required', 'numeric', new IsValidVerificationCode($this->getUserType(), $number)],
         ];
 
         $user_data_validation_rules = $this->getUserDataValidationRules($request_data);
 
-        return array_merge($token_validation_rules, $user_data_validation_rules);
+        return array_merge($verification_code_validation_rules, $user_data_validation_rules);
     }
 }

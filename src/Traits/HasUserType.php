@@ -8,8 +8,8 @@ trait HasUserType
 {
     public function getUserType(): string
     {
-        if (property_exists($this, 'user_class')) {
-            return (new $this->user_class())->getMorphClass();
+        if (method_exists($this, 'getUserClass')) {
+            return (new ($this->getUserClass()))->getMorphClass();
         }
 
         throw new InvalidOperationException('The user class property is not defined in the class');
