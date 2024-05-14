@@ -56,6 +56,14 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Mobile Number Format Validator
+    |--------------------------------------------------------------------------
+    | This class that will be used to validate the mobile number format.
+     * */
+    'mobile_number_format_validator' => \Javaabu\MobileVerification\Support\MobileNumberFormatValidator::class,
+
+    /*
+    |--------------------------------------------------------------------------
     | Token validity
     |--------------------------------------------------------------------------
     | The number of minutes that a mobile number verification token

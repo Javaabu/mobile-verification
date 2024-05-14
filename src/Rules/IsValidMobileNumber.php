@@ -8,6 +8,7 @@ use Illuminate\Contracts\Validation\DataAwareRule;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Javaabu\MobileVerification\Models\MobileNumber;
 use Javaabu\MobileVerification\Support\Enums\Countries;
+use Javaabu\MobileVerification\Contracts\IsANumberFormatValidator;
 
 class IsValidMobileNumber implements DataAwareRule, ValidationRule
 {
@@ -62,6 +63,7 @@ class IsValidMobileNumber implements DataAwareRule, ValidationRule
     {
         $value = MobileVerification::normalizeNumber($value);
 
+        /* @var IsANumberFormatValidator $mobile_number_format_validator */
         $mobile_number_format_validator = config('mobile-verification.mobile_number_format_validator');
         if (! $mobile_number_format_validator->handle($this->getCountryCode(), $value)) {
             $fail(trans('mobile-verification::strings.validation.number.invalid', ['attribute' => $attribute]));
