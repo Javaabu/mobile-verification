@@ -31,4 +31,14 @@ class User extends Authenticatable implements HasMobileNumber
     {
         return '';
     }
+
+    public function findMobileGrantUser($oauth_user, $provider): ?HasMobileNumber
+    {
+        $number = $http_response_header->getNumber();
+        $user = User::whereHas('phone', function ($query) use ($number) {
+            $query->where('number', $number);
+        })->first();
+
+        return $user;
+    }
 }
