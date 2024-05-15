@@ -14,7 +14,35 @@ The update process with mobile number works as follows:
 2. The package verifies the OTP.
 3. The package then assigns the verified mobile number to the user and disassociates the previous mobile number from the user.
 
-## Step 1: Define the Routes
+
+## Step `2`: Create the Controller
+Create a controller that extends the `Javaabu\MobileVerification\Http\Controllers\UpdateMobileNumberController` class. Below is an example of how you can create the controller in your application.
+
+```php
+<?php
+
+namespace App\Http\Controllers;
+
+use Javaabu\MobileVerification\Contracts\SendVerificationCodeContract;use Javaabu\MobileVerification\Contracts\UpdateMobileNumberContract;use Javaabu\MobileVerification\Http\Controllers\UpdateMobileNumberController as BaseUpdateMobileNumberController;use Javaabu\SmsNotifications\Notifications\SendsSms;
+
+class UpdateMobileNumberController implements 
+    SendVerificationCodeContract, 
+    UpdateMobileNumberContract
+{
+    use SendsVerificationCode;
+    use UpdatesMobileNumber;
+    
+    public function mustBeARegisteredMobileNumber(array $request_data): ?bool
+    {
+        return false;
+    }
+    
+}
+```
+
+
+
+## Step 2: Define the Routes
 Define the routes in your application. Below is an example of how you can define the routes in your application.
 
 ```php
@@ -29,33 +57,4 @@ And if you are not doing an API request, you can define the route from which the
 use Illuminate\Support\Facades\Route;
 
 Route::get('update-mobile-number-form', [App\Http\Controllers\UpdateMobileNumberController::class, 'showUpdateForm'])->name('mobile-numbers.update-mobile-number-form');
-```
-
-## Step 2: Create the Controller
-Create a controller that extends the `Javaabu\MobileVerification\Http\Controllers\UpdateMobileNumberController` class. Below is an example of how you can create the controller in your application.
-
-```php
-<?php
-
-namespace App\Http\Controllers;
-
-use Javaabu\MobileVerification\Http\Controllers\UpdateMobileNumberController as BaseUpdateMobileNumberController;
-
-class UpdateMobileNumberController extends BaseUpdateMobileNumberController
-{
-    /*
-     * Define the user class to be used for mobile number validation
-     */
-    public string $user_class = User::class;
-    
-    /*
-     * Define the guard to be used for the user
-     */
-    protected string $user_guard = 'web';
-    
-    /*
-     * Define the user column to be used for mobile number validation
-     */
-    public string $form_view = 'web.mobile-numbers.update-mobile-number-form';
-}
 ```

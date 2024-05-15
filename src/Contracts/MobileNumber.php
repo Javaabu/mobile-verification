@@ -52,6 +52,10 @@ interface MobileNumber extends SmsNotifiable
 
     public function getWasSentRecentlyAttribute(): bool;
 
+    public function verificationCodeResponseData(): array;
+
+    public function getResendVerificationCodeInAttribute(): int;
+
     public static function blankPhone(string $number, string $country_code = '', string $user_type = 'user'): ?self;
 
     public static function getUserByMobileNumber(string $number, string $country_code = '', string $user_type = 'user'): ?HasMobileNumber;

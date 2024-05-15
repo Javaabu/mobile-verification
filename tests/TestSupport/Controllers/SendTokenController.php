@@ -2,12 +2,12 @@
 
 namespace Javaabu\MobileVerification\Tests\TestSupport\Controllers;
 
-use Javaabu\MobileVerification\Contracts\HasOtpHandling;
+use Javaabu\MobileVerification\Contracts\SendVerificationCodeContract;
 use Javaabu\MobileVerification\Http\Controllers\OTPController;
 use Javaabu\MobileVerification\Tests\TestSupport\Models\User;
 use Javaabu\MobileVerification\Traits\CanSendVerificationCode;
 
-class SendTokenController implements HasOtpHandling
+class SendTokenController implements SendVerificationCodeContract
 {
     use CanSendVerificationCode;
 

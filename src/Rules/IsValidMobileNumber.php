@@ -27,17 +27,15 @@ class IsValidMobileNumber implements DataAwareRule, ValidationRule
 
     public function registered(): static
     {
-        $this->should_be_registered_number = true;
-        return $this;
+        return $this->setShouldBeRegisteredNumber(true);
     }
 
     public function notRegistered(): static
     {
-        $this->should_be_registered_number = false;
-        return $this;
+        return $this->setShouldBeRegisteredNumber(false);
     }
 
-    public function mustBeARegisteredMobileNumber(?bool $value): static
+    public function setShouldBeRegisteredNumber(?bool $value = null): static
     {
         $this->should_be_registered_number = $value;
         return $this;
@@ -84,7 +82,9 @@ class IsValidMobileNumber implements DataAwareRule, ValidationRule
         if ((! $this->can_send_otp) && is_null($this->should_be_registered_number)) {
             return;
         }
-        $mobile_number = MobileNumber::query()
+
+        $model_class = MobileVerification::mobileNumberModel();
+        $mobile_number = $model_class::query()
                                      ->when($this->getIgnoreUserId(), function ($query) {
                                          $query->where('user_id', '!=', $this->ignore_user_id); // todo : test
                                      })

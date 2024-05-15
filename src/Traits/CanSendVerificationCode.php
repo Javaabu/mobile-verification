@@ -7,6 +7,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\View\View;
+use Symfony\Component\HttpFoundation\Response;
 use Javaabu\MobileVerification\Notifications\MobileNumberVerificationToken;
 use Javaabu\MobileVerification\Support\DataObjects\MobileNumberData;
 use Javaabu\MobileVerification\Support\Services\MobileNumberService;
@@ -15,7 +16,7 @@ trait CanSendVerificationCode
 {
     use CanValidateMobileNumber;
 
-    public function mobileNumberOtp(Request $request): RedirectResponse|JsonResponse
+    public function requestVerificationCode(Request $request)
     {
         $rules = $this->getMobileNumberValidationRules($request->all());
         $messages = $this->getMobileNumberValidationErrorMessages();

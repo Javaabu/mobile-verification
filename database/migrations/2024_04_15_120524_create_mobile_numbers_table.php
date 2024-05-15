@@ -22,6 +22,7 @@ class CreateMobileNumbersTable extends Migration
                 $table->string('country_code');
                 $table->string('verification_code')->nullable();
                 $table->dateTime('verification_code_created_at')->nullable();
+                $table->uuid('verification_code_id')->nullable();
                 $table->timestamps();
 
                 // 1 number per user

@@ -3,6 +3,7 @@
 namespace Javaabu\MobileVerification;
 
 use Illuminate\Http\Request;
+use Javaabu\MobileVerification\Contracts\MobileNumber;
 
 class MobileVerification
 {
@@ -56,6 +57,12 @@ class MobileVerification
     public static function mobileNumberModel(): string
     {
         return self::config('mobile_number_model');
+    }
+
+    public static function findMobileNumberById(string $id): ?MobileNumber
+    {
+        $model_class = self::mobileNumberModel();
+        return $model_class::find($id);
     }
 
     /**

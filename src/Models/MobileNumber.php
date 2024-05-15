@@ -62,6 +62,7 @@ class MobileNumber extends Model implements MobileNumberContract
     protected $appends = [
         'formatted_number',
         'verification_code_expires_in',
+        'resend_verification_code_in',
     ];
 
     protected static array $logExceptAttributes = [
@@ -214,6 +215,7 @@ class MobileNumber extends Model implements MobileNumberContract
         $this->attempts = 0;
         $this->verification_code = $verification_code;
         $this->verification_code_created_at = Carbon::now();
+        $this->verification_code_id = Str::uuid();
         $this->save();
 
         return $verification_code;
@@ -226,6 +228,13 @@ class MobileNumber extends Model implements MobileNumberContract
     public function getWasSentRecentlyAttribute(): bool
     {
         return $this->verification_code_created_at && $this->verification_code_created_at->diffInSeconds() < self::config('resend_interval');
+    }
+
+    public function getResendVerificationCodeInAttribute(): int
+    {
+        return $this->was_sent_recently
+            ? self::config('resend_interval') - $this->verification_code_created_at->diffInSeconds()
+            : 0;
     }
 
     /**
@@ -330,6 +339,7 @@ class MobileNumber extends Model implements MobileNumberContract
         $this->attempts = 0;
         $this->verification_code = null;
         $this->verification_code_created_at = null;
+        $this->verification_code_id = null;
         $this->save();
     }
 
@@ -414,10 +424,27 @@ class MobileNumber extends Model implements MobileNumberContract
 
         $model = MobileVerification::mobileNumberModel();
         $phone = $model::query()->where('number', $number)
-            ->where('country_code', $country_code)
-            ->where('user_type', $user_type)
-            ->first();
+                       ->where('country_code', $country_code)
+                       ->where('user_type', $user_type)
+                       ->first();
 
         return $phone->user;
+    }
+
+    public function verificationCodeResponseData(): array
+    {
+        return [
+            'verification_code_id' => $this->verification_code_id,
+            'user_type'            => $this->user_type,
+            'is_registered'        => (bool)$this->user_id,
+            'expires_at'           => $this->verification_code_expires_at,
+            'expiry_duration'      => $this->verification_code_expiry,
+            'expires_in'           => $this->verification_code_expires_in,
+            'resend_interval'      => MobileVerification::config('resend_interval'),
+            'resend_in'            => $this->resend_verification_code_in,
+            'attempts'             => $this->attempts,
+            'is_locked'            => $this->is_locked,
+            'attempt_expiry'       => $this->attempts_expiry,
+        ];
     }
 }

@@ -2,9 +2,9 @@
 
 namespace Javaabu\MobileVerification\Contracts;
 
-interface HasOtpHandling
+interface HasUserTypeContract
 {
     public function getUserClass(): string;
 
-    public function mustBeARegisteredMobileNumber(array $request_data): ?bool;
+    public function getUserType(): string;
 }

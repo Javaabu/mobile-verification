@@ -36,7 +36,7 @@ Define the routes in your application. Below is an example of how you can define
 ```php
 use Illuminate\Support\Facades\Route;
 
-Route::post('request-otp', [App\Http\Controllers\OTPController::class, 'requestOtp'])->name('otp.request');
+Route::post('request-otp', [App\Http\Controllers\OTPController::class, 'requestVerificationCode'])->name('otp.request');
 ```
 
 And if you are not doing an API request, you can define the route from which the request is coming from.
@@ -60,9 +60,9 @@ use Illuminate\Http\JsonResponse;
 
 use Javaabu\MobileVerification\Http\Controllers\OTPController as BaseOTPController;use Javaabu\SmsNotifications\Notifications\SendsSms;
 
-class OTPController implements 
+class OTPController implements SendVerificationCodeContract
 {
-    use SendsMobileVerificationCode;
+    use SendsVerificationCode;
     
     public function getUserClass(Request $request): string
     {

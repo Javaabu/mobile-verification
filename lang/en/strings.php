@@ -18,6 +18,10 @@ return [
             'invalid' => 'The token is invalid.',
             'expired' => 'The token has expired.',
             'locked' => 'The number is locked due to too many attempts.'
+        ],
+        'messages' => [
+            'verification_code_verified' => "Your mobile number has been successfully verified.",
+            'verification_code_verified_title' => 'Verification Successful',
         ]
     ]
 ];

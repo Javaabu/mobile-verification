@@ -20,7 +20,7 @@ trait CanValidateMobileNumber
             'number' => [
                 'required',
                 (new IsValidMobileNumber($this->getUserType()))
-                    ->mustBeARegisteredMobileNumber($this->mustBeARegisteredMobileNumber($request_data)),
+                    ->setShouldBeRegisteredNumber($this->mustBeARegisteredMobileNumber($request_data)),
             ],
         ];
     }

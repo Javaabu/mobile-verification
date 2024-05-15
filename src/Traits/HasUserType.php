@@ -3,15 +3,13 @@
 namespace Javaabu\MobileVerification\Traits;
 
 use Javaabu\Helpers\Exceptions\InvalidOperationException;
+use Javaabu\MobileVerification\Contracts\HasUserTypeContract;
 
+/* @var HasUserTypeContract $this */
 trait HasUserType
 {
     public function getUserType(): string
     {
-        if (method_exists($this, 'getUserClass')) {
-            return (new ($this->getUserClass()))->getMorphClass();
-        }
-
-        throw new InvalidOperationException('The user class property is not defined in the class');
+        return (new ($this->getUserClass()))->getMorphClass();
     }
 }

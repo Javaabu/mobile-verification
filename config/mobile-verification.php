@@ -121,4 +121,16 @@ return [
     | Whether the use Recaptcha to prevent SPAM OTP requests
     */
     'use_recaptcha' => env('MOBILE_NUMBER_USE_RECAPTCHA', true),
+
+    /*
+    |--------------------------------------------------------------------------
+    | Notifications
+    |--------------------------------------------------------------------------
+    |
+     * */
+    'notifications' => [
+        'login' => \Javaabu\MobileVerification\Notifications\LoginNotification::class,
+        'verification_code' => \Javaabu\MobileVerification\Notifications\MobileNumberVerificationToken::class,
+        'update' => \Javaabu\MobileVerification\Notifications\UpdateMobileNumberNotification::class,
+    ]
 ];
