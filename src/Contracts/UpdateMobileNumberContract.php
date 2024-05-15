@@ -7,5 +7,4 @@ interface UpdateMobileNumberContract extends
     VerifyVerificationCodeContract,
     HasSessionMobileNumberContract
 {
-
 }

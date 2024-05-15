@@ -3,8 +3,8 @@
 namespace Javaabu\MobileVerification\Rules;
 
 use Closure;
-use Javaabu\MobileVerification\MobileVerification;
 use Illuminate\Contracts\Validation\ValidationRule;
+use Javaabu\MobileVerification\MobileVerification;
 
 class IsValidCountryCode implements ValidationRule
 {

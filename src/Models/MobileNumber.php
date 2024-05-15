@@ -3,20 +3,20 @@
 namespace Javaabu\MobileVerification\Models;
 
 use Carbon\Carbon;
-use Illuminate\Support\Str;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\MorphTo;
+use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Notifications\Notifiable;
-use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Str;
 use Javaabu\Activitylog\Traits\LogsActivity;
-use Javaabu\MobileVerification\MobileVerification;
-use Illuminate\Database\Eloquent\Relations\MorphTo;
-use Javaabu\SmsNotifications\Notifiable\HasSmsNumber;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Javaabu\MobileVerification\Contracts\HasMobileNumber;
-use Javaabu\MobileVerification\Factories\MobileNumberFactory;
 use Javaabu\MobileVerification\Contracts\MobileNumber as MobileNumberContract;
+use Javaabu\MobileVerification\Factories\MobileNumberFactory;
+use Javaabu\MobileVerification\MobileVerification;
+use Javaabu\SmsNotifications\Notifiable\HasSmsNumber;
 
 class MobileNumber extends Model implements MobileNumberContract
 {
@@ -436,16 +436,16 @@ class MobileNumber extends Model implements MobileNumberContract
     {
         return [
             'verification_code_id' => $this->verification_code_id,
-            'user_type'            => $this->user_type,
-            'is_registered'        => (bool)$this->user_id,
-            'expires_at'           => $this->verification_code_expires_at,
-            'expiry_duration'      => $this->verification_code_expiry,
-            'expires_in'           => $this->verification_code_expires_in,
-            'resend_interval'      => MobileVerification::config('resend_interval'),
-            'resend_in'            => $this->resend_verification_code_in,
-            'attempts'             => $this->attempts,
-            'is_locked'            => $this->is_locked,
-            'attempt_expiry'       => $this->attempts_expiry,
+            'user_type' => $this->user_type,
+            'is_registered' => (bool)$this->user_id,
+            'expires_at' => $this->verification_code_expires_at,
+            'expiry_duration' => $this->verification_code_expiry,
+            'expires_in' => $this->verification_code_expires_in,
+            'resend_interval' => MobileVerification::config('resend_interval'),
+            'resend_in' => $this->resend_verification_code_in,
+            'attempts' => $this->attempts,
+            'is_locked' => $this->is_locked,
+            'attempt_expiry' => $this->attempts_expiry,
         ];
     }
 }

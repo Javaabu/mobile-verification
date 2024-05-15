@@ -2,8 +2,8 @@
 
 namespace Javaabu\MobileVerification\Factories;
 
-use Javaabu\Activitylog\CauserTypes;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Javaabu\Activitylog\CauserTypes;
 use Javaabu\MobileVerification\Models\MobileNumber;
 
 class MobileNumberFactory extends Factory

@@ -62,6 +62,7 @@ class MobileVerification
     public static function findMobileNumberById(string $id): ?MobileNumber
     {
         $model_class = self::mobileNumberModel();
+
         return $model_class::find($id);
     }
 

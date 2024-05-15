@@ -2,14 +2,14 @@
 
 namespace Javaabu\MobileVerification\Traits;
 
-use Illuminate\View\View;
-use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\View\View;
+use Javaabu\MobileVerification\Notifications\MobileNumberVerificationToken;
 use Javaabu\MobileVerification\Support\DataObjects\MobileNumberData;
 use Javaabu\MobileVerification\Support\Services\MobileNumberService;
-use Javaabu\MobileVerification\Notifications\MobileNumberVerificationToken;
 
 trait CanSendVerificationCode
 {

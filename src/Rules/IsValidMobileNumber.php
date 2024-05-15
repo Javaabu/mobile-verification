@@ -4,9 +4,9 @@ namespace Javaabu\MobileVerification\Rules;
 
 use Closure;
 use Illuminate\Contracts\Validation\DataAwareRule;
-use Javaabu\MobileVerification\MobileVerification;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Javaabu\MobileVerification\Contracts\IsANumberFormatValidator;
+use Javaabu\MobileVerification\MobileVerification;
 
 class IsValidMobileNumber implements DataAwareRule, ValidationRule
 {
@@ -34,12 +34,14 @@ class IsValidMobileNumber implements DataAwareRule, ValidationRule
     public function setShouldBeRegisteredNumber(?bool $value = null): static
     {
         $this->should_be_registered_number = $value;
+
         return $this;
     }
 
     public function canSendOtp(): static
     {
         $this->can_send_otp = true;
+
         return $this;
     }
 
@@ -56,6 +58,7 @@ class IsValidMobileNumber implements DataAwareRule, ValidationRule
     public function ignore(string $user_id): static
     {
         $this->ignore_user_id = $user_id;
+
         return $this;
     }
 
@@ -113,6 +116,7 @@ class IsValidMobileNumber implements DataAwareRule, ValidationRule
     public function setData(array $data): static
     {
         $this->setCountryCode($data[$this->country_code_input_name] ?? null);
+
         return $this;
     }
 }

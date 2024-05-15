@@ -2,11 +2,11 @@
 
 namespace Javaabu\MobileVerification\Tests\Feature\Rules;
 
-use Javaabu\MobileVerification\Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Javaabu\MobileVerification\Models\MobileNumber;
-use Javaabu\MobileVerification\Support\Enums\Countries;
 use Javaabu\MobileVerification\Rules\IsValidMobileNumber;
+use Javaabu\MobileVerification\Support\Enums\Countries;
+use Javaabu\MobileVerification\Tests\TestCase;
 use Javaabu\MobileVerification\Tests\TestSupport\Models\User;
 
 class IsValidMobileNumberRuleTest extends TestCase
