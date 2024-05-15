@@ -2,6 +2,7 @@
 
 namespace Javaabu\MobileVerification\Traits;
 
+use Illuminate\View\View;
 use Illuminate\Http\Request;
 use Javaabu\MobileVerification\Contracts\MobileNumber;
 use Javaabu\MobileVerification\Contracts\HasMobileNumber;
@@ -15,6 +16,15 @@ trait LoginsWithMobileNumber
     use UsesSessionMobileNumber;
     use VerifiesVerificationCode;
     use UsesGuard;
+
+    public function showVerificationCodeRequestForm(Request $request): View
+    {
+        if ($mobile_number = $this->getSessionMobileNumber($request)) {
+            return $this->showVerificationCodeForm($request, $mobile_number);
+        }
+
+        return view($this->getVerificationCodeRequestFormView());
+    }
 
     public function doAfterVerificationCodeVerified(MobileNumber $mobile_number, Request $request): mixed
     {

@@ -29,7 +29,7 @@ trait VerifiesVerificationCode
         return $this->sendSuccessfulCodeVerificationResponse($mobile_number, $request, $data);
     }
 
-    public function showVerificationCodeForm(?MobileNumber $mobile_number = null): View
+    public function showVerificationCodeForm(Request $request, ?MobileNumber $mobile_number = null): View
     {
         return view($this->getVerificationCodeFormView(), [
             'mobile_number' => $mobile_number,

@@ -8,7 +8,7 @@ use Illuminate\Validation\Validator;
 
 interface VerifyVerificationCodeContract extends HasRequestMobileNumberContract
 {
-    public function showVerificationCodeForm(?MobileNumber $mobile_number = null): View;
+    public function showVerificationCodeForm(Request $request, ?MobileNumber $mobile_number = null): View;
 
     public function getVerificationCodeFormView(): ?string;
 

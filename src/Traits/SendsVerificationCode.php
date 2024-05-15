@@ -14,7 +14,7 @@ use Javaabu\MobileVerification\Contracts\SendVerificationCodeContract;
 /* @var SendVerificationCodeContract $this */
 trait SendsVerificationCode
 {
-    public function showVerificationCodeRequestForm(): View
+    public function showVerificationCodeRequestForm(Request $request): View
     {
         return view($this->getVerificationCodeRequestFormView());
     }

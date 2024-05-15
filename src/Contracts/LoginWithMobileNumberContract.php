@@ -11,8 +11,4 @@ interface LoginWithMobileNumberContract extends
     HasGuardContract
 {
 
-
-
-
-
 }

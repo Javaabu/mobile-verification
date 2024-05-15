@@ -10,7 +10,7 @@ use Javaabu\SmsNotifications\Notifications\SmsNotification;
 
 interface SendVerificationCodeContract extends HasRequestMobileNumberContract
 {
-    public function showVerificationCodeRequestForm(): View;
+    public function showVerificationCodeRequestForm(Request $request): View;
 
     public function requestVerificationCode(Request $request);
 

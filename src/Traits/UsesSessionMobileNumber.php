@@ -10,7 +10,7 @@ trait UsesSessionMobileNumber
 {
     public function getSessionMobileNumberId(Request $request): ?string
     {
-        return $request->session()->get($this->getSessionMobileNumberKey());
+        return $request->session()->pull($this->getSessionMobileNumberKey());
     }
 
     public function getSessionMobileNumber(Request $request): ?MobileNumber

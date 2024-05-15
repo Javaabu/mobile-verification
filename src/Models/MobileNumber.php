@@ -203,6 +203,7 @@ class MobileNumber extends Model implements MobileNumberContract
         $this->attempts = 0;
         $this->verification_code = null;
         $this->verification_code_created_at = null;
+        $this->verification_code_id = null;
     }
 
     /**
