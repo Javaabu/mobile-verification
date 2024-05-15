@@ -34,4 +34,8 @@ interface SendVerificationCodeContract extends HasRequestMobileNumberContract
     public function getVerificationCodeSmsNotification(string $verification_code, MobileNumber $mobile_number): SmsNotification;
 
     public function enableReCaptcha(): bool;
+
+    public function redirectAfterVerificationCodeRequest(MobileNumber $mobile_number, Request $request);
+
+    public function shouldAddMobileNumberToSession(): bool;
 }

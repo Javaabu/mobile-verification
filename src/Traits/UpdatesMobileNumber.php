@@ -19,4 +19,19 @@ trait UpdatesMobileNumber
         return new $notification_class($verification_code, $mobile_number);
     }
 
+
+    public function mustBeARegisteredMobileNumber(array $request_data): ?bool
+    {
+        return false;
+    }
+
+    public function getSessionMobileNumberKey(): string
+    {
+        return 'mobile_to_update';
+    }
+
+    public function shouldAddMobileNumberToSession(): bool
+    {
+        return true;
+    }
 }

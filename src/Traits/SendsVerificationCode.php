@@ -34,7 +34,7 @@ trait SendsVerificationCode
 
         $this->sendVerificationCodeSms($verification_code, $mobile_number);
 
-        if (method_exists($this, 'getSessionMobileNumberKey') && $this->getSessionMobileNumberKey()) {
+        if ($this->shouldAddMobileNumberToSession()) {
             $this->setSessionMobileNumber($mobile_number, $request);
         }
 
@@ -50,6 +50,11 @@ trait SendsVerificationCode
             return response()->json($mobile_number->verificationCodeResponseData());
         }
 
+        return $this->redirectAfterVerificationCodeRequest($mobile_number, $request);
+    }
+
+    public function redirectAfterVerificationCodeRequest(MobileNumber $mobile_number, Request $request)
+    {
         return back()->with([
             'success'       => true,
             'mobile_number' => $mobile_number,
@@ -101,5 +106,10 @@ trait SendsVerificationCode
     public function enableReCaptcha(): bool
     {
         return config('mobile-verification.use_recaptcha');
+    }
+
+    public function shouldAddMobileNumberToSession(): bool
+    {
+        return false;
     }
 }
