@@ -9,7 +9,6 @@ use Javaabu\SmsNotifications\Notifiable\SmsNotifiable;
 
 interface MobileNumber extends SmsNotifiable
 {
-
     public function user(): MorphTo;
 
     public function scopeSearch(Builder $query, string $search): Builder;

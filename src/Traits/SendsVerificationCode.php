@@ -5,17 +5,15 @@ namespace Javaabu\MobileVerification\Traits;
 use Illuminate\View\View;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Validator;
-use Javaabu\MobileVerification\MobileVerification;
-use Illuminate\Support\Facades\Validator as ValidatorFacade;
 use Javaabu\MobileVerification\Contracts\MobileNumber;
 use Javaabu\MobileVerification\Rules\IsValidCountryCode;
 use Javaabu\MobileVerification\Rules\IsValidMobileNumber;
+use Illuminate\Support\Facades\Validator as ValidatorFacade;
 use Javaabu\MobileVerification\Contracts\SendVerificationCodeContract;
 
 /* @var SendVerificationCodeContract $this */
 trait SendsVerificationCode
 {
-
     public function showVerificationCodeRequestForm(): View
     {
         return view($this->getVerificationCodeRequestFormView());

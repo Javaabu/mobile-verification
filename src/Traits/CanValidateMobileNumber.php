@@ -4,7 +4,6 @@ namespace Javaabu\MobileVerification\Traits;
 
 use Javaabu\MobileVerification\Rules\IsValidCountryCode;
 use Javaabu\MobileVerification\Rules\IsValidMobileNumber;
-use Javaabu\MobileVerification\Support\Enums\Countries;
 
 trait CanValidateMobileNumber
 {

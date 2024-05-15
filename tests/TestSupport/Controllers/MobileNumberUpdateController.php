@@ -2,18 +2,14 @@
 
 namespace Javaabu\MobileVerification\Tests\TestSupport\Controllers;
 
-use Illuminate\View\View;
 use Illuminate\Http\Request;
 use Javaabu\MobileVerification\Contracts\MobileNumber;
 use Javaabu\MobileVerification\Contracts\HasMobileNumber;
 use Javaabu\MobileVerification\Traits\UpdatesMobileNumber;
-use Javaabu\MobileVerification\Traits\SendsVerificationCode;
-use Javaabu\MobileVerification\Traits\UsesSessionMobileNumber;
-use Javaabu\MobileVerification\Contracts\SendVerificationCodeContract;
-use Javaabu\MobileVerification\Contracts\VerifyVerificationCodeContract;
-use Javaabu\MobileVerification\Contracts\HasSessionMobileNumberContract;
-use Javaabu\MobileVerification\Http\Controllers\UpdateMobileNumberController;
 use Javaabu\MobileVerification\Tests\TestSupport\Models\User;
+use Javaabu\MobileVerification\Contracts\SendVerificationCodeContract;
+use Javaabu\MobileVerification\Contracts\HasSessionMobileNumberContract;
+use Javaabu\MobileVerification\Contracts\VerifyVerificationCodeContract;
 
 class MobileNumberUpdateController implements
     SendVerificationCodeContract,
@@ -45,10 +41,10 @@ class MobileNumberUpdateController implements
     public function doAfterVerificationCodeVerified(MobileNumber $mobile_number, Request $request): mixed
     {
         /* @var HasMobileNumber $user */
-         $user = $request->user();
-         $user->updatePhone($mobile_number);
+        $user = $request->user();
+        $user->updatePhone($mobile_number);
 
-         return $user;
+        return $user;
     }
 
     public function verificationCodeSuccessRedirectUrl(): string

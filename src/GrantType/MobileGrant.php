@@ -9,25 +9,23 @@ use Psr\Http\Message\ServerRequestInterface;
 use League\OAuth2\Server\Grant\AbstractGrant;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Laravel\Passport\Bridge\User as UserEntity;
-use Javaabu\MobileVerification\Rules\IsValidVerificationCode;
 use Javaabu\MobileVerification\MobileVerification;
-use League\OAuth2\Server\Entities\UserEntityInterface;
 use Javaabu\MobileVerification\Contracts\MobileNumber;
-use League\OAuth2\Server\Exception\OAuthServerException;
-use League\OAuth2\Server\Entities\ClientEntityInterface;
+use League\OAuth2\Server\Entities\UserEntityInterface;
 use Javaabu\MobileVerification\Rules\IsValidCountryCode;
+use League\OAuth2\Server\Entities\ClientEntityInterface;
+use League\OAuth2\Server\Exception\OAuthServerException;
 use Javaabu\MobileVerification\Rules\IsValidMobileNumber;
+use Javaabu\MobileVerification\Rules\IsValidVerificationCode;
 use League\OAuth2\Server\ResponseTypes\ResponseTypeInterface;
 use League\OAuth2\Server\Repositories\RefreshTokenRepositoryInterface;
 use League\OAuth2\Server\Exception\UniqueTokenIdentifierConstraintViolationException;
 
 class MobileGrant extends AbstractGrant
 {
-
     public function __construct(
         RefreshTokenRepositoryInterface $refreshTokenRepository,
-    )
-    {
+    ) {
         $this->setRefreshTokenRepository($refreshTokenRepository);
         $this->refreshTokenTTL = new DateInterval('P1M');
     }
@@ -45,8 +43,7 @@ class MobileGrant extends AbstractGrant
         ServerRequestInterface $request,
         ResponseTypeInterface  $responseType,
         DateInterval           $accessTokenTTL
-    ): ResponseTypeInterface
-    {
+    ): ResponseTypeInterface {
         $client = $this->validateClient($request);
         $scopes = $this->validateScopes($this->getRequestParameter('scope', $request, $this->defaultScope));
         $user = $this->validateUser($request, $client);
@@ -169,7 +166,7 @@ class MobileGrant extends AbstractGrant
             throw OAuthServerException::invalidRequest('client_id', 'Unable to determine authentication model from configuration.');
         }
 
-        return (new $user_model)->getMorphClass();
+        return (new $user_model())->getMorphClass();
     }
 
 }

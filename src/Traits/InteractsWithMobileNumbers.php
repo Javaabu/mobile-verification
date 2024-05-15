@@ -6,12 +6,12 @@
 namespace Javaabu\MobileVerification\Traits;
 
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Relations\MorphOne;
-use Javaabu\MobileVerification\Contracts\HasMobileNumber;
-use Javaabu\MobileVerification\Contracts\MobileNumber;
-use Javaabu\MobileVerification\Events\MobileNumberUpdated;
 use Javaabu\MobileVerification\MobileVerification;
+use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Javaabu\SmsNotifications\Notifiable\HasSmsNumber;
+use Javaabu\MobileVerification\Contracts\MobileNumber;
+use Javaabu\MobileVerification\Contracts\HasMobileNumber;
+use Javaabu\MobileVerification\Events\MobileNumberUpdated;
 
 trait InteractsWithMobileNumbers
 {

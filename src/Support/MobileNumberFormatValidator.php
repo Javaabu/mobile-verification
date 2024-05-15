@@ -6,7 +6,6 @@ use Javaabu\MobileVerification\Contracts\IsANumberFormatValidator;
 
 class MobileNumberFormatValidator implements IsANumberFormatValidator
 {
-
     /*
      * Returns true if the number is in the correct format
      * */

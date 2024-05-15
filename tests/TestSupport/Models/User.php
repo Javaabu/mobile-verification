@@ -2,20 +2,20 @@
 
 namespace Javaabu\MobileVerification\Tests\TestSupport\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Javaabu\MobileVerification\Contracts\HasMobileNumber;
-use Javaabu\MobileVerification\Tests\TestSupport\Factories\UserFactory;
 use Javaabu\MobileVerification\Traits\InteractsWithMobileNumbers;
-use Laravel\Sanctum\HasApiTokens;
+use Javaabu\MobileVerification\Tests\TestSupport\Factories\UserFactory;
 
 class User extends Authenticatable implements HasMobileNumber
 {
-    use InteractsWithMobileNumbers;
-    use HasFactory;
-    use SoftDeletes;
     use HasApiTokens;
+    use HasFactory;
+    use InteractsWithMobileNumbers;
+    use SoftDeletes;
 
     protected static function newFactory()
     {

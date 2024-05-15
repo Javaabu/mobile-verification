@@ -2,12 +2,12 @@
 
 namespace Javaabu\MobileVerification\Tests\Feature\Controllers\Web;
 
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Notification;
-use Javaabu\MobileVerification\Models\MobileNumber;
-use Javaabu\MobileVerification\Notifications\MobileNumberVerificationToken;
 use Javaabu\MobileVerification\Tests\TestCase;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Javaabu\MobileVerification\Models\MobileNumber;
 use Javaabu\MobileVerification\Tests\TestSupport\Models\User;
+use Javaabu\MobileVerification\Notifications\MobileNumberVerificationToken;
 
 class SendTokenControllerTest extends TestCase
 {

@@ -7,7 +7,6 @@ use Illuminate\Contracts\Validation\DataAwareRule;
 use Javaabu\MobileVerification\MobileVerification;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Javaabu\MobileVerification\Models\MobileNumber;
-use Javaabu\MobileVerification\Support\Enums\Countries;
 
 class IsValidVerificationCode implements DataAwareRule, ValidationRule
 {

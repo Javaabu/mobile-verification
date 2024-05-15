@@ -8,7 +8,6 @@ use Javaabu\MobileVerification\Contracts\MobileNumber;
 
 trait UsesSessionMobileNumber
 {
-
     public function getSessionMobileNumberId(Request $request): ?string
     {
         return $request->session()->get($this->getSessionMobileNumberKey());

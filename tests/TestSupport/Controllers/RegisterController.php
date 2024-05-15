@@ -3,9 +3,9 @@
 namespace Javaabu\MobileVerification\Tests\TestSupport\Controllers;
 
 use Javaabu\MobileVerification\Contracts\HasMobileNumber;
+use Javaabu\MobileVerification\Tests\TestSupport\Models\User;
 use Javaabu\MobileVerification\Contracts\SendVerificationCodeContract;
 use Javaabu\MobileVerification\Http\Controllers\RegistrationController;
-use Javaabu\MobileVerification\Tests\TestSupport\Models\User;
 
 class RegisterController extends RegistrationController implements SendVerificationCodeContract
 {

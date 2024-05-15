@@ -2,10 +2,10 @@
 
 namespace Javaabu\MobileVerification\Support\Services;
 
-use Javaabu\MobileVerification\Contracts\HasMobileNumber;
-use Javaabu\MobileVerification\Contracts\MobileNumber as MobileNumberContract;
 use Javaabu\MobileVerification\Models\MobileNumber;
+use Javaabu\MobileVerification\Contracts\HasMobileNumber;
 use Javaabu\MobileVerification\Support\DataObjects\MobileNumberData;
+use Javaabu\MobileVerification\Contracts\MobileNumber as MobileNumberContract;
 
 class MobileNumberService
 {

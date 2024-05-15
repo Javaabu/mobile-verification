@@ -4,8 +4,8 @@ namespace Javaabu\MobileVerification\Tests\TestSupport\Controllers;
 
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
-use Javaabu\MobileVerification\Http\Controllers\LoginController as BaseLoginController;
 use Javaabu\MobileVerification\Tests\TestSupport\Models\User;
+use Javaabu\MobileVerification\Http\Controllers\LoginController as BaseLoginController;
 
 class LoginController extends BaseLoginController
 {

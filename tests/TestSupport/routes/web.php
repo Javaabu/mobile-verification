@@ -2,12 +2,12 @@
 
 use Illuminate\Support\Facades\Route;
 use Javaabu\MobileVerification\Tests\TestSupport\Controllers\LoginController;
-use Javaabu\MobileVerification\Tests\TestSupport\Controllers\MobileNumberUpdateController;
-use Javaabu\MobileVerification\Tests\TestSupport\Controllers\MobileNumberUpdateTokenController;
 use Javaabu\MobileVerification\Tests\TestSupport\Controllers\RegisterController;
 use Javaabu\MobileVerification\Tests\TestSupport\Controllers\SendTokenController;
-use Javaabu\MobileVerification\Tests\TestSupport\Controllers\ValidateMobileNumbersController;
 use Javaabu\MobileVerification\Tests\TestSupport\Controllers\VerifyTokenController;
+use Javaabu\MobileVerification\Tests\TestSupport\Controllers\MobileNumberUpdateController;
+use Javaabu\MobileVerification\Tests\TestSupport\Controllers\ValidateMobileNumbersController;
+use Javaabu\MobileVerification\Tests\TestSupport\Controllers\MobileNumberUpdateTokenController;
 
 Route::get('/', function () {
     return "Testing Javaabu Mobile Verification";

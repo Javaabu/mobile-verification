@@ -2,7 +2,6 @@
 
 namespace Javaabu\MobileVerification\Traits;
 
-use Javaabu\Helpers\Exceptions\InvalidOperationException;
 use Javaabu\MobileVerification\Contracts\HasUserTypeContract;
 
 /* @var HasUserTypeContract $this */

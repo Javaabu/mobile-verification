@@ -7,11 +7,11 @@ use Javaabu\SmsNotifications\Notifications\SmsNotification;
 
 trait UpdatesMobileNumber
 {
+    use HasRequestMobileNumber;
+    use HasUserType;
     use SendsVerificationCode;
     use UsesSessionMobileNumber;
     use VerifiesVerificationCode;
-    use HasRequestMobileNumber;
-    use HasUserType;
 
     public function getVerificationCodeSmsNotification(string $verification_code, MobileNumber $mobile_number): SmsNotification
     {
