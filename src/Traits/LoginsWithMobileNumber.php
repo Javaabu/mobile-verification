@@ -7,53 +7,49 @@ use Javaabu\MobileVerification\Contracts\MobileNumber;
 use Javaabu\MobileVerification\Contracts\HasMobileNumber;
 use Javaabu\SmsNotifications\Notifications\SmsNotification;
 
-trait UpdatesMobileNumber
+trait LoginsWithMobileNumber
 {
     use HasRequestMobileNumber;
     use HasUserType;
     use SendsVerificationCode;
     use UsesSessionMobileNumber;
     use VerifiesVerificationCode;
+    use UsesGuard;
 
     public function doAfterVerificationCodeVerified(MobileNumber $mobile_number, Request $request): mixed
     {
         /* @var HasMobileNumber $user */
-        $user = $request->user();
-        $user->updatePhone($mobile_number);
+        $user = $mobile_number->user;
+
+        $this->guard()->login($user);
+        $request->session()->regenerate();
 
         return $user;
     }
 
+    public function flashVerificationCodeSuccessMessage(MobileNumber $mobile_number, Request $request, $data = null): void
+    {
+        //
+    }
+
     public function getVerificationCodeSmsNotification(string $verification_code, MobileNumber $mobile_number): SmsNotification
     {
-        $notification_class = config('mobile-verification.notifications.update');
+        $notification_class = config('mobile-verification.notifications.login');
         return new $notification_class($verification_code, $mobile_number);
     }
 
     public function mustBeARegisteredMobileNumber(array $request_data): ?bool
     {
-        return false;
+        return true;
     }
 
     public function getSessionMobileNumberKey(): string
     {
-        return 'mobile_to_update';
+        return 'mobile_number_to_login';
     }
 
     public function shouldAddMobileNumberToSession(): bool
     {
         return true;
-    }
-
-    public function getVerificationCodeSuccessMessage(MobileNumber $mobile_number, Request $request, $data = null): string
-    {
-        return trans('mobile-verification::messages.mobile_number_updated', [
-            'mobile_number' => $mobile_number->formatted_number,
-        ]);
-    }
-
-    public function getVerificationCodeSuccessMessageTitle(MobileNumber $mobile_number, Request $request, $data = null): string
-    {
-        return trans('mobile-verification::messages.mobile_number_updated_title');
     }
 }

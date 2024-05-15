@@ -22,6 +22,8 @@ return [
         'messages' => [
             'verification_code_verified' => "Your mobile number has been successfully verified.",
             'verification_code_verified_title' => 'Verification Successful',
+            'mobile_number_updated' => 'Your mobile number has been successfully updated to :mobile_number.',
+            'mobile_number_updated_title' => 'Mobile Number Updated',
         ]
     ]
 ];

@@ -4,22 +4,42 @@ namespace Javaabu\MobileVerification\Tests\TestSupport\Controllers;
 
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
+use Javaabu\MobileVerification\Traits\HasUserType;
+use Javaabu\MobileVerification\Traits\SendsVerificationCode;
 use Javaabu\MobileVerification\Tests\TestSupport\Models\User;
+use Javaabu\MobileVerification\Traits\HasRequestMobileNumber;
+use Javaabu\MobileVerification\Traits\LoginsWithMobileNumber;
+use Javaabu\MobileVerification\Traits\UsesSessionMobileNumber;
+use Javaabu\MobileVerification\Traits\VerifiesVerificationCode;
+use Javaabu\MobileVerification\Contracts\LoginWithMobileNumberContract;
 use Javaabu\MobileVerification\Http\Controllers\LoginController as BaseLoginController;
 
-class LoginController extends BaseLoginController
+class LoginController implements LoginWithMobileNumberContract
 {
-    protected string $user_class = User::class;
-    protected string $guard = 'web';
+    use LoginsWithMobileNumber;
 
-    //    public string $form_view = 'web.mobile-numbers.login-form';
-
-    public function redirectUrl(): RedirectResponse | JsonResponse
+    public function getUserClass(): string
     {
-        if (request()->wantsJson()) {
-            return response()->json(['message' => 'User logged in successfully']);
-        }
+        return User::class;
+    }
 
-        return redirect()->back()->with('success', 'User logged in successfully');
+    public function getGuardName(): string
+    {
+        return 'web';
+    }
+
+    public function getVerificationCodeRequestFormView(): ?string
+    {
+        // TODO: Implement getVerificationCodeRequestFormView() method.
+    }
+
+    public function getVerificationCodeFormView(): ?string
+    {
+        // TODO: Implement getVerificationCodeFormView() method.
+    }
+
+    public function verificationCodeSuccessRedirectUrl(): string
+    {
+        // TODO: Implement verificationCodeSuccessRedirectUrl() method.
     }
 }

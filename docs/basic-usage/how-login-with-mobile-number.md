@@ -14,23 +14,9 @@ The login process with mobile number works as follows:
 2. The package verifies the OTP.
 3. The user is then authenticated and logged in.
 
-## Step 1: Define the Routes
-Define the routes in your application. Below is an example of how you can define the routes in your application.
 
-```php
-use Illuminate\Support\Facades\Route;
 
-Route::post('login', [LoginController::class, 'login'])->name('mobile-numbers.login');
-```
-
-And if you are not doing an API request, you can define the route from which the request is coming from.
-```php
-use Illuminate\Support\Facades\Route;
-
-Route::get('login-form', [LoginController::class, 'showLoginForm'])->name('mobile-numbers.login.show');
-```
-
-## Step 2: Create the Controller
+## Step 1: Create the Controller
 Create a controller that extends the `Javaabu\MobileVerification\Http\Controllers\LoginController` class. Below is an example of how you can create the controller in your application.
 
 ```php
@@ -40,7 +26,7 @@ namespace App\Http\Controllers;
 
 use Javaabu\MobileVerification\Http\Controllers\LoginController as BaseLoginController;
 
-class LoginController extends BaseLoginController
+class LoginController
 {
     /*
      * Define the user class to be used for mobile number validation
@@ -57,6 +43,22 @@ class LoginController extends BaseLoginController
      */
     public string $form_view = 'web.mobile-numbers.login-form';
 }
+```
+
+## Step 2: Define the Routes
+Define the routes in your application. Below is an example of how you can define the routes in your application.
+
+```php
+use Illuminate\Support\Facades\Route;
+
+Route::post('login', [LoginController::class, 'login'])->name('mobile-numbers.login');
+```
+
+And if you are not doing an API request, you can define the route from which the request is coming from.
+```php
+use Illuminate\Support\Facades\Route;
+
+Route::get('login-form', [LoginController::class, 'showLoginForm'])->name('mobile-numbers.login.show');
 ```
 
 ## Step 3: Make the Request
