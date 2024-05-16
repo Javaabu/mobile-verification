@@ -47,11 +47,26 @@ trait VerifiesVerificationCode
 
         $this->flashVerificationCodeSuccessMessage($mobile_number, $request, $data);
 
+        return $this->redirectAfterSuccessfulCodeVerification($mobile_number, $request, $data);
+    }
+
+    public function getVerifiedCodeDataSessionKey(): string
+    {
+        return 'verified_code_data';
+    }
+
+    public function redirectAfterSuccessfulCodeVerification(MobileNumber $mobile_number, Request $request, $data = null)
+    {
         return redirect()
             ->to($this->verificationCodeSuccessRedirectUrl())
             ->with([
                 'success' => true,
-                'mobile_number' => $mobile_number,
+                $this->getVerifiedCodeDataSessionKey() => $data ?: [
+                    $this->getMobileNumberInputKey() => $request->input($this->getMobileNumberInputKey()),
+                    $this->getCountryCodeInputKey() => $request->input($this->getCountryCodeInputKey()),
+                    $this->getVerificationCodeInputKey() => $request->input($this->getVerificationCodeInputKey()),
+                    $this->getVerificationCodeIdInputKey() => $request->input($this->getVerificationCodeIdInputKey()),
+                ]
             ]);
     }
 

@@ -55,6 +55,8 @@ interface MobileNumber extends SmsNotifiable
 
     public function getResendVerificationCodeInAttribute(): int;
 
+    public function hasUnexpiredVerificationCode(): bool;
+
     public static function blankPhone(string $number, string $country_code = '', string $user_type = 'user'): ?self;
 
     public static function getUserByMobileNumber(string $number, string $country_code = '', string $user_type = 'user'): ?HasMobileNumber;

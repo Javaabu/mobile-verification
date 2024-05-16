@@ -182,9 +182,14 @@ class MobileNumber extends Model implements MobileNumberContract
      * Hash the verification_code before saving
      * @param $value
      */
-    public function setTokenAttribute($value)
+    public function setVerificationCodeAttribute($value)
     {
         $this->attributes['verification_code'] = $value ? Hash::make($value) : null;
+    }
+
+    public function hasUnexpiredVerificationCode(): bool
+    {
+        return $this->verification_code && (! $this->is_verification_code_expired);
     }
 
     /**

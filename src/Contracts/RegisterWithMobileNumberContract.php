@@ -12,6 +12,8 @@ interface RegisterWithMobileNumberContract extends
     HasGuardContract,
     RegisterContract
 {
+    public function getRegistrationFormView(): string;
+
     public function getRegisterFieldsValidationRules(Request $request): array;
 
     public function createUser(array $data): HasMobileNumber;
