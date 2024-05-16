@@ -9,6 +9,9 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\View\View;
 use Javaabu\MobileVerification\Contracts\MobileNumber;
 use Javaabu\SmsNotifications\Notifications\SmsNotification;
+use Javaabu\MobileVerification\Contracts\RegisterWithMobileNumberContract;
+
+/** @var RegisterWithMobileNumberContract $this */
 
 trait RegistersWithMobileNumber
 {
@@ -21,6 +24,27 @@ trait RegistersWithMobileNumber
         UsesGuard::guard insteadof RegistersUsers;
     }
 
+    public function showRegistrationForm()
+    {
+        $verified_code_data = session()->get($this->getVerifiedCodeDataSessionKey());
+
+        if ($verified_code_data) {
+            return view($this->getRegistrationFormView(), $verified_code_data);
+        }
+
+        // if the mobile number is missing
+        // redirect to get a new code
+        return redirect()
+            ->action([self::class, 'showVerificationCodeRequestForm'])
+            ->withErrors([
+                'verification_code' => 'missing',
+            ]);
+    }
+
+    public function verificationCodeSuccessRedirectUrl(): string
+    {
+        return action([self::class, 'showRegistrationForm']);
+    }
 
     protected function validator(array $data)
     {
@@ -41,6 +65,8 @@ trait RegistersWithMobileNumber
         $mobile_number = $this->getMobileNumberFromRequest(request());
 
         $user->updatePhone($mobile_number);
+
+        session()->forget($this->getVerifiedCodeDataSessionKey());
 
         return $user;
     }

@@ -50,14 +50,23 @@ trait VerifiesVerificationCode
         return $this->redirectAfterSuccessfulCodeVerification($mobile_number, $request, $data);
     }
 
+    public function getVerifiedCodeDataSessionKey(): string
+    {
+        return 'verified_code_data';
+    }
+
     public function redirectAfterSuccessfulCodeVerification(MobileNumber $mobile_number, Request $request, $data = null)
     {
         return redirect()
             ->to($this->verificationCodeSuccessRedirectUrl())
             ->with([
                 'success' => true,
-                'mobile_number' => $mobile_number,
-                'data' => $data
+                $this->getVerifiedCodeDataSessionKey() => $data ?: [
+                    'number' => $request->input($this->getMobileNumberInputKey()),
+                    'country_code' => $request->input($this->getCountryCodeInputKey()),
+                    'verification_code' => $request->input($this->getVerificationCodeInputKey()),
+                    'verification_code_id' => $request->input($this->getVerificationCodeIdInputKey()),
+                ]
             ]);
     }
 

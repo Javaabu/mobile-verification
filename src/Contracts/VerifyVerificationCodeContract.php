@@ -35,4 +35,6 @@ interface VerifyVerificationCodeContract extends HasRequestMobileNumberContract
     public function getVerificationCodeSuccessMessageTitle(MobileNumber $mobile_number, Request $request, $data = null): string;
 
     public function redirectAfterSuccessfulCodeVerification(MobileNumber $mobile_number, Request $request, $data = null);
+
+    public function getVerifiedCodeDataSessionKey(): string;
 }
