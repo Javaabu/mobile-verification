@@ -2,12 +2,12 @@
 
 namespace Javaabu\MobileVerification\Tests\TestSupport\Controllers;
 
-use Illuminate\View\View;
-use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
-use Javaabu\MobileVerification\Tests\TestSupport\Models\User;
+use Illuminate\Http\Request;
+use Illuminate\View\View;
 use Javaabu\MobileVerification\Http\Controllers\OTPController as BaseOTPController;
+use Javaabu\MobileVerification\Tests\TestSupport\Models\User;
 
 class MobileNumberUpdateTokenController extends BaseOTPController
 {

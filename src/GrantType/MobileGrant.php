@@ -3,23 +3,23 @@
 namespace Javaabu\MobileVerification\GrantType;
 
 use DateInterval;
-use League\OAuth2\Server\RequestEvent;
-use Illuminate\Support\Facades\Validator;
-use Psr\Http\Message\ServerRequestInterface;
-use League\OAuth2\Server\Grant\AbstractGrant;
 use Illuminate\Contracts\Auth\Authenticatable;
-use Laravel\Passport\Bridge\User as UserEntity;
-use Javaabu\MobileVerification\MobileVerification;
+use Illuminate\Support\Facades\Validator;
 use Javaabu\MobileVerification\Contracts\MobileNumber;
-use League\OAuth2\Server\Entities\UserEntityInterface;
+use Javaabu\MobileVerification\MobileVerification;
 use Javaabu\MobileVerification\Rules\IsValidCountryCode;
-use League\OAuth2\Server\Entities\ClientEntityInterface;
-use League\OAuth2\Server\Exception\OAuthServerException;
 use Javaabu\MobileVerification\Rules\IsValidMobileNumber;
 use Javaabu\MobileVerification\Rules\IsValidVerificationCode;
-use League\OAuth2\Server\ResponseTypes\ResponseTypeInterface;
-use League\OAuth2\Server\Repositories\RefreshTokenRepositoryInterface;
+use Laravel\Passport\Bridge\User as UserEntity;
+use League\OAuth2\Server\Entities\ClientEntityInterface;
+use League\OAuth2\Server\Entities\UserEntityInterface;
+use League\OAuth2\Server\Exception\OAuthServerException;
 use League\OAuth2\Server\Exception\UniqueTokenIdentifierConstraintViolationException;
+use League\OAuth2\Server\Grant\AbstractGrant;
+use League\OAuth2\Server\Repositories\RefreshTokenRepositoryInterface;
+use League\OAuth2\Server\RequestEvent;
+use League\OAuth2\Server\ResponseTypes\ResponseTypeInterface;
+use Psr\Http\Message\ServerRequestInterface;
 
 class MobileGrant extends AbstractGrant
 {
@@ -88,6 +88,7 @@ class MobileGrant extends AbstractGrant
 
         if (! $user instanceof UserEntityInterface) {
             $this->getEmitter()->emit(new RequestEvent(RequestEvent::USER_AUTHENTICATION_FAILED, $request));
+
             throw OAuthServerException::invalidGrant();
         }
 
@@ -107,13 +108,13 @@ class MobileGrant extends AbstractGrant
         $user_type = $this->getUserType($request, $client);
 
         $validator = Validator::make([
-            'number'       => $mobile_number,
+            'number' => $mobile_number,
             'country_code' => $country_code,
-            'otp'          => $otp,
+            'otp' => $otp,
         ], [
-            'number'       => ['required', 'string', (new IsValidMobileNumber($user_type))->registered()],
+            'number' => ['required', 'string', (new IsValidMobileNumber($user_type))->registered()],
             'country_code' => ['nullable', 'string', new IsValidCountryCode()],
-            'otp'          => ['required', 'string', (new IsValidVerificationCode($user_type))->shouldResetAttempts()],
+            'otp' => ['required', 'string', (new IsValidVerificationCode($user_type))->shouldResetAttempts()],
         ]);
 
         if ($validator->fails()) {

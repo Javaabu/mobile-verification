@@ -4,13 +4,9 @@ namespace Javaabu\MobileVerification\Tests\TestSupport\Controllers;
 
 use Illuminate\Http\Request;
 use Javaabu\MobileVerification\Contracts\MobileNumber;
-use Javaabu\MobileVerification\Contracts\HasMobileNumber;
-use Javaabu\MobileVerification\Traits\UpdatesMobileNumber;
-use Javaabu\MobileVerification\Tests\TestSupport\Models\User;
 use Javaabu\MobileVerification\Contracts\UpdateMobileNumberContract;
-use Javaabu\MobileVerification\Contracts\SendVerificationCodeContract;
-use Javaabu\MobileVerification\Contracts\HasSessionMobileNumberContract;
-use Javaabu\MobileVerification\Contracts\VerifyVerificationCodeContract;
+use Javaabu\MobileVerification\Tests\TestSupport\Models\User;
+use Javaabu\MobileVerification\Traits\UpdatesMobileNumber;
 
 class MobileNumberUpdateController implements UpdateMobileNumberContract
 {

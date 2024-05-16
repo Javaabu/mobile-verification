@@ -2,11 +2,11 @@
 
 namespace Javaabu\MobileVerification\Http\Controllers;
 
-use Illuminate\View\View;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
-use Javaabu\MobileVerification\Traits\ValidatesMobileNumbers;
+use Illuminate\View\View;
 use Javaabu\MobileVerification\Contracts\HasMobileNumberValidation;
+use Javaabu\MobileVerification\Traits\ValidatesMobileNumbers;
 
 abstract class MobileNumberVerificationController implements HasMobileNumberValidation
 {

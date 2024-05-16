@@ -2,14 +2,12 @@
 
 namespace Javaabu\MobileVerification\Traits;
 
-use Illuminate\View\View;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
-use Illuminate\Validation\Rules\Password;
 use Illuminate\Contracts\Auth\StatefulGuard;
 use Illuminate\Foundation\Auth\RegistersUsers;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\View\View;
 use Javaabu\MobileVerification\Contracts\MobileNumber;
-use Javaabu\MobileVerification\Contracts\HasMobileNumber;
 use Javaabu\SmsNotifications\Notifications\SmsNotification;
 
 trait RegistersWithMobileNumber
@@ -27,6 +25,7 @@ trait RegistersWithMobileNumber
     protected function validator(array $data)
     {
         $rules = $this->getRegistrationVerificationCodeValidationRules(request());
+
         return Validator::make($data, array_merge($rules, $this->getRegisterFieldsValidationRules(request())));
     }
 
@@ -63,6 +62,7 @@ trait RegistersWithMobileNumber
     public function getVerificationCodeSmsNotification(string $verification_code, MobileNumber $mobile_number): SmsNotification
     {
         $notification_class = config('mobile-verification.notifications.register');
+
         return new $notification_class($verification_code, $mobile_number);
     }
 

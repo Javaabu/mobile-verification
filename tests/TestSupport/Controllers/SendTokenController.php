@@ -2,9 +2,9 @@
 
 namespace Javaabu\MobileVerification\Tests\TestSupport\Controllers;
 
+use Javaabu\MobileVerification\Contracts\SendVerificationCodeContract;
 use Javaabu\MobileVerification\Tests\TestSupport\Models\User;
 use Javaabu\MobileVerification\Traits\CanSendVerificationCode;
-use Javaabu\MobileVerification\Contracts\SendVerificationCodeContract;
 
 class SendTokenController implements SendVerificationCodeContract
 {

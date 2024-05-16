@@ -2,17 +2,10 @@
 
 namespace Javaabu\MobileVerification\Tests\TestSupport\Controllers;
 
-use Illuminate\Http\JsonResponse;
-use Illuminate\Http\RedirectResponse;
 use Javaabu\Helpers\Http\Controllers\Controller;
-use Javaabu\MobileVerification\Traits\HasUserType;
-use Javaabu\MobileVerification\Traits\SendsVerificationCode;
-use Javaabu\MobileVerification\Tests\TestSupport\Models\User;
-use Javaabu\MobileVerification\Traits\HasRequestMobileNumber;
-use Javaabu\MobileVerification\Traits\LoginsWithMobileNumber;
-use Javaabu\MobileVerification\Traits\UsesSessionMobileNumber;
-use Javaabu\MobileVerification\Traits\VerifiesVerificationCode;
 use Javaabu\MobileVerification\Contracts\LoginWithMobileNumberContract;
+use Javaabu\MobileVerification\Tests\TestSupport\Models\User;
+use Javaabu\MobileVerification\Traits\LoginsWithMobileNumber;
 
 class LoginController extends Controller implements LoginWithMobileNumberContract
 {

@@ -2,10 +2,10 @@
 
 namespace Javaabu\MobileVerification\Tests\Feature\Controllers\Web;
 
-use Laravel\Sanctum\Sanctum;
-use Javaabu\MobileVerification\Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Javaabu\MobileVerification\Tests\TestCase;
 use Javaabu\MobileVerification\Tests\TestSupport\Models\User;
+use Laravel\Sanctum\Sanctum;
 
 class ApiTokenLoginControllerTest extends TestCase
 {

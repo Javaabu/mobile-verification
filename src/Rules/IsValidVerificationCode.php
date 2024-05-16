@@ -4,8 +4,8 @@ namespace Javaabu\MobileVerification\Rules;
 
 use Closure;
 use Illuminate\Contracts\Validation\DataAwareRule;
-use Javaabu\MobileVerification\MobileVerification;
 use Illuminate\Contracts\Validation\ValidationRule;
+use Javaabu\MobileVerification\MobileVerification;
 use Javaabu\MobileVerification\Models\MobileNumber;
 
 class IsValidVerificationCode implements DataAwareRule, ValidationRule
@@ -35,11 +35,13 @@ class IsValidVerificationCode implements DataAwareRule, ValidationRule
 
         if (! $mobile_number) {
             $fail(trans('mobile-verification::strings.validation.verification_code.invalid'));
+
             return;
         }
 
         if (! ($this->getVerificationCodeId() && $this->getVerificationCodeId() == $mobile_number->verification_code_id)) {
             $fail(trans('mobile-verification::strings.validation.verification_code.invalid'));
+
             return;
         }
 
@@ -94,6 +96,7 @@ class IsValidVerificationCode implements DataAwareRule, ValidationRule
     public function setShouldResetAttempts(bool $reset): static
     {
         $this->should_reset_attempts = $reset;
+
         return $this;
     }
 
@@ -102,6 +105,7 @@ class IsValidVerificationCode implements DataAwareRule, ValidationRule
         $this->setCountryCode($data[$this->country_code_input_name] ?? null);
         $this->setNumber($data[$this->number_input_name] ?? null);
         $this->setVerificationCodeId($data[$this->verification_code_id_input_name] ?? null);
+
         return $this;
     }
 }

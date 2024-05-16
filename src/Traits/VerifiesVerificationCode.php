@@ -2,15 +2,15 @@
 
 namespace Javaabu\MobileVerification\Traits;
 
-use Illuminate\View\View;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator as ValidatorFacade;
 use Illuminate\Validation\Validator;
+use Illuminate\View\View;
 use Javaabu\MobileVerification\Contracts\MobileNumber;
+use Javaabu\MobileVerification\Contracts\VerifyVerificationCodeContract;
 use Javaabu\MobileVerification\Rules\IsValidCountryCode;
 use Javaabu\MobileVerification\Rules\IsValidMobileNumber;
-use Illuminate\Support\Facades\Validator as ValidatorFacade;
 use Javaabu\MobileVerification\Rules\IsValidVerificationCode;
-use Javaabu\MobileVerification\Contracts\VerifyVerificationCodeContract;
 
 /* @var VerifyVerificationCodeContract $this */
 trait VerifiesVerificationCode
@@ -40,7 +40,7 @@ trait VerifiesVerificationCode
     {
         if (expects_json($request)) {
             return response()->json([
-                'verified'      => true,
+                'verified' => true,
                 'mobile_number' => $mobile_number->verificationCodeResponseData(),
             ]);
         }
@@ -50,7 +50,7 @@ trait VerifiesVerificationCode
         return redirect()
             ->to($this->verificationCodeSuccessRedirectUrl())
             ->with([
-                'success'       => true,
+                'success' => true,
                 'mobile_number' => $mobile_number,
             ]);
     }
@@ -78,7 +78,7 @@ trait VerifiesVerificationCode
     {
         if (expects_json($request)) {
             return response()->json([
-                'errors'        => $validator->errors(),
+                'errors' => $validator->errors(),
                 'mobile_number' => $mobile_number?->verificationCodeResponseData(),
             ], 422);
         }
@@ -113,9 +113,9 @@ trait VerifiesVerificationCode
             ->setShouldResetAttempts($this->shouldResetVerificationAttemptsOnSuccess());
 
         $rules = [
-            $this->getMobileNumberInputKey()       => ['required', 'string', $valid_mobile_number_rule],
-            $this->getCountryCodeInputKey()        => ['nullable', 'string', new IsValidCountryCode()],
-            $this->getVerificationCodeInputKey()   => ['required', 'string', $valid_verification_code_rule],
+            $this->getMobileNumberInputKey() => ['required', 'string', $valid_mobile_number_rule],
+            $this->getCountryCodeInputKey() => ['nullable', 'string', new IsValidCountryCode()],
+            $this->getVerificationCodeInputKey() => ['required', 'string', $valid_verification_code_rule],
             $this->getVerificationCodeIdInputKey() => ['required', 'string'],
         ];
 

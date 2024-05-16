@@ -2,10 +2,10 @@
 
 namespace Javaabu\MobileVerification\Traits;
 
-use Illuminate\View\View;
 use Illuminate\Http\Request;
-use Javaabu\MobileVerification\Contracts\MobileNumber;
+use Illuminate\View\View;
 use Javaabu\MobileVerification\Contracts\HasMobileNumber;
+use Javaabu\MobileVerification\Contracts\MobileNumber;
 use Javaabu\SmsNotifications\Notifications\SmsNotification;
 
 trait UpdatesMobileNumber
@@ -37,6 +37,7 @@ trait UpdatesMobileNumber
     public function getVerificationCodeSmsNotification(string $verification_code, MobileNumber $mobile_number): SmsNotification
     {
         $notification_class = config('mobile-verification.notifications.update');
+
         return new $notification_class($verification_code, $mobile_number);
     }
 

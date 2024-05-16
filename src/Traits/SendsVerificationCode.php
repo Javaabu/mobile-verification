@@ -2,14 +2,14 @@
 
 namespace Javaabu\MobileVerification\Traits;
 
-use Illuminate\View\View;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator as ValidatorFacade;
 use Illuminate\Validation\Validator;
+use Illuminate\View\View;
 use Javaabu\MobileVerification\Contracts\MobileNumber;
+use Javaabu\MobileVerification\Contracts\SendVerificationCodeContract;
 use Javaabu\MobileVerification\Rules\IsValidCountryCode;
 use Javaabu\MobileVerification\Rules\IsValidMobileNumber;
-use Illuminate\Support\Facades\Validator as ValidatorFacade;
-use Javaabu\MobileVerification\Contracts\SendVerificationCodeContract;
 
 /* @var SendVerificationCodeContract $this */
 trait SendsVerificationCode
@@ -54,7 +54,7 @@ trait SendsVerificationCode
     public function redirectAfterVerificationCodeRequest(MobileNumber $mobile_number, Request $request)
     {
         return back()->with([
-            'success'       => true,
+            'success' => true,
             'mobile_number' => $mobile_number,
         ]);
     }
@@ -86,7 +86,7 @@ trait SendsVerificationCode
 
         $rules = [
             $this->getMobileNumberInputKey() => ['required', 'string', $valid_mobile_number_rule],
-            $this->getCountryCodeInputKey()  => ['nullable', 'string', new IsValidCountryCode()],
+            $this->getCountryCodeInputKey() => ['nullable', 'string', new IsValidCountryCode()],
         ];
 
         if ($this->enableReCaptcha()) {

@@ -2,14 +2,14 @@
 
 namespace Javaabu\MobileVerification\Traits;
 
-use Illuminate\View\View;
+use Illuminate\Foundation\Auth\RedirectsUsers;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Foundation\Auth\RedirectsUsers;
-use Javaabu\MobileVerification\MobileVerification;
+use Illuminate\Validation\Rule;
+use Illuminate\View\View;
 use Javaabu\MobileVerification\Contracts\MobileNumber;
+use Javaabu\MobileVerification\MobileVerification;
 
 trait VerifiesMobileNumbers
 {
