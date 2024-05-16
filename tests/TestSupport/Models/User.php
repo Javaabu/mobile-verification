@@ -2,14 +2,16 @@
 
 namespace Javaabu\MobileVerification\Tests\TestSupport\Models;
 
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Javaabu\MobileVerification\Contracts\HasMobileNumber;
 use Javaabu\MobileVerification\Tests\TestSupport\Factories\UserFactory;
 use Javaabu\MobileVerification\Traits\InteractsWithMobileNumbers;
+use Javaabu\MobileVerification\Contracts\ShouldHaveVerifiedMobileNumber;
 
-class User extends Authenticatable implements HasMobileNumber
+class User extends Authenticatable implements ShouldHaveVerifiedMobileNumber
 {
     use HasFactory;
     use InteractsWithMobileNumbers;
@@ -38,5 +40,10 @@ class User extends Authenticatable implements HasMobileNumber
         })->first();
 
         return $user;
+    }
+
+    public function redirectToMobileVerificationUrl(): RedirectResponse
+    {
+        return to_route('mobile-verifications.login.create');
     }
 }

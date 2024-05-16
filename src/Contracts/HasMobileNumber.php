@@ -99,6 +99,8 @@ interface HasMobileNumber extends SmsNotifiable
      */
     public function getPhoneVerifiedAttribute(): bool;
 
+    public function hasVerifiedMobile(): bool;
+
     /**
      * Clear phones
      */

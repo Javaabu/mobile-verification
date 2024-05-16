@@ -141,6 +141,11 @@ trait InteractsWithMobileNumbers
         return  ! empty($this->phone);
     }
 
+    public function hasVerifiedMobile(): bool
+    {
+        return $this->phone_verified;
+    }
+
     /**
      * Clear phones
      */

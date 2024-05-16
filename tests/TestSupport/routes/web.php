@@ -13,12 +13,20 @@ Route::get('/', function () {
     return "Testing Javaabu Mobile Verification";
 });
 
-Route::group(['middleware' => 'web'], function () {
-    Route::get('/mobile-numbers', [LoginController::class, 'showVerificationCodeRequestForm'])->name('mobile-numbers.create');
-    Route::post('/mobile-numbers', [LoginController::class, 'store'])->name('mobile-numbers.store');
+Route::group([
+    'middleware' => 'web',
+    'prefix' => '/mobile-verification',
+], function () {
+    Route::get('/login', [LoginController::class, 'showVerificationCodeRequestForm'])->name('mobile-verifications.login.create');
+    Route::post('/login', [LoginController::class, 'requestVerificationCode'])->name('mobile-verifications.login.store');
 
-    Route::get('/mobile-numbers/register', [RegisterController::class, 'showRegistrationForm'])->name('mobile-numbers.register.create');
-    Route::post('/mobile-numbers/register', [RegisterController::class, 'register'])->name('mobile-numbers.register.store');
+
+    Route::get('/register', [RegisterController::class, 'showVerificationCodeRequestForm'])->name('mobile-verifications.register.create');
+    Route::post('/register', [RegisterController::class, 'register'])->name('mobile-verifications.register.store');
+
+    Route::get('/protected', function () {
+        return "Protected route";
+    })->middleware('mobile-verified:web');
 });
 
 //Route::post('/validate', [ValidateMobileNumbersController::class, 'validate'])->name('validate');

@@ -46,7 +46,7 @@ trait LoginsWithMobileNumber
     {
         $notification_class = config('mobile-verification.notifications.login');
 
-        return new $notification_class($verification_code, $mobile_number);
+        return new $notification_class($verification_code, $mobile_number?->user?->name);
     }
 
     public function mustBeARegisteredMobileNumber(array $request_data): ?bool

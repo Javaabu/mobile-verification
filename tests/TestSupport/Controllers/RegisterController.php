@@ -56,5 +56,8 @@ class RegisterController extends Controller implements RegisterWithMobileNumberC
         // TODO: Implement verificationCodeSuccessRedirectUrl() method.
     }
 
-
+    public function getRegistrationFormView(): string
+    {
+        // TODO: Implement getRegistrationFormView() method.
+    }
 }

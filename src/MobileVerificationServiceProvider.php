@@ -7,6 +7,7 @@ use Javaabu\MobileVerification\GrantType\MobileGrant;
 use Laravel\Passport\Bridge\RefreshTokenRepository;
 use Laravel\Passport\Passport;
 use League\OAuth2\Server\AuthorizationServer;
+use Javaabu\MobileVerification\Middlewares\AllowMobileVerifiedUsersOnly;
 
 class MobileVerificationServiceProvider extends ServiceProvider
 {
@@ -60,6 +61,8 @@ class MobileVerificationServiceProvider extends ServiceProvider
             $grant = $this->makeGrant();
             $server->enableGrantType($grant, Passport::tokensExpireIn());
         });
+
+        app('route')->aliasMiddleware('mobile-verified', AllowMobileVerifiedUsersOnly::class);
     }
 
     protected function makeGrant(): MobileGrant

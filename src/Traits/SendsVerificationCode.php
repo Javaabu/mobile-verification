@@ -24,7 +24,7 @@ trait SendsVerificationCode
         $validator = $this->getVerificationCodeRequestValidator($request);
 
         if ($validator->fails()) {
-            return $this->sendFailedCodeVerificationResponse($request, $validator);
+            return $this->sendFailedVerificationCodeRequestResponse($request, $validator);
         }
 
         $mobile_number = $this->getMobileNumberFromRequest($request);

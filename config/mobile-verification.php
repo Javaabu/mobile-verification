@@ -129,7 +129,7 @@ return [
     |
      * */
     'notifications' => [
-        'login' => \Javaabu\MobileVerification\Notifications\LoginNotification::class,
+        'login' => \Javaabu\MobileVerification\Notifications\LoginVerificationTokenNotification::class,
         'verification_code' => \Javaabu\MobileVerification\Notifications\MobileNumberVerificationToken::class,
         'update' => \Javaabu\MobileVerification\Notifications\UpdateMobileNumberNotification::class,
     ]
