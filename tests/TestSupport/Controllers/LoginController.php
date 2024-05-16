@@ -28,12 +28,12 @@ class LoginController extends Controller implements LoginWithMobileNumberContrac
 
     public function getVerificationCodeRequestFormView(): ?string
     {
-        // TODO: Implement getVerificationCodeRequestFormView() method.
+        return "verification-code-request-form";
     }
 
     public function getVerificationCodeFormView(): ?string
     {
-        // TODO: Implement getVerificationCodeFormView() method.
+        return "verification-code-entry-form";
     }
 
     public function verificationCodeSuccessRedirectUrl(): string

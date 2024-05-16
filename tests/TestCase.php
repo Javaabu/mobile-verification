@@ -2,6 +2,7 @@
 
 namespace Javaabu\MobileVerification\Tests;
 
+use Illuminate\Support\Facades\View;
 use Biscolab\ReCaptcha\Facades\ReCaptcha;
 use Illuminate\Support\Facades\Notification;
 use Javaabu\Activitylog\ActivitylogServiceProvider;
@@ -24,6 +25,8 @@ abstract class TestCase extends BaseTestCase
 
         Notification::fake();
 
+        View::addLocation(__DIR__ . '/TestSupport/views');
+
         // call sanctum install:api
     }
 
@@ -35,7 +38,6 @@ abstract class TestCase extends BaseTestCase
             SmsNotificationsServiceProvider::class,
             HelpersServiceProvider::class,
             ActivitylogServiceProvider::class,
-            SanctumServiceProvider::class,
         ];
     }
 

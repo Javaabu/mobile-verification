@@ -13,20 +13,36 @@ class SendTokenControllerTest extends TestCase
 {
     use RefreshDatabase;
 
-    /** @test */
-    // can send a post request to register a user with a mobile number
-    public function can_send_a_post_request_to_register_a_user_with_a_mobile_number()
+    public function test_can_see_the_verification_request_form() // done
     {
-        $this->get('/');
+        $this->get('/mobile-numbers')
+            ->assertSee("Verification Code Request Form");
+    }
 
-        $this->post(route('mobile-number-otp'), [
+    public function test_can_see_the_verification_code_form_if_mobile_number_is_present() // done
+    {
+        $mobile_number = MobileNumber::factory()->create([
             'number' => '7326655',
-        ])
-        ->assertSessionHasNoErrors();
+            'country_code' => '960',
+            'user_type' => 'user',
+            'user_id' => null,
+        ]);
+
+        $this->withSession(['mobile_number_to_login' => $mobile_number->id])
+             ->get('/mobile-numbers')
+             ->assertSee("Enter Verification Code");
+    }
+
+    public function test_can_send_a_post_request_to_login_a_user_with_a_mobile_number() // done
+    {
+        $this->get('/mobile-numbers');
+
+        $this->post('/mobile-numbers', [
+            'number' => '7326655',
+        ])->assertSessionHasNoErrors();
     }
 
     /** @test */
-    // if the number provided is already registered then the user is redirected back with an error
     public function if_the_number_provided_is_already_registered_then_the_user_is_redirected_back_with_an_error()
     {
         $user = User::factory()->create();
@@ -37,7 +53,7 @@ class SendTokenControllerTest extends TestCase
             'user_id' => $user->id,
         ]);
 
-        $response = $this->post(route('mobile-number-otp'), [
+        $response = $this->post('mobile', [
             'number' => $mobileNumber->number,
             'purpose' => 'register',
         ]);

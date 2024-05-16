@@ -8,11 +8,9 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Javaabu\MobileVerification\Contracts\HasMobileNumber;
 use Javaabu\MobileVerification\Tests\TestSupport\Factories\UserFactory;
 use Javaabu\MobileVerification\Traits\InteractsWithMobileNumbers;
-use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable implements HasMobileNumber
 {
-    use HasApiTokens;
     use HasFactory;
     use InteractsWithMobileNumbers;
     use SoftDeletes;
