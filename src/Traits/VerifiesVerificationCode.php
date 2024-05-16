@@ -62,10 +62,10 @@ trait VerifiesVerificationCode
             ->with([
                 'success' => true,
                 $this->getVerifiedCodeDataSessionKey() => $data ?: [
-                    'number' => $request->input($this->getMobileNumberInputKey()),
-                    'country_code' => $request->input($this->getCountryCodeInputKey()),
-                    'verification_code' => $request->input($this->getVerificationCodeInputKey()),
-                    'verification_code_id' => $request->input($this->getVerificationCodeIdInputKey()),
+                    $this->getMobileNumberInputKey() => $request->input($this->getMobileNumberInputKey()),
+                    $this->getCountryCodeInputKey() => $request->input($this->getCountryCodeInputKey()),
+                    $this->getVerificationCodeInputKey() => $request->input($this->getVerificationCodeInputKey()),
+                    $this->getVerificationCodeIdInputKey() => $request->input($this->getVerificationCodeIdInputKey()),
                 ]
             ]);
     }
