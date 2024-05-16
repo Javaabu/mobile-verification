@@ -47,11 +47,17 @@ trait VerifiesVerificationCode
 
         $this->flashVerificationCodeSuccessMessage($mobile_number, $request, $data);
 
+        return $this->redirectAfterSuccessfulCodeVerification($mobile_number, $request, $data);
+    }
+
+    public function redirectAfterSuccessfulCodeVerification(MobileNumber $mobile_number, Request $request, $data = null)
+    {
         return redirect()
             ->to($this->verificationCodeSuccessRedirectUrl())
             ->with([
                 'success' => true,
                 'mobile_number' => $mobile_number,
+                'data' => $data
             ]);
     }
 
