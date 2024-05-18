@@ -23,11 +23,12 @@ Route::group([
 ], function () {
     Route::get('/login', [LoginController::class, 'showVerificationCodeRequestForm'])->name('mobile-verifications.login.create');
     Route::post('/login', [LoginController::class, 'requestVerificationCode'])->name('mobile-verifications.login.store');
-    Route::match(['PATCH', 'PUT'], '/login', [LoginController::class, 'verifyVerificationCode'])->name('mobile-verifications.login.store');
+    Route::match(['PATCH', 'PUT'], '/login', [LoginController::class, 'verifyVerificationCode'])->name('mobile-verifications.login.update');
 
 
     Route::get('/register', [RegisterController::class, 'showVerificationCodeRequestForm'])->name('mobile-verifications.register.create');
     Route::post('/register', [RegisterController::class, 'requestVerificationCode'])->name('mobile-verifications.register.store');
+    Route::patch('/register', [RegisterController::class, 'register'])->name('mobile-verifications.register.update');
 
     Route::get('/protected', function () {
         return "Protected route";

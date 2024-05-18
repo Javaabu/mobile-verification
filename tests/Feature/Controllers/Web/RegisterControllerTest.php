@@ -96,14 +96,16 @@ class RegisterControllerTest extends TestCase
             'user_type' => 'user',
             'user_id' => null,
             'number' => '7528222',
-            'token' => '123456',
         ]);
 
-        $this->post(route('register'), [
+        $verification_code = $mobileNumber->generateVerificationCode();
+
+        $this->patch('mobile-verification/register', [
             'number' => '7528222',
-            'token' => '123456',
             'name' => 'John Doe',
             'email' => 'admin@example.com',
+            'verification_code' => $verification_code,
+            'verification_code_id' => $mobileNumber->verification_code_id?->toString(),
         ])
              ->assertSessionHasNoErrors();
 
@@ -120,7 +122,4 @@ class RegisterControllerTest extends TestCase
             'user_type' => 'user',
         ]);
     }
-
-
-    // it will not register a user if the token is incorrect
 }

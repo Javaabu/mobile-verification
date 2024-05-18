@@ -30,7 +30,12 @@ class RegisterController extends Controller implements RegisterWithMobileNumberC
 
     public function createUser(array $data): HasMobileNumber
     {
-        //        return User::create($data);
+        $user = new User();
+        $user->name = $data['name'];
+        $user->email = $data['email'];
+        $user->save();
+
+        return $user;
     }
 
     public function getRegisterFieldsValidationRules(Request $request): array
