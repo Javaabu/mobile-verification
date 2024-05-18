@@ -2,14 +2,14 @@
 
 namespace Javaabu\MobileVerification\Traits;
 
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator as ValidatorFacade;
-use Illuminate\Validation\Validator;
 use Illuminate\View\View;
+use Illuminate\Http\Request;
+use Illuminate\Validation\Validator;
 use Javaabu\MobileVerification\Contracts\MobileNumber;
-use Javaabu\MobileVerification\Contracts\SendVerificationCodeContract;
 use Javaabu\MobileVerification\Rules\IsValidCountryCode;
 use Javaabu\MobileVerification\Rules\IsValidMobileNumber;
+use Illuminate\Support\Facades\Validator as ValidatorFacade;
+use Javaabu\MobileVerification\Contracts\SendVerificationCodeContract;
 
 /* @var SendVerificationCodeContract $this */
 trait SendsVerificationCode

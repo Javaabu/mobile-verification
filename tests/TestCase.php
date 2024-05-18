@@ -4,14 +4,13 @@ namespace Javaabu\MobileVerification\Tests;
 
 use Illuminate\Support\Facades\View;
 use Biscolab\ReCaptcha\Facades\ReCaptcha;
-use Illuminate\Support\Facades\Notification;
-use Javaabu\Activitylog\ActivitylogServiceProvider;
 use Javaabu\Helpers\HelpersServiceProvider;
+use Illuminate\Support\Facades\Notification;
+use Orchestra\Testbench\TestCase as BaseTestCase;
+use Javaabu\Activitylog\ActivitylogServiceProvider;
+use Javaabu\SmsNotifications\SmsNotificationsServiceProvider;
 use Javaabu\MobileVerification\MobileVerificationServiceProvider;
 use Javaabu\MobileVerification\Tests\TestSupport\Providers\TestServiceProvider;
-use Javaabu\SmsNotifications\SmsNotificationsServiceProvider;
-use Laravel\Sanctum\SanctumServiceProvider;
-use Orchestra\Testbench\TestCase as BaseTestCase;
 
 abstract class TestCase extends BaseTestCase
 {

@@ -3,20 +3,20 @@
 namespace Javaabu\MobileVerification\Models;
 
 use Carbon\Carbon;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\MorphTo;
-use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Str;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Notifications\Notifiable;
+use Illuminate\Database\Eloquent\Builder;
 use Javaabu\Activitylog\Traits\LogsActivity;
-use Javaabu\MobileVerification\Contracts\HasMobileNumber;
-use Javaabu\MobileVerification\Contracts\MobileNumber as MobileNumberContract;
-use Javaabu\MobileVerification\Factories\MobileNumberFactory;
 use Javaabu\MobileVerification\MobileVerification;
+use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Javaabu\SmsNotifications\Notifiable\HasSmsNumber;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Javaabu\MobileVerification\Contracts\HasMobileNumber;
+use Javaabu\MobileVerification\Factories\MobileNumberFactory;
+use Javaabu\MobileVerification\Contracts\MobileNumber as MobileNumberContract;
 
 class MobileNumber extends Model implements MobileNumberContract
 {

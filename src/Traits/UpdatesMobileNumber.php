@@ -2,10 +2,10 @@
 
 namespace Javaabu\MobileVerification\Traits;
 
-use Illuminate\Http\Request;
 use Illuminate\View\View;
-use Javaabu\MobileVerification\Contracts\HasMobileNumber;
+use Illuminate\Http\Request;
 use Javaabu\MobileVerification\Contracts\MobileNumber;
+use Javaabu\MobileVerification\Contracts\HasMobileNumber;
 use Javaabu\SmsNotifications\Notifications\SmsNotification;
 
 trait UpdatesMobileNumber

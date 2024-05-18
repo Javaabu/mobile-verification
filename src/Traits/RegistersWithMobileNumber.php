@@ -2,11 +2,11 @@
 
 namespace Javaabu\MobileVerification\Traits;
 
-use Illuminate\Contracts\Auth\StatefulGuard;
-use Illuminate\Foundation\Auth\RegistersUsers;
+use Illuminate\View\View;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\View\View;
+use Illuminate\Contracts\Auth\StatefulGuard;
+use Illuminate\Foundation\Auth\RegistersUsers;
 use Javaabu\MobileVerification\Contracts\MobileNumber;
 use Javaabu\SmsNotifications\Notifications\SmsNotification;
 use Javaabu\MobileVerification\Contracts\RegisterWithMobileNumberContract;
@@ -17,12 +17,12 @@ trait RegistersWithMobileNumber
 {
     use HasRequestMobileNumber;
     use HasUserType;
-    use SendsVerificationCode;
-    use UsesSessionMobileNumber;
-    use VerifiesVerificationCode;
     use RegistersUsers, UsesGuard {
         UsesGuard::guard insteadof RegistersUsers;
     }
+    use SendsVerificationCode;
+    use UsesSessionMobileNumber;
+    use VerifiesVerificationCode;
 
     public function showRegistrationForm()
     {

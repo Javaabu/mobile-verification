@@ -2,10 +2,10 @@
 
 namespace Javaabu\MobileVerification\Traits;
 
-use Illuminate\Http\Request;
 use Illuminate\View\View;
-use Javaabu\MobileVerification\Contracts\HasMobileNumber;
+use Illuminate\Http\Request;
 use Javaabu\MobileVerification\Contracts\MobileNumber;
+use Javaabu\MobileVerification\Contracts\HasMobileNumber;
 use Javaabu\SmsNotifications\Notifications\SmsNotification;
 
 trait LoginsWithMobileNumber
@@ -13,9 +13,9 @@ trait LoginsWithMobileNumber
     use HasRequestMobileNumber;
     use HasUserType;
     use SendsVerificationCode;
+    use UsesGuard;
     use UsesSessionMobileNumber;
     use VerifiesVerificationCode;
-    use UsesGuard;
 
     public function showVerificationCodeRequestForm(Request $request): View
     {

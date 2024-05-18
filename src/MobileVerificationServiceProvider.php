@@ -2,11 +2,11 @@
 
 namespace Javaabu\MobileVerification;
 
-use Illuminate\Support\ServiceProvider;
-use Javaabu\MobileVerification\GrantType\MobileGrant;
-use Laravel\Passport\Bridge\RefreshTokenRepository;
 use Laravel\Passport\Passport;
+use Illuminate\Support\ServiceProvider;
 use League\OAuth2\Server\AuthorizationServer;
+use Laravel\Passport\Bridge\RefreshTokenRepository;
+use Javaabu\MobileVerification\GrantType\MobileGrant;
 use Javaabu\MobileVerification\Middlewares\AllowMobileVerifiedUsersOnly;
 
 class MobileVerificationServiceProvider extends ServiceProvider

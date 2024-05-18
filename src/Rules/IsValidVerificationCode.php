@@ -4,8 +4,8 @@ namespace Javaabu\MobileVerification\Rules;
 
 use Closure;
 use Illuminate\Contracts\Validation\DataAwareRule;
-use Illuminate\Contracts\Validation\ValidationRule;
 use Javaabu\MobileVerification\MobileVerification;
+use Illuminate\Contracts\Validation\ValidationRule;
 use Javaabu\MobileVerification\Models\MobileNumber;
 
 class IsValidVerificationCode implements DataAwareRule, ValidationRule

@@ -4,9 +4,9 @@ namespace Javaabu\MobileVerification\Rules;
 
 use Closure;
 use Illuminate\Contracts\Validation\DataAwareRule;
+use Javaabu\MobileVerification\MobileVerification;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Javaabu\MobileVerification\Contracts\IsANumberFormatValidator;
-use Javaabu\MobileVerification\MobileVerification;
 
 class IsValidMobileNumber implements DataAwareRule, ValidationRule
 {

@@ -3,23 +3,23 @@
 namespace Javaabu\MobileVerification\GrantType;
 
 use DateInterval;
-use Illuminate\Contracts\Auth\Authenticatable;
+use League\OAuth2\Server\RequestEvent;
 use Illuminate\Support\Facades\Validator;
-use Javaabu\MobileVerification\Contracts\MobileNumber;
+use Psr\Http\Message\ServerRequestInterface;
+use League\OAuth2\Server\Grant\AbstractGrant;
+use Illuminate\Contracts\Auth\Authenticatable;
+use Laravel\Passport\Bridge\User as UserEntity;
 use Javaabu\MobileVerification\MobileVerification;
+use Javaabu\MobileVerification\Contracts\MobileNumber;
+use League\OAuth2\Server\Entities\UserEntityInterface;
 use Javaabu\MobileVerification\Rules\IsValidCountryCode;
+use League\OAuth2\Server\Entities\ClientEntityInterface;
+use League\OAuth2\Server\Exception\OAuthServerException;
 use Javaabu\MobileVerification\Rules\IsValidMobileNumber;
 use Javaabu\MobileVerification\Rules\IsValidVerificationCode;
-use Laravel\Passport\Bridge\User as UserEntity;
-use League\OAuth2\Server\Entities\ClientEntityInterface;
-use League\OAuth2\Server\Entities\UserEntityInterface;
-use League\OAuth2\Server\Exception\OAuthServerException;
-use League\OAuth2\Server\Exception\UniqueTokenIdentifierConstraintViolationException;
-use League\OAuth2\Server\Grant\AbstractGrant;
-use League\OAuth2\Server\Repositories\RefreshTokenRepositoryInterface;
-use League\OAuth2\Server\RequestEvent;
 use League\OAuth2\Server\ResponseTypes\ResponseTypeInterface;
-use Psr\Http\Message\ServerRequestInterface;
+use League\OAuth2\Server\Repositories\RefreshTokenRepositoryInterface;
+use League\OAuth2\Server\Exception\UniqueTokenIdentifierConstraintViolationException;
 
 class MobileGrant extends AbstractGrant
 {

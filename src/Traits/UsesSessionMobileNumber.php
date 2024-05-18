@@ -3,8 +3,8 @@
 namespace Javaabu\MobileVerification\Traits;
 
 use Illuminate\Http\Request;
-use Javaabu\MobileVerification\Contracts\MobileNumber;
 use Javaabu\MobileVerification\MobileVerification;
+use Javaabu\MobileVerification\Contracts\MobileNumber;
 
 trait UsesSessionMobileNumber
 {

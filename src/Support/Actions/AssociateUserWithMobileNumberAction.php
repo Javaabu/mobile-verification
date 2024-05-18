@@ -2,8 +2,8 @@
 
 namespace Javaabu\MobileVerification\Support\Actions;
 
-use Javaabu\Helpers\Exceptions\InvalidOperationException;
 use Javaabu\MobileVerification\Models\MobileNumber;
+use Javaabu\Helpers\Exceptions\InvalidOperationException;
 use Javaabu\MobileVerification\Support\DataObjects\MobileNumberData;
 
 class AssociateUserWithMobileNumberAction

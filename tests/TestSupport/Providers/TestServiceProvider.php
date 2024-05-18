@@ -2,9 +2,9 @@
 
 namespace Javaabu\MobileVerification\Tests\TestSupport\Providers;
 
-use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Support\ServiceProvider;
 use Javaabu\MobileVerification\Models\MobileNumber;
+use Illuminate\Database\Eloquent\Relations\Relation;
 use Javaabu\MobileVerification\Tests\TestSupport\Models\User;
 
 class TestServiceProvider extends ServiceProvider

@@ -3,9 +3,9 @@
 namespace Javaabu\MobileVerification\Traits;
 
 use Illuminate\Http\Request;
-use Javaabu\MobileVerification\Contracts\HasRequestMobileNumberContract;
-use Javaabu\MobileVerification\Contracts\MobileNumber;
 use Javaabu\MobileVerification\MobileVerification;
+use Javaabu\MobileVerification\Contracts\MobileNumber;
+use Javaabu\MobileVerification\Contracts\HasRequestMobileNumberContract;
 
 /* @var HasRequestMobileNumberContract $this */
 trait HasRequestMobileNumber
@@ -25,7 +25,7 @@ trait HasRequestMobileNumber
             return $mobile_number;
         }
 
-        $mobile_number = new $model_class;
+        $mobile_number = new $model_class();
         $mobile_number->number = $number;
         $mobile_number->country_code = $country_code;
         $mobile_number->user_type = $this->getUserType();

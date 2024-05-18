@@ -2,9 +2,9 @@
 
 namespace Javaabu\MobileVerification\Contracts;
 
+use Illuminate\View\View;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Validator;
-use Illuminate\View\View;
 
 interface VerifyVerificationCodeContract extends HasRequestMobileNumberContract
 {

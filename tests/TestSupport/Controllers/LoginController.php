@@ -3,9 +3,9 @@
 namespace Javaabu\MobileVerification\Tests\TestSupport\Controllers;
 
 use Javaabu\Helpers\Http\Controllers\Controller;
-use Javaabu\MobileVerification\Contracts\LoginWithMobileNumberContract;
 use Javaabu\MobileVerification\Tests\TestSupport\Models\User;
 use Javaabu\MobileVerification\Traits\LoginsWithMobileNumber;
+use Javaabu\MobileVerification\Contracts\LoginWithMobileNumberContract;
 
 class LoginController extends Controller implements LoginWithMobileNumberContract
 {

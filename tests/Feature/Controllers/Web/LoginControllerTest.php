@@ -4,12 +4,11 @@ namespace Javaabu\MobileVerification\Tests\Feature\Controllers\Web;
 
 use JsonException;
 use Illuminate\Support\Facades\Notification;
+use Javaabu\MobileVerification\Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Javaabu\MobileVerification\MobileVerification;
 use Javaabu\MobileVerification\Models\MobileNumber;
-use Javaabu\MobileVerification\Tests\TestCase;
 use Javaabu\MobileVerification\Tests\TestSupport\Models\User;
-use Javaabu\MobileVerification\Notifications\MobileNumberVerificationToken;
 use Javaabu\MobileVerification\Notifications\LoginVerificationTokenNotification;
 
 class LoginControllerTest extends TestCase

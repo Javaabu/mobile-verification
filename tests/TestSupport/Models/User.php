@@ -3,12 +3,12 @@
 namespace Javaabu\MobileVerification\Tests\TestSupport\Models;
 
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Javaabu\MobileVerification\Contracts\HasMobileNumber;
-use Javaabu\MobileVerification\Tests\TestSupport\Factories\UserFactory;
 use Javaabu\MobileVerification\Traits\InteractsWithMobileNumbers;
+use Javaabu\MobileVerification\Tests\TestSupport\Factories\UserFactory;
 use Javaabu\MobileVerification\Contracts\ShouldHaveVerifiedMobileNumber;
 
 class User extends Authenticatable implements ShouldHaveVerifiedMobileNumber

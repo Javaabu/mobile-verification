@@ -2,10 +2,10 @@
 
 namespace Javaabu\MobileVerification\Contracts;
 
-use Illuminate\Http\Request;
-use Illuminate\Notifications\Notification;
-use Illuminate\Validation\Validator;
 use Illuminate\View\View;
+use Illuminate\Http\Request;
+use Illuminate\Validation\Validator;
+use Illuminate\Notifications\Notification;
 use Javaabu\SmsNotifications\Notifications\SmsNotification;
 
 interface SendVerificationCodeContract extends HasRequestMobileNumberContract

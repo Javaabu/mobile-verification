@@ -2,10 +2,9 @@
 
 namespace Javaabu\MobileVerification\Tests\Feature\Controllers\Web;
 
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Javaabu\MobileVerification\Tests\TestCase;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Javaabu\MobileVerification\Tests\TestSupport\Models\User;
-use Laravel\Sanctum\Sanctum;
 
 class ApiTokenLoginControllerTest extends TestCase
 {
@@ -17,9 +16,9 @@ class ApiTokenLoginControllerTest extends TestCase
     // an unauthorized user cannot visit auth protected routes
     public function an_unauthorized_user_cannot_visit_auth_protected_routes()
     {
-//        $this->get(route('api-protected'))
-//            ->assertStatus(302)
-//            ->assertRedirect(route('login'));
+        //        $this->get(route('api-protected'))
+        //            ->assertStatus(302)
+        //            ->assertRedirect(route('login'));
     }
 
 

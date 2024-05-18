@@ -5,9 +5,9 @@ namespace Javaabu\MobileVerification\Tests\TestSupport\Controllers;
 use Illuminate\Http\Request;
 use Javaabu\Helpers\Http\Controllers\Controller;
 use Javaabu\MobileVerification\Contracts\HasMobileNumber;
-use Javaabu\MobileVerification\Contracts\RegisterWithMobileNumberContract;
 use Javaabu\MobileVerification\Tests\TestSupport\Models\User;
 use Javaabu\MobileVerification\Traits\RegistersWithMobileNumber;
+use Javaabu\MobileVerification\Contracts\RegisterWithMobileNumberContract;
 
 class RegisterController extends Controller implements RegisterWithMobileNumberContract
 {
