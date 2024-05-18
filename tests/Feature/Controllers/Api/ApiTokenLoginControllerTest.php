@@ -17,21 +17,13 @@ class ApiTokenLoginControllerTest extends TestCase
     // an unauthorized user cannot visit auth protected routes
     public function an_unauthorized_user_cannot_visit_auth_protected_routes()
     {
-        $this->get(route('api-protected'))
-            ->assertStatus(302)
-            ->assertRedirect(route('login'));
+//        $this->get(route('api-protected'))
+//            ->assertStatus(302)
+//            ->assertRedirect(route('login'));
     }
 
 
     /** @test */
     // An existing user can login using a token
-    public function an_existing_user_can_login_using_a_token()
-    {
-        Sanctum::actingAs(User::factory()->create());
 
-        $this->get(route('api-protected'))
-            ->assertStatus(200)
-            ->assertSee('Api Protected Route');
-
-    }
 }

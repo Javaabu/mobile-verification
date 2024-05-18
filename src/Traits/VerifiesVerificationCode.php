@@ -99,7 +99,7 @@ trait VerifiesVerificationCode
         }
 
         if ($this->getVerificationCodeFormView()) {
-            return $this->showVerificationCodeForm($mobile_number)->withErrors($validator);
+            return $this->showVerificationCodeForm($request, $mobile_number)->withErrors($validator);
         }
 
         return back()->withErrors($validator);
@@ -116,7 +116,6 @@ trait VerifiesVerificationCode
             $this->getUserType(),
             $this->getCountryCodeInputKey()
         ))
-            ->canSendOtp()
             ->setShouldBeRegisteredNumber($this->mustBeARegisteredMobileNumber($request->all()));
 
         $valid_verification_code_rule = (new IsValidVerificationCode(

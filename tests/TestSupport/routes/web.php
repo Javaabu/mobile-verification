@@ -13,12 +13,17 @@ Route::get('/', function () {
     return "Testing Javaabu Mobile Verification";
 });
 
+Route::get('/login', function() {
+    return "Login";
+})->name('login');
+
 Route::group([
     'middleware' => 'web',
     'prefix' => '/mobile-verification',
 ], function () {
     Route::get('/login', [LoginController::class, 'showVerificationCodeRequestForm'])->name('mobile-verifications.login.create');
     Route::post('/login', [LoginController::class, 'requestVerificationCode'])->name('mobile-verifications.login.store');
+    Route::match(['PATCH', 'PUT'], '/login', [LoginController::class, 'verifyVerificationCode'])->name('mobile-verifications.login.store');
 
 
     Route::get('/register', [RegisterController::class, 'showVerificationCodeRequestForm'])->name('mobile-verifications.register.create');
@@ -26,7 +31,7 @@ Route::group([
 
     Route::get('/protected', function () {
         return "Protected route";
-    })->middleware('mobile-verified:web');
+    })->middleware(['auth:web', 'mobile-verified:web']);
 });
 
 //Route::post('/validate', [ValidateMobileNumbersController::class, 'validate'])->name('validate');

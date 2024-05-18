@@ -40,4 +40,9 @@ class LoginController extends Controller implements LoginWithMobileNumberContrac
     {
         // TODO: Implement verificationCodeSuccessRedirectUrl() method.
     }
+
+    public function enableReCaptcha(): bool
+    {
+        return false;
+    }
 }

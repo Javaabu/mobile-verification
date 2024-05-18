@@ -62,7 +62,7 @@ class MobileVerificationServiceProvider extends ServiceProvider
             $server->enableGrantType($grant, Passport::tokensExpireIn());
         });
 
-        app('route')->aliasMiddleware('mobile-verified', AllowMobileVerifiedUsersOnly::class);
+        app('router')->aliasMiddleware('mobile-verified', AllowMobileVerifiedUsersOnly::class);
     }
 
     protected function makeGrant(): MobileGrant

@@ -19,7 +19,7 @@ class MobileNumberUpdateController implements UpdateMobileNumberContract
 
     public function redirectAfterVerificationCodeRequest(MobileNumber $mobile_number, Request $request)
     {
-        return $this->showVerificationCodeForm($mobile_number);
+        return $this->showVerificationCodeForm($request, $mobile_number);
     }
 
     public function getUserClass(): string

@@ -5,6 +5,7 @@ namespace Javaabu\MobileVerification\Tests\Feature\Controllers\Web;
 use JsonException;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Javaabu\MobileVerification\MobileVerification;
 use Javaabu\MobileVerification\Models\MobileNumber;
 use Javaabu\MobileVerification\Tests\TestCase;
 use Javaabu\MobileVerification\Tests\TestSupport\Models\User;
@@ -28,10 +29,10 @@ class LoginControllerTest extends TestCase
     public function test_can_see_the_verification_code_form_if_mobile_number_is_present_in_session() // done
     {
         $mobile_number = MobileNumber::factory()->create([
-            'number' => '7326655',
+            'number'       => '7326655',
             'country_code' => '960',
-            'user_type' => 'user',
-            'user_id' => null,
+            'user_type'    => 'user',
+            'user_id'      => null,
         ]);
 
         $this->withSession(['mobile_number_to_login' => $mobile_number->id])
@@ -57,15 +58,15 @@ class LoginControllerTest extends TestCase
         $response->assertSessionHasErrors(['number']);
     }
 
-   /* @throws JsonException */
+    /* @throws JsonException */
     public function test_if_the_number_provided_is_valid_then_system_sends_an_otp_to_the_number()
     {
         $user = User::factory()->create();
         $mobile_number = MobileNumber::factory()->create([
-            'number' => '7326655',
+            'number'       => '7326655',
             'country_code' => '960',
-            'user_type' => 'user',
-            'user_id' => $user->id,
+            'user_type'    => 'user',
+            'user_id'      => $user->id,
         ]);
 
         $this->post('mobile-verification/login', [
@@ -84,39 +85,38 @@ class LoginControllerTest extends TestCase
      * */
 
     /** @test */
-    // an unauthorized user cannot visit auth protected routes
     public function an_unauthorized_user_cannot_visit_auth_protected_routes()
     {
-        $this->get(route('protected'))
-             ->assertRedirect(route('login'));
+        $this->get('/mobile-verification/protected')
+             ->assertStatus(302)
+             ->assertRedirect('/login');
     }
 
     /** @test */
     // An existing user can login using a token
     public function an_existing_user_can_login_using_a_token()
     {
-        $this->get('/');
-
         $user = User::factory()->create([
-            'name' => 'John Doe',
+            'name'  => 'John Doe',
             'email' => 'john@example.com',
         ]);
 
         $mobile_number = MobileNumber::factory()->create([
             'user_type' => 'user',
-            'user_id' => $user->id,
-            'number' => '7528222',
+            'user_id'   => $user->id,
+            'number'    => '7528222',
+            'country_code' => MobileVerification::defaultCountryCode(),
         ]);
 
-        $token = $mobile_number->generateVerificationCode();
+        $verification_code = $mobile_number->generateVerificationCode();
 
-        $this->post(route('login'), [
+        $this->patch('/mobile-verification/login', [
             'number' => '7528222',
-            'token' => $token,
+            'verification_code'  => $verification_code,
+            'verification_code_id' => $mobile_number->verification_code_id?->toString(),
         ])->assertSessionHasNoErrors();
 
-        $this->get(route('protected'))
-            ->assertSee('Protected Route');
-
+        $this->get('mobile-verification/protected')
+             ->assertSee('Protected route');
     }
 }
