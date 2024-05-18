@@ -28,31 +28,19 @@ Route::group([
 
     Route::get('/register', [RegisterController::class, 'showVerificationCodeRequestForm'])->name('mobile-verifications.register.create');
     Route::post('/register', [RegisterController::class, 'requestVerificationCode'])->name('mobile-verifications.register.store');
-    Route::patch('/register', [RegisterController::class, 'register'])->name('mobile-verifications.register.update');
+    Route::match(['PATCH', 'PUT'],'/register', [RegisterController::class, 'register'])->name('mobile-verifications.register.update');
+
+    Route::get('/update', [MobileNumberUpdateController::class, 'showVerificationCodeRequestForm'])->name('mobile-verifications.update.create');
+    Route::post('/update', [MobileNumberUpdateController::class, 'requestVerificationCode'])->name('mobile-verifications.update.store');
+    Route::match(['PATCH', 'PUT'],'/update', [MobileNumberUpdateController::class, 'verifyVerificationCode'])->name('mobile-verifications.update.update');
+
+
+    Route::get('/updated', function (){
+        return "Mobile number updated";
+    })->name('mobile-verifications.updated');
 
     Route::get('/protected', function () {
         return "Protected route";
     })->middleware(['auth:web', 'mobile-verified:web']);
 });
 
-//Route::post('/validate', [ValidateMobileNumbersController::class, 'validate'])->name('validate');
-//Route::post('/mobile-number-otp', [SendTokenController::class, 'mobileNumberOtp'])->name('mobile-number-otp');
-//Route::post('/verify', [VerifyTokenController::class, 'verify'])->name('verify');
-//Route::post('/register', [RegisterController::class, 'register'])->name('register');
-//Route::post('/login', [LoginController::class, 'login'])->name('login');
-//
-//Route::get('/protected', function () {
-//    return "Protected Route";
-//})->name('protected')->middleware('auth:web');
-//
-//Route::post('/request-top', [MobileNumberUpdateTokenController::class, 'mobileNumberOtp'])
-//     ->name('request-number-change-otp')
-//     ->middleware('auth:web');
-//
-//Route::post('/update-mobile-number', [MobileNumberUpdateController::class, 'update'])
-//    ->name('update-mobile-number')
-//    ->middleware('auth:web');
-//
-//Route::get('/api-protected', function () {
-//    return "Api Protected Route";
-//})->name('api-protected')->middleware('auth:sanctum');

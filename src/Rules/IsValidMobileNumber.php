@@ -45,9 +45,10 @@ class IsValidMobileNumber implements DataAwareRule, ValidationRule
         return $this;
     }
 
-    public function setCountryCode(?string $country_code): void
+    public function setCountryCode(?string $country_code): static
     {
         $this->country_code = $country_code ?: MobileVerification::defaultCountryCode();
+        return $this;
     }
 
     public function getCountryCode(): string
@@ -116,7 +117,6 @@ class IsValidMobileNumber implements DataAwareRule, ValidationRule
     public function setData(array $data): static
     {
         $this->setCountryCode($data[$this->country_code_input_name] ?? null);
-
         return $this;
     }
 }

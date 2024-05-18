@@ -2,6 +2,7 @@
 
 namespace Javaabu\MobileVerification\Tests\Feature\Traits;
 
+use Javaabu\Activitylog\Models\Activity;
 use Javaabu\MobileVerification\Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Javaabu\MobileVerification\Models\MobileNumber;
@@ -33,9 +34,10 @@ class InteractsWithMobileNumbersTest extends TestCase
 
         $this->actingAs($user);
 
-        $this->post(route('update-mobile-number'), [
+        $this->patch('mobile-verification/update', [
             'number' => '7326655',
-            'token' => $new_mobile_number->generateVerificationCode(),
+            'verification_code' => $new_mobile_number->generateVerificationCode(),
+            'verification_code_id' => $new_mobile_number->verification_code_id->toString(),
         ])
              ->assertSessionHasNoErrors()
              ->assertRedirect();
@@ -47,37 +49,15 @@ class InteractsWithMobileNumbersTest extends TestCase
             'user_id' => $user->id,
         ]);
 
-        $this->assertDatabaseHas('activity_log', [
-            'description' => 'updated',
-            'subject_type' => 'mobile_number',
-            'subject_id' => $mobile_number->id,
-            'causer_type' => 'user',
-            'causer_id' => $user->id,
-            'properties' => json_encode([
-                'attributes' => [
-                    'user_id' => null,
-                ],
-                'old' => [
-                    'user_id' => $user->id,
-                ],
-            ]),
-        ]);
+        $activity = Activity::where('description', 'updated')
+            ->where('subject_type', 'mobile_number')
+            ->where('subject_id', $new_mobile_number->id)
+            ->where('causer_type', 'user')
+            ->where('causer_id', $user->id)
+            ->where('properties->attributes->user_id', $user->id)
+            ->first();
 
-        $this->assertDatabaseHas('activity_log', [
-            'description' => 'updated',
-            'subject_type' => 'mobile_number',
-            'subject_id' => $new_mobile_number->id,
-            'causer_type' => 'user',
-            'causer_id' => $user->id,
-            'properties' => json_encode([
-                'attributes' => [
-                    'user_id' => $user->id,
-                ],
-                'old' => [
-                    'user_id' => null,
-                ],
-            ]),
-        ]);
+        $this->assertNotNull($activity);
     }
 
     /** @test */

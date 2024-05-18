@@ -239,7 +239,7 @@ class MobileNumber extends Model implements MobileNumberContract
     public function getResendVerificationCodeInAttribute(): int
     {
         return $this->was_sent_recently
-            ? self::config('resend_interval') - $this->verification_code_created_at->diffInSeconds()
+            ? MobileVerification::config('resend_interval') - $this->verification_code_created_at->diffInSeconds()
             : 0;
     }
 

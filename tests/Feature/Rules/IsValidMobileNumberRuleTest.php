@@ -30,7 +30,7 @@ class IsValidMobileNumberRuleTest extends TestCase
         $value = $this->checkRule($rule, 'number', '97712345555');
         $this->assertFalse($value);
 
-        $rule = new IsValidMobileNumber('user', Countries::SaudiArabia->getCountryCode());
+        $rule = (new IsValidMobileNumber('user'))->setCountryCode('966');
         $value = $this->checkRule($rule, 'number', '977123455555');
         $this->assertTrue($value);
     }
@@ -46,13 +46,13 @@ class IsValidMobileNumberRuleTest extends TestCase
             'user_id' => $user->id,
         ]);
 
-        $rule = new IsValidMobileNumber('user', can_be_taken_by_user: false);
+        $rule = (new IsValidMobileNumber('user'))->notRegistered();
         $value = $this->checkRule($rule, 'number', '7825222');
         $this->assertFalse($value);
     }
 
     /** @test */
-    public function it_can_validate_if_the_number_regardless_is_used_by_another_user_if_the_option_is_checked()
+    public function it_can_check_if_the_number_is_already_a_registered_number()
     {
         $user = User::factory()->create();
         $mobile_number = MobileNumber::factory()->create([
@@ -62,7 +62,7 @@ class IsValidMobileNumberRuleTest extends TestCase
             'user_id' => $user->id,
         ]);
 
-        $rule = new IsValidMobileNumber('user', can_be_taken_by_user: true);
+        $rule = (new IsValidMobileNumber('user'))->registered();
         $value = $this->checkRule($rule, 'number', '7825222');
         $this->assertTrue($value);
     }
@@ -82,7 +82,7 @@ class IsValidMobileNumberRuleTest extends TestCase
 
         $this->travel(config('mobile-verification.attempt_expiry') + 1)->minutes();
 
-        $rule = new IsValidMobileNumber('user', can_be_taken_by_user: true, can_send_otp: true);
+        $rule = (new IsValidMobileNumber('user'))->registered()->canSendOtp();
         $value = $this->checkRule($rule, 'number', '7825222');
         $this->assertTrue($value);
 
@@ -95,7 +95,7 @@ class IsValidMobileNumberRuleTest extends TestCase
             'attempts' => config('mobile-verification.max_attempts'),
         ]);
 
-        $rule = new IsValidMobileNumber('user', can_be_taken_by_user: true, can_send_otp: true);
+        $rule = (new IsValidMobileNumber('user'))->registered()->canSendOtp();
         $value = $this->checkRule($rule, 'number', '7326655');
         $this->assertFalse($value);
     }

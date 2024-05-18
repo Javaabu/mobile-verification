@@ -9,47 +9,69 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Javaabu\MobileVerification\Models\MobileNumber;
 use Javaabu\MobileVerification\Tests\TestSupport\Models\User;
 use Javaabu\MobileVerification\Notifications\MobileNumberVerificationToken;
+use Javaabu\MobileVerification\Notifications\LoginVerificationTokenNotification;
 
 class MobileNumberUpdateControllerTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function test_user_needs_to_be_logged_in_to_request_for_mobile_number_update_token()
+    /*
+     * VERIFICATION CODE TESTS
+     * */
+
+    public function test_can_see_the_update_verification_code_request_form() // done
     {
-        $this->post(route('request-number-change-otp'))
-             ->assertRedirect(route('login'));
+        $this->get('/mobile-verification/update')
+             ->assertSee("Verification Code Request Form");
     }
 
-    public function test_user_needs_to_be_logged_in_to_update_mobile_number()
+    public function test_can_see_the_update_verification_code_form_if_mobile_number_is_present_in_session() // done
     {
-        $response = $this->post(route('update-mobile-number'));
-        $response->assertRedirect(route('login'));
+        $mobile_number = MobileNumber::factory()->create([
+            'number'       => '7326655',
+            'country_code' => '960',
+            'user_type'    => 'user',
+            'user_id'      => null,
+        ]);
+
+        $this->withSession(['mobile_to_update' => $mobile_number->id])
+             ->get('/mobile-verification/update')
+             ->assertSee("Enter Verification Code");
     }
 
+    public function test_can_send_a_post_request_to_update_a_user_with_a_mobile_number() // done
+    {
+        $this->get('/mobile-numbers');
 
-    /* @throws JsonException */
-    public function test_user_can_request_for_otp_to_be_sent_to_new_mobile_number()
+        $this->post('/mobile-verification/update', [
+            'number' => '7326655',
+        ])->assertSessionHasNoErrors();
+    }
+
+    public function test_if_the_number_provided_for_update_is_already_registered_then_user_is_redirected_back_with_errors()
     {
         $user = User::factory()->create();
-        MobileNumber::factory()->create([
-            'number' => '7528222',
+        $mobile_number = MobileNumber::factory()->create([
+            'number'       => '7326655',
             'country_code' => '960',
-            'user_type' => 'user',
-            'user_id' => $user->id,
+            'user_type'    => 'user',
+            'user_id'      => $user->id,
         ]);
 
-        $this->actingAs($user);
-
-        $this->post(route('request-number-change-otp'), ['number' => '7326655'])
-             ->assertSessionHasNoErrors()
-             ->assertRedirect();
-
-        $this->assertDatabaseHas('mobile_numbers', [
+        $response = $this->post('mobile-verification/update', [
             'number' => '7326655',
-            'country_code' => '960',
-            'user_type' => 'user',
-            'user_id' => null,
         ]);
+        $response->assertRedirect();
+        $response->assertSessionHasErrors(['number']);
+    }
+
+    /* @throws JsonException */
+    public function test_if_the_number_provided_for_update_is_valid_then_system_sends_an_otp_to_the_number()
+    {
+        $this->post('mobile-verification/update', [
+            'number' => '7326655',
+        ])
+             ->assertSessionHasNoErrors();
 
         $mobile_number = MobileNumber::where('number', '7326655')->first();
 
@@ -59,9 +81,13 @@ class MobileNumberUpdateControllerTest extends TestCase
         );
     }
 
-    // test that user can update mobile number with valid token
+    /*
+     * UPDATE MOBILE NUMBER TESTS
+     * */
+    /* @throws JsonException */
     public function test_user_can_update_mobile_number_with_valid_token()
     {
+        $this->withoutExceptionHandling();
         $user = User::factory()->create();
         $mobile_number = MobileNumber::factory()->create([
             'number' => '7528222',
@@ -79,9 +105,12 @@ class MobileNumberUpdateControllerTest extends TestCase
 
         $this->actingAs($user);
 
-        $this->post(route('update-mobile-number'), [
+        $verification_code = $new_mobile_number->generateVerificationCode();
+
+        $this->patch('mobile-verification/update', [
             'number' => '7326655',
-            'token' => $new_mobile_number->generateVerificationCode(),
+            'verification_code' => $verification_code,
+            'verification_code_id' => $new_mobile_number->verification_code_id->toString(),
         ])
              ->assertSessionHasNoErrors()
              ->assertRedirect();
@@ -91,6 +120,13 @@ class MobileNumberUpdateControllerTest extends TestCase
             'country_code' => '960',
             'user_type' => 'user',
             'user_id' => $user->id,
+        ]);
+
+        $this->assertDatabaseHas('mobile_numbers', [
+            'number' => '7528222',
+            'country_code' => '960',
+            'user_type' => 'user',
+            'user_id' => null,
         ]);
     }
 }

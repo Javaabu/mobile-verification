@@ -132,6 +132,6 @@ return [
         'login' => \Javaabu\MobileVerification\Notifications\LoginVerificationTokenNotification::class,
         'register' => \Javaabu\MobileVerification\Notifications\RegisterVerificationTokenNotification::class,
         'verification_code' => \Javaabu\MobileVerification\Notifications\MobileNumberVerificationToken::class,
-        'update' => \Javaabu\MobileVerification\Notifications\UpdateMobileNumberNotification::class,
+        'update' => \Javaabu\MobileVerification\Notifications\MobileNumberVerificationToken::class,
     ]
 ];

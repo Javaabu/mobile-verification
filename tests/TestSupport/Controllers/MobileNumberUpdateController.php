@@ -14,7 +14,7 @@ class MobileNumberUpdateController implements UpdateMobileNumberContract
 
     public function getVerificationCodeRequestFormView(): ?string
     {
-        return "";
+        return "verification-code-request-form";
     }
 
     public function redirectAfterVerificationCodeRequest(MobileNumber $mobile_number, Request $request)
@@ -29,11 +29,11 @@ class MobileNumberUpdateController implements UpdateMobileNumberContract
 
     public function getVerificationCodeFormView(): ?string
     {
-        // TODO: Implement getVerificationCodeFormView() method.
+        return "verification-code-entry-form";
     }
 
     public function verificationCodeSuccessRedirectUrl(): string
     {
-        // TODO: Implement verificationCodeSuccessRedirectUrl() method.
+        return '/mobile-verification/updated';
     }
 }

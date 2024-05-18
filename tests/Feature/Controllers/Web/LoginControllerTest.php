@@ -43,6 +43,14 @@ class LoginControllerTest extends TestCase
     {
         $this->get('/mobile-numbers');
 
+        $user = User::factory()->create();
+        $mobile_number = MobileNumber::factory()->create([
+            'number'       => '7326655',
+            'country_code' => '960',
+            'user_type'    => 'user',
+            'user_id'      => $user->id,
+        ]);
+
         $this->post('/mobile-verification/login', [
             'number' => '7326655',
         ])->assertSessionHasNoErrors();
