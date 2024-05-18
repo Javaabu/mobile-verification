@@ -27,7 +27,8 @@ trait SendsVerificationCode
             return $this->sendFailedVerificationCodeRequestResponse($request, $validator);
         }
 
-        $mobile_number = $this->getMobileNumberFromRequest($request);
+        $should_create_mobile_number = ! $this->mustBeARegisteredMobileNumber($request->all());
+        $mobile_number = $this->getMobileNumberFromRequest($request, $should_create_mobile_number);
         $verification_code = $mobile_number->generateVerificationCode();
 
         $this->sendVerificationCodeSms($verification_code, $mobile_number);

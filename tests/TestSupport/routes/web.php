@@ -27,7 +27,7 @@ Route::group([
 
 
     Route::get('/register', [RegisterController::class, 'showVerificationCodeRequestForm'])->name('mobile-verifications.register.create');
-    Route::post('/register', [RegisterController::class, 'register'])->name('mobile-verifications.register.store');
+    Route::post('/register', [RegisterController::class, 'requestVerificationCode'])->name('mobile-verifications.register.store');
 
     Route::get('/protected', function () {
         return "Protected route";

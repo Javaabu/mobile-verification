@@ -10,16 +10,29 @@ use Javaabu\MobileVerification\MobileVerification;
 /* @var HasRequestMobileNumberContract $this */
 trait HasRequestMobileNumber
 {
-    public function getMobileNumberFromRequest(Request $request): ?MobileNumber
+    public function getMobileNumberFromRequest(Request $request, bool $create = false): ?MobileNumber
     {
-        $mobile_number = $request->input($this->getMobileNumberInputKey());
+        $number = $request->input($this->getMobileNumberInputKey());
         $country_code = $request->input($this->getCountryCodeInputKey()) ?: MobileVerification::defaultCountryCode();
 
         $model_class = MobileVerification::mobileNumberModel();
 
-        return $model_class::query()
-                           ->hasPhoneNumber($country_code, $mobile_number, $this->getUserType())
+        $mobile_number =  $model_class::query()
+                           ->hasPhoneNumber($country_code, $number, $this->getUserType())
                            ->first();
+
+        if (! $create || $mobile_number) {
+            return $mobile_number;
+        }
+
+        $mobile_number = new $model_class;
+        $mobile_number->number = $number;
+        $mobile_number->country_code = $country_code;
+        $mobile_number->user_type = $this->getUserType();
+        $mobile_number->user_id = null;
+        $mobile_number->save();
+
+        return $mobile_number;
     }
 
     public function getMobileNumberInputKey(): string

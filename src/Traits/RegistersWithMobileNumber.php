@@ -88,8 +88,7 @@ trait RegistersWithMobileNumber
     public function getVerificationCodeSmsNotification(string $verification_code, MobileNumber $mobile_number): SmsNotification
     {
         $notification_class = config('mobile-verification.notifications.register');
-
-        return new $notification_class($verification_code, $mobile_number);
+        return new $notification_class($verification_code, $mobile_number?->user?->name);
     }
 
     public function mustBeARegisteredMobileNumber(array $request_data): ?bool

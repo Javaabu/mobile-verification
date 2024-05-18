@@ -43,12 +43,12 @@ class RegisterController extends Controller implements RegisterWithMobileNumberC
 
     public function getVerificationCodeRequestFormView(): ?string
     {
-        // TODO: Implement getVerificationCodeRequestFormView() method.
+        return "verification-code-request-form";
     }
 
     public function getVerificationCodeFormView(): ?string
     {
-        // TODO: Implement getVerificationCodeFormView() method.
+        return "verification-code-entry-form";
     }
 
     public function verificationCodeSuccessRedirectUrl(): string
@@ -59,5 +59,10 @@ class RegisterController extends Controller implements RegisterWithMobileNumberC
     public function getRegistrationFormView(): string
     {
         // TODO: Implement getRegistrationFormView() method.
+    }
+
+    public function enableReCaptcha(): bool
+    {
+        return false;
     }
 }
