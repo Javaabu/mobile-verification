@@ -32,71 +32,6 @@ Publishing Translations
 php artisan vendor:publish --provider="Javaabu\MobileVerification\MobileVerificationServiceProvider" --tag="mobile-verification-translations"
 ```
 
-### Verifying Mobile Number Availability
-Create a route to verify mobile number availability
-```php
-Route::post('validate', [MobileNumberAvailibilityController::class, 'validate']);
-```
-
-In your controller
-```php
-use Javaabu\MobileVerification\Traits\ValidatesMobileNumbers;
-
-// Specify the user type
-protected string $user_class = 'user';
-```
-
-To redirect the user if the mobile number is available, you can override the `redirectUrl` method
-```php
-    public function redirectUrl(): RedirectResponse|JsonResponse
-    {
-        return to_route('web.home')->with(['message' => __('The mobile number is valid')]);
-    }
-```
-When you call the `validate` method, it will return a message that the mobile number is already registered or that the mobile number is available.
-
-
-## Getting Mobile Number Verification Code
-Create a route to get the mobile number verification code
-```php
-Route::post('send-otp', [MobileNumberVerificationController::class, 'sendOtp']);
-```
-
-In your controller
-```php
-    protected string $user_class = 'user';
-    
-    use CanSendVerificationCode;
-```
-
-## Registering Using OTP
-Create a route to register using OTP
-```php
-Route::post('register', [RegistrationController::class, 'register']);
-```
-
-In your controller add the `CanRegisterUsingToken` trait and implement the `IsRegistrationController` interface.
-```php
-    protected string $user_class = 'user';
-    
-    use CanRegisterUsingToken;
-
-    /*
-     * Override the below method as required
-     * */
-    public function registerUser(array $data): HasMobileNumber
-    {
-        $user = new User();
-        $user->name = $data['name'];
-        $user->email = $data['email'];
-        $user->save();
-
-        return $user;
-    }
-```
-
-
-
 
 ## Testing
 
@@ -122,6 +57,7 @@ If you discover any security related issues, please email [info@javaabu.com](mai
 
 - [Javaabu Pvt. Ltd.](https://github.com/javaabu)
 - [Arushad Ahmed (@dash8x)](http://arushad.com)
+- [Hussa Afeef (@ibnnajjaar)](https://abunooh.com)
 - [All Contributors](../../contributors)
 
 ## License
