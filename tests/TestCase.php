@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\View;
 use Biscolab\ReCaptcha\Facades\ReCaptcha;
 use Javaabu\Helpers\HelpersServiceProvider;
 use Illuminate\Support\Facades\Notification;
+use Laravel\Passport\PassportServiceProvider;
 use Orchestra\Testbench\TestCase as BaseTestCase;
 use Javaabu\Activitylog\ActivitylogServiceProvider;
 use Javaabu\SmsNotifications\SmsNotificationsServiceProvider;
@@ -37,6 +38,7 @@ abstract class TestCase extends BaseTestCase
             SmsNotificationsServiceProvider::class,
             HelpersServiceProvider::class,
             ActivitylogServiceProvider::class,
+            PassportServiceProvider::class,
         ];
     }
 

@@ -3,11 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use Javaabu\MobileVerification\Tests\TestSupport\Controllers\LoginController;
 use Javaabu\MobileVerification\Tests\TestSupport\Controllers\RegisterController;
-use Javaabu\MobileVerification\Tests\TestSupport\Controllers\SendTokenController;
-use Javaabu\MobileVerification\Tests\TestSupport\Controllers\VerifyTokenController;
 use Javaabu\MobileVerification\Tests\TestSupport\Controllers\MobileNumberUpdateController;
-use Javaabu\MobileVerification\Tests\TestSupport\Controllers\ValidateMobileNumbersController;
-use Javaabu\MobileVerification\Tests\TestSupport\Controllers\MobileNumberUpdateTokenController;
 
 Route::get('/', function () {
     return "Testing Javaabu Mobile Verification";
@@ -28,14 +24,14 @@ Route::group([
 
     Route::get('/register', [RegisterController::class, 'showVerificationCodeRequestForm'])->name('mobile-verifications.register.create');
     Route::post('/register', [RegisterController::class, 'requestVerificationCode'])->name('mobile-verifications.register.store');
-    Route::match(['PATCH', 'PUT'],'/register', [RegisterController::class, 'register'])->name('mobile-verifications.register.update');
+    Route::match(['PATCH', 'PUT'], '/register', [RegisterController::class, 'register'])->name('mobile-verifications.register.update');
 
     Route::get('/update', [MobileNumberUpdateController::class, 'showVerificationCodeRequestForm'])->name('mobile-verifications.update.create');
     Route::post('/update', [MobileNumberUpdateController::class, 'requestVerificationCode'])->name('mobile-verifications.update.store');
-    Route::match(['PATCH', 'PUT'],'/update', [MobileNumberUpdateController::class, 'verifyVerificationCode'])->name('mobile-verifications.update.update');
+    Route::match(['PATCH', 'PUT'], '/update', [MobileNumberUpdateController::class, 'verifyVerificationCode'])->name('mobile-verifications.update.update');
 
 
-    Route::get('/updated', function (){
+    Route::get('/updated', function () {
         return "Mobile number updated";
     })->name('mobile-verifications.updated');
 

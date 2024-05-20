@@ -9,7 +9,6 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Javaabu\MobileVerification\Models\MobileNumber;
 use Javaabu\MobileVerification\Tests\TestSupport\Models\User;
 use Javaabu\MobileVerification\Notifications\MobileNumberVerificationToken;
-use Javaabu\MobileVerification\Notifications\LoginVerificationTokenNotification;
 
 class MobileNumberUpdateControllerTest extends TestCase
 {

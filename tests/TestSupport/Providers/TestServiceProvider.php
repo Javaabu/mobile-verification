@@ -2,6 +2,7 @@
 
 namespace Javaabu\MobileVerification\Tests\TestSupport\Providers;
 
+use Laravel\Passport\Passport;
 use Illuminate\Support\ServiceProvider;
 use Javaabu\MobileVerification\Models\MobileNumber;
 use Illuminate\Database\Eloquent\Relations\Relation;
@@ -26,6 +27,8 @@ class TestServiceProvider extends ServiceProvider
             'user' => User::class,
             'mobile_number' => MobileNumber::class,
         ]);
+
+        Passport::loadKeysFrom(__DIR__ . '/../../passport-keys');
     }
 
     /**

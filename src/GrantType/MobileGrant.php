@@ -103,23 +103,23 @@ class MobileGrant extends AbstractGrant
         // Validate the OTP
         // Return the validated data
         $mobile_number = $this->getParameter('number', $request);
-        $otp = $this->getParameter('otp', $request);
+        $verification_code = $this->getParameter('verification_code', $request);
         $country_code = $this->getParameter('country_code', $request, false);
         $user_type = $this->getUserType($request, $client);
 
         $validator = Validator::make([
-            'number' => $mobile_number,
-            'country_code' => $country_code,
-            'otp' => $otp,
+            'number'            => $mobile_number,
+            'country_code'      => $country_code,
+            'verification_code' => $verification_code,
         ], [
-            'number' => ['required', 'string', (new IsValidMobileNumber($user_type))->registered()],
-            'country_code' => ['nullable', 'string', new IsValidCountryCode()],
-            'otp' => ['required', 'string', (new IsValidVerificationCode($user_type))->shouldResetAttempts()],
+            'number'            => ['required', 'string', (new IsValidMobileNumber($user_type))->registered()],
+            'country_code'      => ['nullable', 'string', new IsValidCountryCode()],
+            'verification_code' => ['required', 'string', (new IsValidVerificationCode($user_type))->shouldResetAttempts()],
         ]);
 
         if ($validator->fails()) {
-            if ($validator->errors()->has('otp')) {
-                throw OAuthServerException::invalidRequest('otp', $validator->errors()->first('otp'));
+            if ($validator->errors()->has('verification_code')) {
+                throw OAuthServerException::invalidRequest('verification_code', $validator->errors()->first('verification_code'));
             }
 
             if ($validator->errors()->has('number')) {

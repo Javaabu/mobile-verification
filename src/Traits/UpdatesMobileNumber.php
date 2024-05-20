@@ -4,7 +4,6 @@ namespace Javaabu\MobileVerification\Traits;
 
 use Illuminate\View\View;
 use Illuminate\Http\Request;
-use Illuminate\Contracts\Auth\StatefulGuard;
 use Javaabu\MobileVerification\Contracts\MobileNumber;
 use Javaabu\MobileVerification\Contracts\HasMobileNumber;
 use Javaabu\SmsNotifications\Notifications\SmsNotification;
