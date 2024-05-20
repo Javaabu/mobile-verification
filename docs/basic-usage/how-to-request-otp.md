@@ -20,9 +20,7 @@ Below are the steps for the registration process:
 
 Below are the steps for the login process:
 1. A user sends a request to the application with their mobile number.
-2. The package checks if the mobile number is registered.
-    3. If the mobile number is not registered, the package returns a message that the mobile number is not registered.
-    4. If the mobile number is registered, the package sends an OTP to the mobile number.
+
 
 Below are the steps for the update process:
 1. An authenticated user sends a request to the application with their new mobile number.
