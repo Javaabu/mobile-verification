@@ -4,6 +4,7 @@ namespace Javaabu\MobileVerification\Tests\Feature\Rules;
 
 use Javaabu\MobileVerification\Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Javaabu\MobileVerification\MobileVerification;
 use Javaabu\MobileVerification\Models\MobileNumber;
 use Javaabu\MobileVerification\Support\Enums\Countries;
 use Javaabu\MobileVerification\Rules\IsValidMobileNumber;
@@ -40,7 +41,7 @@ class IsValidMobileNumberRuleTest extends TestCase
     {
         $user = User::factory()->create();
         $mobile_number = MobileNumber::factory()->create([
-            'country_code' => Countries::Maldives->getCountryCode(),
+            'country_code' => MobileVerification::defaultCountryCode(),
             'number' => '7825222',
             'user_type' => 'user',
             'user_id' => $user->id,
@@ -56,7 +57,7 @@ class IsValidMobileNumberRuleTest extends TestCase
     {
         $user = User::factory()->create();
         $mobile_number = MobileNumber::factory()->create([
-            'country_code' => Countries::Maldives->getCountryCode(),
+            'country_code' => MobileVerification::defaultCountryCode(),
             'number' => '7825222',
             'user_type' => 'user',
             'user_id' => $user->id,
@@ -73,7 +74,7 @@ class IsValidMobileNumberRuleTest extends TestCase
     {
         $user = User::factory()->create();
         $mobile_number = MobileNumber::factory()->create([
-            'country_code' => Countries::Maldives->getCountryCode(),
+            'country_code' => MobileVerification::defaultCountryCode(),
             'number' => '7825222',
             'user_type' => 'user',
             'user_id' => $user->id,
@@ -88,7 +89,7 @@ class IsValidMobileNumberRuleTest extends TestCase
 
         $user_two = User::factory()->create();
         $mobile_number = MobileNumber::factory()->create([
-            'country_code' => Countries::Maldives->getCountryCode(),
+            'country_code' => MobileVerification::defaultCountryCode(),
             'number' => '7326655',
             'user_type' => 'user',
             'user_id' => $user_two->id,
