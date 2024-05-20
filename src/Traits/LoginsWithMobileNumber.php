@@ -17,6 +17,16 @@ trait LoginsWithMobileNumber
     use UsesSessionMobileNumber;
     use VerifiesVerificationCode;
 
+    public function __construct()
+    {
+        $this->applyMiddlewares();
+    }
+
+    public function applyMiddlewares(): void
+    {
+        $this->middleware('guest:' . $this->getGuardName());
+    }
+
     public function showVerificationCodeRequestForm(Request $request): View
     {
         if ($mobile_number = $this->getSessionMobileNumber($request)) {

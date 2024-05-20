@@ -11,11 +11,6 @@ class LoginController extends Controller implements LoginWithMobileNumberContrac
 {
     use LoginsWithMobileNumber;
 
-    public function __construct()
-    {
-        $this->middleware('guest:' . $this->getGuardName());
-    }
-
     public function getUserClass(): string
     {
         return User::class;

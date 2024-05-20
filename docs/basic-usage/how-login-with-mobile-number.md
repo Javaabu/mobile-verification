@@ -35,14 +35,6 @@ class LoginController extends Controller implements LoginWithMobileNumberContrac
     use LoginsWithMobileNumber;
     
     /*
-     * Disallow authenticated users from accessing the login page
-     * */
-    public function __construct()
-    {
-        $this->middleware('guest:' . $this->getGuardName());
-    }
-    
-    /*
      * The authenticatable user class to use
      * */
     public function getUserClass(): string
