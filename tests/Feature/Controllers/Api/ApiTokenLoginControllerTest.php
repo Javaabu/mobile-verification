@@ -16,9 +16,9 @@ class ApiTokenLoginControllerTest extends TestCase
     // an unauthorized user cannot visit auth protected routes
     public function an_unauthorized_user_cannot_visit_auth_protected_routes()
     {
-        //        $this->get(route('api-protected'))
-        //            ->assertStatus(302)
-        //            ->assertRedirect(route('login'));
+        $this->get('/api/protected')
+            ->assertStatus(302)
+            ->assertRedirect(route('login'));
     }
 
 

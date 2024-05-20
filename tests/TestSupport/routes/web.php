@@ -44,3 +44,11 @@ Route::group([
     })->middleware(['auth:web', 'mobile-verified:web']);
 });
 
+
+Route::group([
+    'prefix' => 'api'
+], function () {
+    Route::get('/protected', function () {
+        return "Protected route";
+    })->middleware(['auth:web', 'mobile-verified:web']);
+});
