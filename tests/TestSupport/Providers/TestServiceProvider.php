@@ -15,10 +15,10 @@ class TestServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        $this->loadMigrationsFrom(
+        $this->loadMigrationsFrom([
             __DIR__ . '/../database',
-            __DIR__ . '/../../../../vendor/laravel/passport/database/migrations',
-        );
+            __DIR__ . '/../../../vendor/laravel/passport/database/migrations'
+        ]);
 
         $this->loadRoutesFrom(__DIR__ . '/../routes/web.php');
 

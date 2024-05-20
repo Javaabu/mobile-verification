@@ -14,6 +14,7 @@ class IsValidVerificationCode implements DataAwareRule, ValidationRule
     protected ?string $number = null;
     protected ?string $verification_code_id = null;
     protected bool $should_reset_attempts = false;
+    protected bool $verify_verification_code_id = true;
 
     public function __construct(
         protected string $user_type,
@@ -39,7 +40,12 @@ class IsValidVerificationCode implements DataAwareRule, ValidationRule
             return;
         }
 
-        if (! ($this->getVerificationCodeId() && $this->getVerificationCodeId() == $mobile_number->verification_code_id)) {
+        if ($this->shouldVerifyVerificationCode()
+            && ! (
+                $this->getVerificationCodeId()
+                && $this->getVerificationCodeId() == $mobile_number->verification_code_id
+            )
+        ) {
             $fail(trans('mobile-verification::strings.validation.verification_code.invalid'));
 
             return;
@@ -56,6 +62,17 @@ class IsValidVerificationCode implements DataAwareRule, ValidationRule
         if (! $mobile_number->verifyVerificationCode($value, $this->should_reset_attempts)) {
             $fail(trans('mobile-verification::strings.validation.verification_code.invalid'));
         }
+    }
+
+    public function shouldVerifyVerificationCode(): bool
+    {
+        return $this->verify_verification_code_id;
+    }
+
+    public function dontVerifyVerficationCodeId(): static
+    {
+        $this->verify_verification_code_id = false;
+        return $this;
     }
 
     public function setCountryCode(?string $country_code): void

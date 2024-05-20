@@ -2,6 +2,9 @@
 
 namespace Javaabu\MobileVerification\Tests\Feature\Controllers\Web;
 
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Config;
+use Laravel\Passport\ClientRepository;
 use Javaabu\MobileVerification\Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Javaabu\MobileVerification\Models\MobileNumber;
@@ -28,6 +31,8 @@ class ApiTokenLoginControllerTest extends TestCase
     {
         $this->withoutExceptionHandling();
         $user = User::factory()->create();
+        MobileNumber::unguard();
+
         $mobile_number = MobileNumber::create([
             'number' => '7528222',
             'country_code' => '960',
@@ -37,17 +42,31 @@ class ApiTokenLoginControllerTest extends TestCase
 
         $verification_code = $mobile_number->generateVerificationCode();
 
+        $this->assertDatabaseHas('mobile_numbers', [
+            'number' => '7528222',
+            'country_code' => '960',
+            'user_id' => $user->id,
+            'user_type' => 'user',
+        ]);
+
+        $grantClient = $this->app
+            ->make(ClientRepository::class)
+            ->createPasswordGrantClient(null, 'Test', 'http://localhost');
+
+        Config::set('auth.guards.api.provider', 'users');
+        Config::set('auth.providers.users.model', User::class);
 
         $response = $this->postJson('/oauth/token', [
             'grant_type' => 'mobile',
+            'client_id' => $grantClient->id,
+            'client_secret' => $grantClient->secret,
             'number' => '7528222',
             'country_code' => '960',
             'verification_code' => $verification_code,
         ]);
 
-        dd($response->json());
         $response->assertStatus(200);
-        $response->assertJsonStructure(['access_token', 'token_type', 'expires_in']);
+        $response->assertJsonStructure(['token_type', 'access_token', 'refresh_token', 'expires_in']);
     }
 
 }

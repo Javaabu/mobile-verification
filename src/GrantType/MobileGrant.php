@@ -114,7 +114,7 @@ class MobileGrant extends AbstractGrant
         ], [
             'number'            => ['required', 'string', (new IsValidMobileNumber($user_type))->registered()],
             'country_code'      => ['nullable', 'string', new IsValidCountryCode()],
-            'verification_code' => ['required', 'string', (new IsValidVerificationCode($user_type))->shouldResetAttempts()],
+            'verification_code' => ['required', 'string', (new IsValidVerificationCode($user_type))->dontVerifyVerficationCodeId()->shouldResetAttempts()],
         ]);
 
         if ($validator->fails()) {
