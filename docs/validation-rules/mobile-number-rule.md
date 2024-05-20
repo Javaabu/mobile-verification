@@ -11,7 +11,7 @@ The package provides a validation rule to validate mobile numbers. The following
 
 ## Usage
 
-You can use the `mobile_number` validation rule to validate mobile numbers. Below is an example of how you can use the rule in your application:
+You can use the `IsValidMobileNumber` validation rule to validate mobile numbers. Below is an example of how you can use the rule in your application:
 
 ```php
 <?php
