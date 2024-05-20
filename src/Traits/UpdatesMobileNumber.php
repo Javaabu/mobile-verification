@@ -4,6 +4,7 @@ namespace Javaabu\MobileVerification\Traits;
 
 use Illuminate\View\View;
 use Illuminate\Http\Request;
+use Illuminate\Contracts\Auth\StatefulGuard;
 use Javaabu\MobileVerification\Contracts\MobileNumber;
 use Javaabu\MobileVerification\Contracts\HasMobileNumber;
 use Javaabu\SmsNotifications\Notifications\SmsNotification;
@@ -66,5 +67,10 @@ trait UpdatesMobileNumber
     public function getVerificationCodeSuccessMessageTitle(MobileNumber $mobile_number, Request $request, $data = null): string
     {
         return trans('mobile-verification::messages.mobile_number_updated_title');
+    }
+
+    public function redirectAfterVerificationCodeRequest(MobileNumber $mobile_number, Request $request): \Illuminate\View\View
+    {
+        return $this->showVerificationCodeForm($request, $mobile_number);
     }
 }

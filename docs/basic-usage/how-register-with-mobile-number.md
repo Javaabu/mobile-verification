@@ -1,6 +1,6 @@
 ---
 title: How to Register with Mobile Number
-sidebar_position: 1.7
+sidebar_position: 1.6
 ---
 
 # How to Register with Mobile Number
@@ -157,7 +157,7 @@ Route::group([
 
 ## Step 3: Making The Requests
 
-### Requesting the OTP
+### Requesting The Verification Code
 Below is an example of how you can make the request in your application.
 
 | Attribute    | Description                                                                         | Type   | Required |

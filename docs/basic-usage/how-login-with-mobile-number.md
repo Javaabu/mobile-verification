@@ -1,6 +1,6 @@
 ---
 title: How to Login with Mobile Number
-sidebar_position: 1.6
+sidebar_position: 1.5
 ---
 
 # How to Login with Mobile Number
