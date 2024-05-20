@@ -1,0 +1,11 @@
+{
+    "position": 2.1,
+    "label": "Validation Rules",
+    "collapsible": true,
+    "collapsed": false,
+    "link": {
+        "type": "generated-index",
+        "slug": "/mobile-verification/_categories/validation-rules",
+        "description": "Validation Rules used in Mobile Verification"
+    }
+}

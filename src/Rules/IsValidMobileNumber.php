@@ -73,6 +73,10 @@ class IsValidMobileNumber implements DataAwareRule, ValidationRule
 
         $value = MobileVerification::normalizeNumber($value);
 
+        if (empty($value)) { // delegate required validation to Laravel
+            return;
+        }
+
         /* @var IsANumberFormatValidator $mobile_number_format_validator */
         $mobile_number_format_validator = config('mobile-verification.mobile_number_format_validator');
         if (! (new $mobile_number_format_validator())->handle($this->getCountryCode(), $value)) {
