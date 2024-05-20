@@ -1,7 +1,3 @@
----
-title: How to Request for OTP
-sidebar_position: 1.6
----
 
 # How to Request for OTP
 When you are using this package you may need to request an OTP for a user. Below are times when you would need to request an OTP:
@@ -13,10 +9,7 @@ When you are using this package you may need to request an OTP for a user. Below
 Before diving into the steps, let's see how the OTP request process works. OTP Request process differs based on the use case. 
 
 Below are the steps for the registration process:
-1. A guest user sends a request to the application with their mobile number.
-2. The package checks if the mobile number is already registered.
-    3. If the mobile number is already registered, the package returns a message that the mobile number is already registered.
-    4. If the mobile number is not registered, the package sends an OTP to the mobile number.
+1. 
 
 Below are the steps for the login process:
 1. A user sends a request to the application with their mobile number.

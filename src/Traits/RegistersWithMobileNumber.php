@@ -24,6 +24,11 @@ trait RegistersWithMobileNumber
     use UsesSessionMobileNumber;
     use VerifiesVerificationCode;
 
+    public function __construct()
+    {
+        $this->applyMiddlewares();
+    }
+
     public function showRegistrationForm()
     {
         $verified_code_data = session()->get($this->getVerifiedCodeDataSessionKey());

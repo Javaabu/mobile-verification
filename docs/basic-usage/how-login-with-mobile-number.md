@@ -1,10 +1,10 @@
 ---
 title: How to Login with Mobile Number
-sidebar_position: 1.8
+sidebar_position: 1.6
 ---
 
 # How to Login with Mobile Number
-You can use this package to log in users with their mobile numbers. Before diving into the steps, let's see how the login process works.
+You can use this package to log in users with their mobile numbers. Before diving into the implementation steps, let's see how the login process works.
 
 ## Login Process
 The login process with mobile number works as follows:

@@ -13,11 +13,6 @@ class RegisterController extends Controller implements RegisterWithMobileNumberC
 {
     use RegistersWithMobileNumber;
 
-    public function __construct()
-    {
-        $this->applyMiddlewares();
-    }
-
     public function getGuardName(): string
     {
         return 'web';
