@@ -18,15 +18,15 @@ class LoginVerificationTokenNotification extends Notification implements SmsNoti
     /**
      * The name of the intended user
      */
-    public string $name;
+    public ?string $name;
 
     /**
      * Create a new notification instance.
      *
      * @param string $verification_code
-     * @param string $name
+     * @param ?string $name
      */
-    public function __construct(string $verification_code, string $name = '')
+    public function __construct(string $verification_code, ?string $name = '')
     {
         $this->verification_code = $verification_code;
         $this->name = $name;
