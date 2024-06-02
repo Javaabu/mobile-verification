@@ -17,6 +17,12 @@ If you've found a bug regarding security please mail [info@javaabu.com](mailto:i
 
 ## Installation
 
+You can install the package via composer:
+
+```bash
+composer require javaabu/mobile-verification
+```
+
 Publishing Migrations
 ```bash
 php artisan vendor:publish --provider="Javaabu\MobileVerification\MobileVerificationServiceProvider" --tag="mobile-verification-migrations"
