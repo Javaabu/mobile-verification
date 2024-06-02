@@ -79,7 +79,7 @@ trait SendsVerificationCode
     public function getVerificationCodeRequestValidationRules(Request $request): array
     {
         $valid_mobile_number_rule = (new IsValidMobileNumber(
-            $this->getUserType(),
+            $this->getUserType($request),
             $this->getCountryCodeInputKey()
         ))
             ->canSendOtp()

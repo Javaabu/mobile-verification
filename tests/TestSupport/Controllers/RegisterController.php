@@ -18,7 +18,7 @@ class RegisterController extends Controller implements RegisterWithMobileNumberC
         return 'web';
     }
 
-    public function getUserClass(): string
+    public function getUserClass(Request $request): string
     {
         return User::class;
     }

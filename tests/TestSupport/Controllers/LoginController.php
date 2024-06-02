@@ -2,6 +2,7 @@
 
 namespace Javaabu\MobileVerification\Tests\TestSupport\Controllers;
 
+use Illuminate\Http\Request;
 use Javaabu\Helpers\Http\Controllers\Controller;
 use Javaabu\MobileVerification\Tests\TestSupport\Models\User;
 use Javaabu\MobileVerification\Traits\LoginsWithMobileNumber;
@@ -11,7 +12,7 @@ class LoginController extends Controller implements LoginWithMobileNumberContrac
 {
     use LoginsWithMobileNumber;
 
-    public function getUserClass(): string
+    public function getUserClass(Request $request): string
     {
         return User::class;
     }

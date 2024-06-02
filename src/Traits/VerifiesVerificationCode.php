@@ -113,13 +113,13 @@ trait VerifiesVerificationCode
     public function getVerificationCodeValidationRules(Request $request): array
     {
         $valid_mobile_number_rule = (new IsValidMobileNumber(
-            $this->getUserType(),
+            $this->getUserType($request),
             $this->getCountryCodeInputKey()
         ))
             ->setShouldBeRegisteredNumber($this->mustBeARegisteredMobileNumber($request->all()));
 
         $valid_verification_code_rule = (new IsValidVerificationCode(
-            $this->getUserType(),
+            $this->getUserType($request),
             $this->getCountryCodeInputKey(),
             $this->getMobileNumberInputKey(),
             $this->getVerificationCodeIdInputKey()

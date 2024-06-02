@@ -18,7 +18,7 @@ trait HasRequestMobileNumber
         $model_class = MobileVerification::mobileNumberModel();
 
         $mobile_number =  $model_class::query()
-                           ->hasPhoneNumber($country_code, $number, $this->getUserType())
+                           ->hasPhoneNumber($country_code, $number, $this->getUserType($request))
                            ->first();
 
         if (! $create || $mobile_number) {
@@ -28,7 +28,7 @@ trait HasRequestMobileNumber
         $mobile_number = new $model_class();
         $mobile_number->number = $number;
         $mobile_number->country_code = $country_code;
-        $mobile_number->user_type = $this->getUserType();
+        $mobile_number->user_type = $this->getUserType($request);
         $mobile_number->user_id = null;
         $mobile_number->save();
 

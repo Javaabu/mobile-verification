@@ -2,9 +2,11 @@
 
 namespace Javaabu\MobileVerification\Contracts;
 
+use Illuminate\Http\Request;
+
 interface HasUserTypeContract
 {
-    public function getUserClass(): string;
+    public function getUserClass(Request $request): string;
 
-    public function getUserType(): string;
+    public function getUserType(Request $request): string;
 }

@@ -2,6 +2,7 @@
 
 namespace Javaabu\MobileVerification\Tests\TestSupport\Controllers;
 
+use Illuminate\Http\Request;
 use Javaabu\Helpers\Http\Controllers\Controller;
 use Javaabu\MobileVerification\Traits\UpdatesMobileNumber;
 use Javaabu\MobileVerification\Tests\TestSupport\Models\User;
@@ -11,7 +12,7 @@ class MobileNumberUpdateController extends Controller implements UpdateMobileNum
 {
     use UpdatesMobileNumber;
 
-    public function getUserClass(): string
+    public function getUserClass(Request $request): string
     {
         return User::class;
     }
