@@ -101,7 +101,7 @@ class IsValidMobileNumber implements DataAwareRule, ValidationRule
             }
         }
 
-        if (! $this->should_be_registered_number) {
+        if (! is_null($this->should_be_registered_number) && ! $this->should_be_registered_number) {
             if ($mobile_number && $mobile_number->user_id) {
                 $fail(trans('mobile-verification::strings.validation.number.exists', ['attribute' => $attribute]));
             }
