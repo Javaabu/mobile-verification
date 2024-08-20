@@ -2,7 +2,7 @@
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/javaabu/mobile-verification.svg?style=flat-square)](https://packagist.org/packages/javaabu/mobile-verification)
 [![Test Status](../../actions/workflows/run-tests.yml/badge.svg)](../../actions/workflows/run-tests.yml)
-[![Code Style Status](../../actions/workflows/php-cs-fixer.yml/badge.svg)](../../actions/workflows/php-cs-fixer.yml)
+![Code Coverage Badge](./.github/coverage.svg)
 [![Total Downloads](https://img.shields.io/packagist/dt/javaabu/mobile-verification.svg?style=flat-square)](https://packagist.org/packages/javaabu/mobile-verification)
 
 Adds mobile number verification to Laravel projects.
