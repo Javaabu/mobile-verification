@@ -65,4 +65,14 @@ class RegisterController extends Controller implements RegisterWithMobileNumberC
     {
         return false;
     }
+
+    public function guardName(): string
+    {
+        return 'web';
+    }
+
+    public function userType(): \Javaabu\Auth\User
+    {
+        return new User();
+    }
 }

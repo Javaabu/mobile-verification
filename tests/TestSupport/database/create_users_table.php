@@ -16,6 +16,7 @@ return new class () extends Migration {
             $table->id();
             $table->string('name');
             $table->string('email')->unique();
+            $table->string('status')->index();
             $table->timestamps();
             $table->softDeletes();
         });

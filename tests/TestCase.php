@@ -2,13 +2,16 @@
 
 namespace Javaabu\MobileVerification\Tests;
 
+use Composer\Semver\VersionParser;
 use Illuminate\Support\Facades\View;
+use Illuminate\Support\Facades\Artisan;
 use Biscolab\ReCaptcha\Facades\ReCaptcha;
 use Javaabu\Helpers\HelpersServiceProvider;
 use Illuminate\Support\Facades\Notification;
 use Laravel\Passport\PassportServiceProvider;
 use Orchestra\Testbench\TestCase as BaseTestCase;
 use Javaabu\Activitylog\ActivitylogServiceProvider;
+use Spatie\MediaLibrary\MediaLibraryServiceProvider;
 use Javaabu\SmsNotifications\SmsNotificationsServiceProvider;
 use Javaabu\MobileVerification\MobileVerificationServiceProvider;
 use Javaabu\MobileVerification\Tests\TestSupport\Providers\TestServiceProvider;
@@ -27,13 +30,26 @@ abstract class TestCase extends BaseTestCase
 
         View::addLocation(__DIR__ . '/TestSupport/views');
 
-        // call sanctum install:api
+        if (empty(glob($this->app->databasePath('migrations/*_create_media_table.php')))) {
+            Artisan::call('vendor:publish', [
+                '--provider' => 'Spatie\\MediaLibrary\\MediaLibraryServiceProvider',
+                '--tag' => self::isMediaLibrary10() ? 'migrations' : 'medialibrary-migrations',
+            ]);
+
+            Artisan::call('migrate');
+        }
+    }
+
+    public static function isMediaLibrary10(): bool
+    {
+        return \Composer\InstalledVersions::satisfies(new VersionParser(), 'spatie/laravel-medialibrary', '10.*');
     }
 
     protected function getPackageProviders($app)
     {
         return [
             MobileVerificationServiceProvider::class,
+            MediaLibraryServiceProvider::class,
             TestServiceProvider::class,
             SmsNotificationsServiceProvider::class,
             HelpersServiceProvider::class,
