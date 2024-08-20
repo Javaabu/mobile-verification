@@ -32,6 +32,11 @@ class User extends Authenticatable implements ShouldHaveVerifiedMobileNumber
         return '';
     }
 
+    public function shouldDeletePreservingMedia(): bool
+    {
+        return true;
+    }
+
     public function findMobileGrantUser($oauth_user, $provider): ?HasMobileNumber
     {
         $number = $http_response_header->getNumber();
