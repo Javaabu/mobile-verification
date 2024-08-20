@@ -22,7 +22,8 @@
         "orchestra/testbench": "^7.0 || ^8.0 || ^9.0",
         "phpunit/phpunit": "^9.5 || ^10.5",
         "laravel/pint": "^1.15",
-        "javaabu/auth": "^1.11"
+        "javaabu/auth": "^1.11",
+        "spatie/laravel-medialibrary": "^10.3.4 || ^11.4"
     },
     "suggest": {
         "javaabu/auth": "Required for login and registration"
