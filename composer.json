@@ -23,7 +23,8 @@
         "phpunit/phpunit": "^9.5 || ^10.5",
         "laravel/pint": "^1.15",
         "javaabu/auth": "^1.11",
-        "spatie/laravel-medialibrary": "^10.3.4 || ^11.4"
+        "spatie/laravel-medialibrary": "^10.3.4 || ^11.4",
+        "composer/semver": "^3.4"
     },
     "suggest": {
         "javaabu/auth": "Required for login and registration"
