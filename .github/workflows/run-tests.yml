@@ -23,7 +23,7 @@ jobs:
                     -   laravel: 11.*
                         testbench: 9.*
                         carbon: ^2.63
-                        medialibrary: 11.*
+                        medialibrary: ^11.4
                     -   laravel: 10.*
                         testbench: 8.*
                         carbon: ^2.63
