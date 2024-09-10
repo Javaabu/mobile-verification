@@ -266,7 +266,7 @@ class MobileNumber extends Model implements MobileNumberContract
      */
     public function getVerificationCodeExpiryAttribute(): int
     {
-        return $this->is_verification_code_expired ? 0 : $this->verification_code_expires_at->diffInSeconds();
+        return $this->is_verification_code_expired ? 0 : now()->diffInSeconds($this->verification_code_expires_at);
     }
 
     /**
