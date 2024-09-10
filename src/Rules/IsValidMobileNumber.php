@@ -109,7 +109,8 @@ class IsValidMobileNumber implements DataAwareRule, ValidationRule
 
         if ($mobile_number && $this->can_send_otp) {
             if (! $mobile_number->can_request_code) {
-                $fail(trans('mobile-verification::strings.validation.number.locked'));
+                $attempts_expiry_seconds = seconds_to_human_readable($mobile_number->attempts_expiry_seconds);
+                $fail(trans('mobile-verification::strings.validation.number.locked', ['time' => $attempts_expiry_seconds]));
             }
 
             if ($mobile_number->was_sent_recently) {

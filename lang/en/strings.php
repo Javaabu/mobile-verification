@@ -8,7 +8,7 @@ return [
             'invalid_length' => 'The :attribute must be 7 digits long.',
             'exists' => 'The :attribute has already been taken.',
             'doesnt-exist' => 'The :attribute does not exist.',
-            'locked' => 'The number is locked due to too many attempts.',
+            'locked' => 'The number is locked due to too many attempts. You can try again in :time.',
             'recently_sent' => 'The code was recently sent to this number. You can try again in :time.'
         ],
         'country_code' => [

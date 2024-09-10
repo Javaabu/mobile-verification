@@ -320,6 +320,11 @@ class MobileNumber extends Model implements MobileNumberContract
         return $this->can_request_code ? 0 : $this->attempts_expiry_at->diffInMinutes();
     }
 
+    public function getAttemptsExpirySecondsAttribute(): int
+    {
+        return $this->can_request_code ? 0 : $this->attempts_expiry_at->diffInSeconds();
+    }
+
     /**
      * Verify verification_code
      */
