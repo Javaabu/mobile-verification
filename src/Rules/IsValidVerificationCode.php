@@ -52,7 +52,8 @@ class IsValidVerificationCode implements DataAwareRule, ValidationRule
         }
 
         if ($mobile_number->is_locked) {
-            $fail(trans('mobile-verification::strings.validation.verification_code.locked'));
+            $time = seconds_to_human_readable(now()->diffInSeconds($mobile_number->attempts_expiry_at));
+            $fail(trans('mobile-verification::strings.validation.verification_code.locked', ['time' => $time]));
         }
 
         if ($mobile_number->is_verification_code_expired) {

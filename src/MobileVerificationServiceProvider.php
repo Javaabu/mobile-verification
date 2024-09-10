@@ -7,6 +7,7 @@ use Illuminate\Support\ServiceProvider;
 use League\OAuth2\Server\AuthorizationServer;
 use Laravel\Passport\Bridge\RefreshTokenRepository;
 use Javaabu\MobileVerification\GrantType\MobileGrant;
+use Javaabu\MobileVerification\Support\VerificationCodeGenerator;
 use Javaabu\MobileVerification\Middlewares\AllowMobileVerifiedUsersOnly;
 
 class MobileVerificationServiceProvider extends ServiceProvider
@@ -63,6 +64,10 @@ class MobileVerificationServiceProvider extends ServiceProvider
         });
 
         app('router')->aliasMiddleware('mobile-verified', AllowMobileVerifiedUsersOnly::class);
+
+        $this->app->bind(VerificationCodeGenerator::class, function () {
+            return new VerificationCodeGenerator();
+        });
     }
 
     protected function makeGrant(): MobileGrant

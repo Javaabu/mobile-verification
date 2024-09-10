@@ -17,7 +17,7 @@ return [
         'verification_code' => [
             'invalid' => 'The token is invalid.',
             'expired' => 'The token has expired.',
-            'locked' => 'The number is locked due to too many attempts.'
+            'locked' => 'The number is locked due to too many attempts. You can try again in :time.'
         ],
         'messages' => [
             'verification_code_verified' => "Your mobile number has been successfully verified.",

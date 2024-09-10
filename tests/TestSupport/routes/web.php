@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use Javaabu\MobileVerification\Tests\TestSupport\Controllers\LoginController;
 use Javaabu\MobileVerification\Tests\TestSupport\Controllers\RegisterController;
 use Javaabu\MobileVerification\Tests\TestSupport\Controllers\MobileNumberUpdateController;
+use Javaabu\MobileVerification\Tests\TestSupport\Controllers\MobileVerificationsController;
 
 Route::get('/', function () {
     return "Testing Javaabu Mobile Verification";
@@ -44,7 +45,11 @@ Route::group([
 Route::group([
     'prefix' => 'api'
 ], function () {
+
     Route::get('/protected', function () {
         return "Protected route";
-    })->middleware(['auth:web', 'mobile-verified:web']);
+    })->middleware(['auth:api', 'mobile-verified']);
+
+    Route::post('mobile-verifications/verification-code', [MobileVerificationsController::class, 'requestVerificationCode'])->name('mobile-verifications.verification-code');
+    Route::post('mobile-verifications/verify', [MobileVerificationsController::class, 'verifyVerificationCode'])->name('mobile-verifications.verification-code');
 });

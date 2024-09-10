@@ -16,6 +16,8 @@ use Javaabu\SmsNotifications\Notifiable\HasSmsNumber;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Javaabu\MobileVerification\Contracts\HasMobileNumber;
 use Javaabu\MobileVerification\Factories\MobileNumberFactory;
+use Javaabu\MobileVerification\Support\VerificationCodeUpdater;
+use Javaabu\MobileVerification\Support\VerificationCodeGenerator;
 use Javaabu\MobileVerification\Contracts\MobileNumber as MobileNumberContract;
 
 class MobileNumber extends Model implements MobileNumberContract
@@ -216,15 +218,9 @@ class MobileNumber extends Model implements MobileNumberContract
      */
     public function generateVerificationCode(): string
     {
-        $verification_code = $this->randomVerificationCode();
-
-        $this->attempts = 0;
-        $this->verification_code = $verification_code;
-        $this->verification_code_created_at = Carbon::now();
-        $this->verification_code_id = Str::uuid();
-        $this->save();
-
-        return $verification_code;
+        /* @var VerificationCodeUpdater $verificationCodeUpdater */
+        $verificationCodeUpdater = app(VerificationCodeUpdater::class);
+        return $verificationCodeUpdater->handle($this);
     }
 
     /**
