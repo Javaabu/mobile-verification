@@ -9,7 +9,7 @@ return [
             'exists' => 'The :attribute has already been taken.',
             'doesnt-exist' => 'The :attribute does not exist.',
             'locked' => 'The number is locked due to too many attempts.',
-            'recently_sent' => 'The code was recently sent to this number.'
+            'recently_sent' => 'The code was recently sent to this number. You can try again in :time.'
         ],
         'country_code' => [
             'invalid' => 'The country code is invalid.'

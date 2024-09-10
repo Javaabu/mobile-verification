@@ -112,8 +112,10 @@ class IsValidMobileNumber implements DataAwareRule, ValidationRule
                 $fail(trans('mobile-verification::strings.validation.number.locked'));
             }
 
-            if ($mobile_number->was_sent_recently) { // todo: test
-                $fail(trans('mobile-verification::strings.validation.number.recently_sent'));
+            if ($mobile_number->was_sent_recently) {
+                $resend_verification_code_in_seconds = $mobile_number->resend_verification_code_in ?? 0;
+
+                $fail(trans('mobile-verification::strings.validation.number.recently_sent', ['time' => seconds_to_human_readable($resend_verification_code_in_seconds)]));
             }
         }
     }
