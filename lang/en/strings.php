@@ -14,7 +14,7 @@ return [
         'country_code' => [
             'invalid' => 'The country code is invalid.'
         ],
-        'token' => [
+        'verification_code' => [
             'invalid' => 'The token is invalid.',
             'expired' => 'The token has expired.',
             'locked' => 'The number is locked due to too many attempts.'
