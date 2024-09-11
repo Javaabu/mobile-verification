@@ -96,7 +96,7 @@ class IsValidMobileNumber implements DataAwareRule, ValidationRule
                                      ->first();
 
         if ($mobile_number && $mobile_number->user_id && ! $mobile_number->user) {
-            $fail(trans('mobile-verification::mobile-verification::strings.validation.number.soft_deleted', ['attribute' => $attribute]));
+            $fail(trans('mobile-verification::strings.validation.number.soft_deleted', ['attribute' => $attribute]));
         }
 
         if ($this->should_be_registered_number) {
