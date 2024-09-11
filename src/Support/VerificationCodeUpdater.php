@@ -5,14 +5,19 @@ namespace Javaabu\MobileVerification\Support;
 use Carbon\Carbon;
 use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Model;
+use Javaabu\MobileVerification\Contracts\IsVerificationCodeGenerator;
 
 class VerificationCodeUpdater
 {
+
+    public IsVerificationCodeGenerator $verificationCodeGenerator;
     public function __construct(
-        public VerificationCodeGenerator $verificationCodeGenerator
     )
     {
+        $verification_code_generator_class = config('mobile-verification.verification_code_generator');
+        $this->verificationCodeGenerator = app($verification_code_generator_class);
     }
+
     public function handle(Model $mobile_number): string
     {
         $verification_code = $this->verificationCodeGenerator->handle();

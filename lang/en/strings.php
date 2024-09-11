@@ -9,7 +9,8 @@ return [
             'exists' => 'The :attribute has already been taken.',
             'doesnt-exist' => 'The :attribute does not exist.',
             'locked' => 'The number is locked due to too many attempts. You can try again in :time.',
-            'recently_sent' => 'The code was recently sent to this number. You can try again in :time.'
+            'recently_sent' => 'The code was recently sent to this number. You can try again in :time.',
+            'soft_deleted' => 'The user associated with the :attribute is soft deleted.',
         ],
         'country_code' => [
             'invalid' => 'The country code is invalid.'

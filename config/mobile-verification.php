@@ -133,5 +133,10 @@ return [
         'register' => \Javaabu\MobileVerification\Notifications\RegisterVerificationTokenNotification::class,
         'verification_code' => \Javaabu\MobileVerification\Notifications\MobileNumberVerificationToken::class,
         'update' => \Javaabu\MobileVerification\Notifications\MobileNumberVerificationToken::class,
-    ]
+    ],
+
+    /*
+     * Token generator class
+     */
+    'verification_code_generator' => \Javaabu\MobileVerification\Support\VerificationCodeGenerator::class,
 ];

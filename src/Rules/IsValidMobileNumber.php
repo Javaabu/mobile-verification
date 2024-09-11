@@ -95,6 +95,10 @@ class IsValidMobileNumber implements DataAwareRule, ValidationRule
                                      ->hasPhoneNumber($this->getCountryCode(), $value, $this->user_type)
                                      ->first();
 
+        if ($mobile_number && $mobile_number->user_id && ! $mobile_number->user) {
+            $fail(trans('mobile-verification::mobile-verification::strings.validation.number.soft_deleted', ['attribute' => $attribute]));
+        }
+
         if ($this->should_be_registered_number) {
             if (empty($mobile_number) || empty($mobile_number->user_id)) {
                 $fail(trans('mobile-verification::strings.validation.number.doesnt-exist', ['attribute' => $attribute]));

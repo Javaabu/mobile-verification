@@ -5,8 +5,9 @@ namespace Javaabu\MobileVerification\Support;
 use Carbon\Carbon;
 use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Model;
+use Javaabu\MobileVerification\Contracts\IsVerificationCodeGenerator;
 
-class VerificationCodeGenerator
+class VerificationCodeGenerator implements IsVerificationCodeGenerator
 {
     public function handle(): string
     {

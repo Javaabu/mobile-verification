@@ -95,6 +95,40 @@ class VerificationCodeTest extends TestCase
             ->assertJsonValidationErrors(['number']);
     }
 
+    public function test_verification_code_request_to_soft_deleted_user_returns_correct_validation_error()
+    {
+        $user = User::factory()->create();
+        MobileNumber::unguard();
+
+        $mobile_number = MobileNumber::create([
+            'number'       => '7528222',
+            'country_code' => '960',
+            'user_type'    => 'user',
+            'user_id'      => $user->id,
+        ]);
+
+        $user->delete();
+        $this->assertDatabaseHas('users', [
+            'id' => $user->id,
+            'deleted_at' => now(),
+        ]);
+
+        $this->mock(VerificationCodeGenerator::class, function ($mock) use ($mobile_number) {
+            $mock->shouldReceive('handle')
+                 ->andReturn('123456');
+        });
+
+        $response = $this->postJson('/api/mobile-verifications/verification-code', [
+            'user_type' => 'user',
+            'number'    => '7528222',
+        ]);
+
+        $response->assertJsonValidationErrors(['number']);
+
+        $mobile_number->refresh();
+        $this->assertNull($mobile_number->verification_code);
+    }
+
     public function getUserWithMobileNumber(string $number = '7528222'): User
     {
         $user = User::factory()->create();
