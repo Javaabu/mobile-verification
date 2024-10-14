@@ -13,6 +13,7 @@ trait HasRequestMobileNumber
     public function getMobileNumberFromRequest(Request $request, bool $create = false): ?MobileNumber
     {
         $number = $request->input($this->getMobileNumberInputKey());
+        $number = MobileVerification::normalizeNumber($number);
         $country_code = $request->input($this->getCountryCodeInputKey()) ?: MobileVerification::defaultCountryCode();
 
         $model_class = MobileVerification::mobileNumberModel();
