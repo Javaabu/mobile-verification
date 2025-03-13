@@ -2,6 +2,7 @@
 
 namespace Javaabu\MobileVerification\Tests\Feature\Rules;
 
+use PHPUnit\Framework\Attributes\Test;
 use Javaabu\MobileVerification\Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Javaabu\MobileVerification\MobileVerification;
@@ -14,8 +15,8 @@ class IsValidMobileNumberRuleTest extends TestCase
     use RefreshDatabase;
 
 
-    /** @test */
     // it can validate number format for maldivian numbers
+    #[Test]
     public function it_can_validate_number_format_for_maldivian_numbers()
     {
         $rule = new IsValidMobileNumber('user');
@@ -35,7 +36,7 @@ class IsValidMobileNumberRuleTest extends TestCase
         $this->assertTrue($value);
     }
 
-    /** @test */
+    #[Test]
     public function it_can_validate_that_no_other_user_of_same_type_has_the_number()
     {
         $user = User::factory()->create();
@@ -51,7 +52,7 @@ class IsValidMobileNumberRuleTest extends TestCase
         $this->assertFalse($value);
     }
 
-    /** @test */
+    #[Test]
     public function it_can_check_if_the_number_is_already_a_registered_number()
     {
         $user = User::factory()->create();
@@ -67,7 +68,7 @@ class IsValidMobileNumberRuleTest extends TestCase
         $this->assertTrue($value);
     }
 
-    /** @test */
+    #[Test]
     // it can validate if otp can be sent to the number
     public function it_can_validate_if_otp_can_be_sent_to_the_number()
     {

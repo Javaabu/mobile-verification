@@ -2,6 +2,7 @@
 
 namespace Javaabu\MobileVerification\Tests\Feature\Controllers\Web;
 
+use PHPUnit\Framework\Attributes\Test;
 use Illuminate\Support\Facades\Notification;
 use Javaabu\MobileVerification\Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -38,7 +39,7 @@ class RegisterControllerTest extends TestCase
              ->assertSee("Enter Verification Code");
     }
 
-    /** @test */
+    #[Test]
     public function if_the_number_provided_is_already_registered_then_the_user_is_redirected_back_with_an_error()
     {
         $user = User::factory()->create();
@@ -61,7 +62,7 @@ class RegisterControllerTest extends TestCase
         );
     }
 
-    /** @test */
+    #[Test]
     public function it_can_send_registration_verification_code_if_the_number_is_not_taken()
     {
         $response = $this->post('mobile-verification/register', [
@@ -88,7 +89,7 @@ class RegisterControllerTest extends TestCase
      * */
 
     // it can register a user if the token is correct
-    /** @test */
+    #[Test]
     public function it_can_register_a_user_if_the_token_is_correct()
     {
         $mobileNumber = MobileNumber::factory()->create([

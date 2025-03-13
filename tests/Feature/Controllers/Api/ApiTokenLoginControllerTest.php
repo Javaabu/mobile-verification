@@ -6,6 +6,7 @@ use Laravel\Passport\Client;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Config;
 use Laravel\Passport\ClientRepository;
+use PHPUnit\Framework\Attributes\Test;
 use Javaabu\MobileVerification\Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Javaabu\MobileVerification\Models\MobileNumber;
@@ -17,8 +18,9 @@ class ApiTokenLoginControllerTest extends TestCase
 
     // mark as incomplete
 
-    /** @test */
     // an unauthorized user cannot visit auth protected routes
+
+    #[Test]
     public function an_unauthorized_user_cannot_visit_auth_protected_routes()
     {
         Config::set('auth.guards.api.provider', 'users');
@@ -31,7 +33,7 @@ class ApiTokenLoginControllerTest extends TestCase
     }
 
 
-    /** @test */
+    #[Test]
     public function can_obtain_an_access_token_using_a_valid_verification_code()
     {
         $this->withoutExceptionHandling();

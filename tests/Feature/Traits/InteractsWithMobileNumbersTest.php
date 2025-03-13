@@ -2,6 +2,7 @@
 
 namespace Javaabu\MobileVerification\Tests\Feature\Traits;
 
+use PHPUnit\Framework\Attributes\Test;
 use Javaabu\Activitylog\Models\Activity;
 use Javaabu\MobileVerification\Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -12,7 +13,7 @@ class InteractsWithMobileNumbersTest extends TestCase
 {
     use RefreshDatabase;
 
-    /** @test */
+    #[Test]
     public function it_logs_to_activity_log_when_mobile_number_is_updated(): void
     {
         $this->assertDatabaseCount('activity_log', 0);
@@ -60,7 +61,7 @@ class InteractsWithMobileNumbersTest extends TestCase
         $this->assertNotNull($activity);
     }
 
-    /** @test */
+    #[Test]
     public function it_deletes_the_associated_mobile_number_when_the_user_is_deleted(): void
     {
         $user = User::factory()->create();

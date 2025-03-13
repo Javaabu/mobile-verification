@@ -3,6 +3,7 @@
 namespace Javaabu\MobileVerification\Tests\Feature\Controllers\Web;
 
 use JsonException;
+use PHPUnit\Framework\Attributes\Test;
 use Illuminate\Support\Facades\Notification;
 use Javaabu\MobileVerification\Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -91,7 +92,7 @@ class LoginControllerTest extends TestCase
      * LOGIN TESTS
      * */
 
-    /** @test */
+    #[Test]
     public function an_unauthorized_user_cannot_visit_auth_protected_routes()
     {
         $this->get('/mobile-verification/protected')
@@ -99,7 +100,7 @@ class LoginControllerTest extends TestCase
              ->assertRedirect('/login');
     }
 
-    /** @test */
+    #[Test]
     // An existing user can login using a token
     public function an_existing_user_can_login_using_a_token()
     {
