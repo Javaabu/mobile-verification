@@ -2,6 +2,8 @@
 
 namespace Javaabu\MobileVerification;
 
+use Carbon\Carbon;
+use Illuminate\Support\Str;
 use Laravel\Passport\Passport;
 use Illuminate\Support\ServiceProvider;
 use League\OAuth2\Server\AuthorizationServer;
@@ -13,17 +15,30 @@ use Javaabu\MobileVerification\Middlewares\AllowMobileVerifiedUsersOnly;
 class MobileVerificationServiceProvider extends ServiceProvider
 {
     /**
+     * The package migrations, in order of creation.
+     *
+     * @var array|string[]
+     */
+    protected array $migrations = [
+        'create_mobile_numbers_table'
+    ];
+
+    /**
      * Bootstrap the application services.
      */
     public function boot()
     {
         // declare publishes
         if ($this->app->runningInConsole()) {
-            $this->registerMigrations();
+            // Publish migrations with current timestamp
+            foreach ($this->migrations as $migration) {
+                $vendorMigration = __DIR__ . '/../database/migrations/' . $migration . '.php';
+                $appMigration = $this->generateMigrationName($migration, now()->addSecond());
 
-            $this->publishes([
-                __DIR__.'/../database/migrations' => database_path('migrations'),
-            ], 'mobile-verification-migrations');
+                $this->publishes([
+                    $vendorMigration => $appMigration,
+                ], 'mobile-verification-migrations');
+            }
 
             $this->publishes([
                 __DIR__ . '/../config/mobile-verification.php' => config_path('mobile-verification.php'),
@@ -36,18 +51,6 @@ class MobileVerificationServiceProvider extends ServiceProvider
         }
 
         $this->loadTranslationsFrom(__DIR__.'/../lang', 'mobile-verification');
-    }
-
-    /**
-     * Register migration files.
-     *
-     * @return void
-     */
-    protected function registerMigrations(): void
-    {
-        if (MobileVerification::$runsMigrations) {
-            $this->loadMigrationsFrom(__DIR__.'/../database/migrations');
-        }
     }
 
     /**
@@ -79,5 +82,29 @@ class MobileVerificationServiceProvider extends ServiceProvider
         $grant->setRefreshTokenTTL(Passport::refreshTokensExpireIn());
 
         return $grant;
+    }
+
+    protected function generateMigrationName(string $migrationFileName, Carbon $now): string
+    {
+        $migrationsPath = 'migrations/' . dirname($migrationFileName) . '/';
+        $migrationFileName = basename($migrationFileName);
+
+        $len = strlen($migrationFileName) + 4;
+
+        if (Str::contains($migrationFileName, '/')) {
+            $migrationsPath .= Str::of($migrationFileName)->beforeLast('/')->finish('/');
+            $migrationFileName = Str::of($migrationFileName)->afterLast('/');
+        }
+
+        foreach (glob(database_path("{$migrationsPath}*.php")) as $filename) {
+            if ((substr($filename, -$len) === $migrationFileName . '.php')) {
+                return $filename;
+            }
+        }
+
+        $timestamp = $now->format('Y_m_d_His');
+        $migrationFileName = Str::of($migrationFileName)->snake()->finish('.php');
+
+        return database_path($migrationsPath . $timestamp . '_' . $migrationFileName);
     }
 }

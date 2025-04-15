@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateMobileNumbersTable extends Migration
+return new class extends Migration
 {
     /**
      * Run the migrations.
@@ -42,4 +42,4 @@ class CreateMobileNumbersTable extends Migration
     {
         Schema::connection(config('mobile-verification.database_connection'))->dropIfExists(config('mobile-verification.table_name'));
     }
-}
+};

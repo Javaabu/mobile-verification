@@ -17,6 +17,7 @@ class TestServiceProvider extends ServiceProvider
     {
         $this->loadMigrationsFrom([
             __DIR__ . '/../database',
+            __DIR__ . '/../../../database/migrations',
             __DIR__ . '/../../../vendor/laravel/passport/database/migrations'
         ]);
 
