@@ -151,7 +151,4 @@ interface HasMobileNumber extends SmsNotifiable
      * @return mixed
      */
     public function scopeHasPhone(Builder $query, string $search): Builder;
-
-
-    public function findMobileGrantUser($oauth_user, $provider): ?HasMobileNumber;
 }
