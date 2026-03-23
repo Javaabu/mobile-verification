@@ -38,7 +38,6 @@ Publishing Translations
 php artisan vendor:publish --provider="Javaabu\MobileVerification\MobileVerificationServiceProvider" --tag="mobile-verification-translations"
 ```
 
-
 ## Testing
 
 You can run the tests with
