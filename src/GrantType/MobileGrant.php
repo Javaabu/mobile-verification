@@ -170,4 +170,16 @@ class MobileGrant extends AbstractGrant
         return (new $user_model())->getMorphClass();
     }
 
+    protected function supportsGrantType(ClientEntityInterface $client, string $grantType): bool
+    {
+        $supports = parent::supportsGrantType($client, $grantType);
+
+        // if mobile is not directly supported, fallback to password grant
+        if ($supports === false && $grantType === $this->getIdentifier()) {
+            $supports = parent::supportsGrantType($client, 'password');
+        }
+
+        return $supports;
+    }
+
 }

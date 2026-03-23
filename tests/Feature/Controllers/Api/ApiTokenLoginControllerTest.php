@@ -58,7 +58,7 @@ class ApiTokenLoginControllerTest extends TestCase
 
         $grantClient = $this->app
             ->make(ClientRepository::class)
-            ->createPasswordGrantClient(null, 'Test', 'http://localhost');
+            ->createPasswordGrantClient('Test', 'users');
 
         Config::set('auth.guards.api.provider', 'users');
         Config::set('auth.providers.users.model', User::class);
@@ -66,7 +66,7 @@ class ApiTokenLoginControllerTest extends TestCase
         $response = $this->postJson('/oauth/token', [
             'grant_type'        => 'mobile',
             'client_id'         => $grantClient->id,
-            'client_secret'     => $grantClient->secret,
+            'client_secret'     => $grantClient->plainSecret,
             'number'            => '7528222',
             'country_code'      => '960',
             'verification_code' => $verification_code,
@@ -104,7 +104,7 @@ class ApiTokenLoginControllerTest extends TestCase
         $verification_code = $mobile_number->generateVerificationCode();
 
         $grantClient = $this->app->make(ClientRepository::class)
-                                 ->createPasswordGrantClient(null, 'Test', 'http://localhost');
+                                 ->createPasswordGrantClient('Test', 'users');
 
         Config::set('auth.guards.api.provider', 'users');
         Config::set('auth.guards.api.driver', 'passport');
@@ -113,14 +113,13 @@ class ApiTokenLoginControllerTest extends TestCase
         $response = $this->postJson('/oauth/token', [
             'grant_type'        => 'mobile',
             'client_id'         => $grantClient->id,
-            'client_secret'     => $grantClient->secret,
+            'client_secret'     => $grantClient->plainSecret,
             'number'            => '7528222',
             'country_code'      => '960',
             'verification_code' => $verification_code,
         ]);
 
-        $content = json_decode($response->content(), true);
-        return $content['access_token'];
+        return $response->json('access_token');
     }
 
 }
