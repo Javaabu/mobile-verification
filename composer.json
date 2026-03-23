@@ -19,7 +19,7 @@
         "laravel/passport": "^12.4"
     },
     "require-dev": {
-        "orchestra/testbench": "^9.0 || ^10.0",
+        "orchestra/testbench": "^9.16 || ^10.0",
         "phpunit/phpunit": "^10.5 || ^11.5.3",
         "laravel/pint": "^1.15",
         "javaabu/auth": "^1.16"
