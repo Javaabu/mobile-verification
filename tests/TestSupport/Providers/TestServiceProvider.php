@@ -30,6 +30,8 @@ class TestServiceProvider extends ServiceProvider
         ]);
 
         Passport::loadKeysFrom(__DIR__ . '/../../passport-keys');
+
+        Passport::$validateKeyPermissions = false;
     }
 
     /**
