@@ -16,13 +16,13 @@
         "javaabu/laravel-recaptcha": "^6.3",
         "javaabu/helpers": "^1.71",
         "javaabu/activitylog": "^1.6",
-        "laravel/passport": "^12.4 || ^13.0"
+        "laravel/passport": "^13.0"
     },
     "require-dev": {
         "orchestra/testbench": "^9.16 || ^10.0 || ^10.0 || ^11.0",
         "phpunit/phpunit": "^10.5 || ^11.5.3 || ^12.5.8 || ^13.0.3",
         "laravel/pint": "^1.15",
-        "javaabu/auth": "^1.16 || ^2.0"
+        "javaabu/auth": "^2.0"
     },
     "suggest": {
         "javaabu/auth": "Required for login and registration"
