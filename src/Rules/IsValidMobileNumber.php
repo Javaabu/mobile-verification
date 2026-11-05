@@ -93,7 +93,7 @@ class IsValidMobileNumber implements DataAwareRule, ValidationRule
         }
 
         /** @var ValidatesNumberFormat $format */
-        $format = app(MobileVerification::config('number_format_validator', ValidatesNumberFormat::class));
+        $format = app(ValidatesNumberFormat::class);
 
         if (! $format->passes($this->getCountryCode(), $number)) {
             $fail(__('The :attribute is not a valid mobile number.'));

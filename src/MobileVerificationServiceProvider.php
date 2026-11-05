@@ -5,6 +5,7 @@ namespace Javaabu\MobileVerification;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Router;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
@@ -17,10 +18,13 @@ use Javaabu\MobileVerification\Contracts\GeneratesVerificationCodes;
 use Javaabu\MobileVerification\Contracts\ValidatesNumberFormat;
 use Javaabu\MobileVerification\Http\Middleware\EnsureMobileIsVerified;
 use Javaabu\MobileVerification\Passport\MobileGrant;
+use Javaabu\MobileVerification\Policies\MobileNumberPolicy;
 use Javaabu\MobileVerification\Routing\MobileApiRoutes;
+use Javaabu\MobileVerification\Routing\MobileNumberActionRoutes;
 use Javaabu\MobileVerification\Routing\MobileNumberRoutes;
 use Javaabu\MobileVerification\Support\NumberFormatValidator;
 use Javaabu\MobileVerification\Support\VerificationCodeGenerator;
+use Javaabu\Permissions\Permissions;
 use Laravel\Passport\Bridge\RefreshTokenRepository;
 use Laravel\Passport\Passport;
 use League\OAuth2\Server\AuthorizationServer;
@@ -38,8 +42,6 @@ class MobileVerificationServiceProvider extends ServiceProvider
 
     /** Default implementations apps can replace */
     public const array BINDINGS = [
-        GeneratesVerificationCodes::class => VerificationCodeGenerator::class,
-        ValidatesNumberFormat::class => NumberFormatValidator::class,
         CreatesUsersFromMobileNumbers::class => CreateUserFromMobileNumber::class,
     ];
 
@@ -50,6 +52,10 @@ class MobileVerificationServiceProvider extends ServiceProvider
         foreach (self::BINDINGS as $contract => $implementation) {
             $this->app->bindIf($contract, $implementation);
         }
+
+        // The classes in config, unless the app binds the contracts itself
+        $this->app->bindIf(GeneratesVerificationCodes::class, fn () => $this->app->make(MobileVerification::config('code_generator') ?: VerificationCodeGenerator::class));
+        $this->app->bindIf(ValidatesNumberFormat::class, fn () => $this->app->make(MobileVerification::config('number_format_validator') ?: NumberFormatValidator::class));
 
         $this->registerPassportGrant();
     }
@@ -71,6 +77,9 @@ class MobileVerificationServiceProvider extends ServiceProvider
         $this->registerMiddleware();
         $this->registerRouteMacros();
         $this->registerRateLimiters();
+        $this->registerAbilities();
+
+        $this->app->booted(fn () => $this->registerPermissions());
     }
 
     protected function registerPublishing(): void
@@ -131,6 +140,10 @@ class MobileVerificationServiceProvider extends ServiceProvider
         Route::macro('mobileApiRoutes', function (?string $type = null, array $options = []) {
             MobileApiRoutes::register($this, $type, $options);
         });
+
+        Route::macro('mobileNumberActions', function (string $type, array $options = []) {
+            MobileNumberActionRoutes::register($this, $type, $options);
+        });
     }
 
     /**
@@ -152,6 +165,47 @@ class MobileVerificationServiceProvider extends ServiceProvider
 
             $server->enableGrantType($grant, Passport::tokensExpireIn());
         });
+    }
+
+    /**
+     * The abilities of MobileNumberPolicy (or mobile-verification.policy), unless the app defined them
+     */
+    protected function registerAbilities(): void
+    {
+        $policy = MobileVerification::config('policy', MobileNumberPolicy::class);
+
+        foreach (MobileNumberPolicy::ABILITIES as $ability => $action) {
+            if (Gate::has($ability)) {
+                continue;
+            }
+
+            Gate::define($ability, [$policy, $action]);
+        }
+    }
+
+    /**
+     * Permissions for managing each user type's numbers, through javaabu/permissions
+     */
+    protected function registerPermissions(): void
+    {
+        if (! MobileVerification::config('register_permissions', true)) {
+            return;
+        }
+
+        $managed = MobileVerification::config('managed_user_types') ?: array_keys(UserTypes::all());
+
+        foreach ($managed as $name) {
+            $type = UserTypes::get($name);
+            $group = MobileNumberPolicy::group($type);
+            $permissions = [];
+
+            foreach (MobileNumberPolicy::DESCRIPTIONS as $action => $description) {
+                // English, as javaabu/permissions translates descriptions when it shows them
+                $permissions[MobileNumberPolicy::permission($action, $type)] = strtr($description, [':resource' => str_replace('_', ' ', $group)]);
+            }
+
+            Permissions::register($group, $permissions);
+        }
     }
 
     protected function registerRateLimiters(): void

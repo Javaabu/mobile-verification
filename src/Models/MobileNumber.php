@@ -183,7 +183,7 @@ class MobileNumber extends Model implements SmsNotifiable
      */
     public function generateVerificationCode(): string
     {
-        $code = app(MobileVerification::config('code_generator', GeneratesVerificationCodes::class))->generate();
+        $code = app(GeneratesVerificationCodes::class)->generate();
 
         $this->attempts = 0;
         $this->verification_code = $code;

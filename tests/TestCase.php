@@ -34,6 +34,9 @@ abstract class TestCase extends BaseTestCase
 
         Manifest::fake();
         Notification::fake();
+
+        // Codes are saved to the second; keep expiry counts exact
+        $this->freezeSecond();
     }
 
     protected function getPackageProviders($app): array
