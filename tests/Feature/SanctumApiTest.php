@@ -98,6 +98,28 @@ class SanctumApiTest extends TestCase
             'device_name' => 'iPhone',
         ])->assertUnprocessable()->assertJsonValidationErrors('code');
 
+        $this->travel(31)->seconds();
+        $code_id = $this->postJson('/api/mobile/code', ['number' => '7771234'])->json('verification_code_id');
+
+        $this->postJson('/api/mobile/token', [
+            'number' => '7771234',
+            'verification_code' => $this->lastSentCode(),
+            'verification_code_id' => $code_id,
+            'device_name' => 'iPhone',
+            'code' => '000000',
+        ])->assertUnprocessable()->assertJsonValidationErrors('code');
+
+        $this->travel(31)->seconds();
+        $code_id = $this->postJson('/api/mobile/code', ['number' => '7771234'])->json('verification_code_id');
+
+        $this->postJson('/api/mobile/token', [
+            'number' => '7771234',
+            'verification_code' => $this->lastSentCode(),
+            'verification_code_id' => $code_id,
+            'device_name' => 'iPhone',
+            'recovery_code' => 'nope',
+        ])->assertUnprocessable()->assertJsonValidationErrors('recovery_code');
+
         // The SMS code was used up, so ask again with a recovery code
         $this->travel(31)->seconds();
 

@@ -19,6 +19,7 @@ use Javaabu\MobileVerification\Models\MobileNumber;
 use Javaabu\MobileVerification\Stencil\MobileRegistrationForm;
 use Javaabu\MobileVerification\Support\PendingVerification;
 use Javaabu\Stencil\Form;
+use LogicException;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -102,9 +103,11 @@ class MobileRegistrationController extends VerificationFlowController
 
         $user = $creator->create($type, $data, $mobile_number);
 
-        if ($user instanceof HasMobileNumber) {
-            $user->updatePhone($mobile_number);
+        if (! $user instanceof HasMobileNumber) {
+            throw new LogicException($user::class . ' must implement ' . HasMobileNumber::class . ' (use InteractsWithMobileNumbers) for mobile registration.');
         }
+
+        $user->updatePhone($mobile_number);
 
         PendingVerification::forgetVerified($request, $type, $this->purpose());
 
