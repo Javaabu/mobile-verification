@@ -15,11 +15,55 @@ Find yourself stuck using the package? Found a bug? Do you have general question
 
 If you've found a bug regarding security please mail [info@javaabu.com](mailto:info@javaabu.com) instead of using the issue tracker.
 
+## Quick start
+
+```bash
+composer require javaabu/mobile-verification
+php artisan migrate
+```
+
+```php
+// config/javaabu-auth.php: add the login method to a user type
+use Javaabu\MobileVerification\Auth\MobileLoginMethod;
+
+'user' => [
+    'guard' => 'web',
+    'route_name' => '',
+    'home' => '/dashboard',
+    'login_methods' => [MobileLoginMethod::class],
+],
+```
+
+```php
+// routes/web.php
+Route::authRoutes('user');            // /login/mobile and /register/mobile
+Route::mobileNumberRoutes('user');    // /settings/mobile-number
+
+Route::middleware(['auth.type:user', 'mobile.verified:user'])->group(function () {
+    Route::get('dashboard', DashboardController::class)->name('dashboard');
+});
+```
+
+```php
+// app/Models/User.php
+use Javaabu\Auth\Models\User as BaseUser;
+use Javaabu\MobileVerification\Concerns\InteractsWithMobileNumbers;
+use Javaabu\MobileVerification\Contracts\HasMobileNumber;
+
+class User extends BaseUser implements HasMobileNumber
+{
+    use InteractsWithMobileNumbers;
+}
+```
+
+Upgrading from v2? See [`docs/upgrading.md`](docs/upgrading.md). For AI assistants, the package ships [`llms.txt`](llms.txt) and a Laravel Boost guideline and skill.
+
 ## Testing
 
 ```bash
 composer test
 composer lint
+pnpm install && pnpm check   # the React pages
 ```
 
 ## Changelog

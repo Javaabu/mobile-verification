@@ -3,136 +3,139 @@ title: Installation & Setup
 sidebar_position: 1.2
 ---
 
-You can install the package via composer:
+Set up [javaabu/auth](https://github.com/Javaabu/auth) v3 first: this package adds mobile login to its user types.
+
+# Install
 
 ```bash
 composer require javaabu/mobile-verification
+php artisan migrate
 ```
 
-### Publishing Migrations
+The package loads its migration, which creates the `mobile_numbers` table (it skips it when the table is already there, as after v2). To change it, publish it and stop the package from loading its own:
+
 ```bash
-php artisan vendor:publish --provider="Javaabu\MobileVerification\MobileVerificationServiceProvider" --tag="mobile-verification-migrations"
+php artisan vendor:publish --tag=mobile-verification-migrations
 ```
-
-### Publishing Translations
-```bash
-php artisan vendor:publish --provider="Javaabu\MobileVerification\MobileVerificationServiceProvider" --tag="mobile-verification-translations"
-```
-
-### Publishing Config
-```bash
-php artisan vendor:publish --provider="Javaabu\MobileVerification\MobileVerificationServiceProvider" --tag="mobile-verification-config"
-```
-
-This is the default content of the config file:
 
 ```php
-<?php
-
-return [
-    /*
-    |--------------------------------------------------------------------------
-    | Mobile Number Database connection
-    |--------------------------------------------------------------------------
-    | This is the database connection that will be used by the mobile numbers
-    | migration and the MobileNumber model shipped with this package. In case
-    | it's not set Laravel's database.default will be used instead.
-    */
-    'database_connection' => env('MOBILE_NUMBER_DB_CONNECTION'),
-
-    /*
-    |--------------------------------------------------------------------------
-    | Mobile Numbers table name
-    |--------------------------------------------------------------------------
-    | This is the name of the table that will be created by the mobile numbers
-    | migration and used by the MobileNumber model shipped with this package.
-    */
-    'table_name' => 'mobile_numbers',
-
-    /*
-    |--------------------------------------------------------------------------
-    | Mobile Number Model
-    |--------------------------------------------------------------------------
-    | This model will be used to save mobile numbers.
-    | It should implement the Javaabu\MobileVerification\Contracts\MobileNumber interface
-    | and extend Illuminate\Database\Eloquent\Model.
-    */
-    'mobile_number_model' => \Javaabu\MobileVerification\Models\MobileNumber::class,
-
-    /*
-    |--------------------------------------------------------------------------
-    | Default country code
-    |--------------------------------------------------------------------------
-    | The country code to be used by default
-    */
-    'default_country_code' => env('MOBILE_NUMBER_DEFAULT_COUNTRY_CODE', '960'),
-
-    /*
-    |--------------------------------------------------------------------------
-    | Allowed country codes
-    |--------------------------------------------------------------------------
-    | Which country codes are allowed
-    */
-    'allowed_country_codes' => explode(',', env('MOBILE_NUMBER_ALLOWED_COUNTRY_CODES', '960')),
-
-    /*
-    |--------------------------------------------------------------------------
-    | Number prefix
-    |--------------------------------------------------------------------------
-    | The prefix to add before fully qualified numbers
-    */
-    'number_prefix' => '+',
-
-    /*
-    |--------------------------------------------------------------------------
-    | Token validity
-    |--------------------------------------------------------------------------
-    | The number of minutes that a mobile number verification token
-    | would be valid for.
-    */
-    'verification_code_validity' => 10, // minutes
-
-    /*
-    |--------------------------------------------------------------------------
-    | Maximum attempts
-    |--------------------------------------------------------------------------
-    | The maximum number of validation attempts that can be made before which
-    | the number would get locked for a specific length of time.
-    */
-    'max_attempts' => 5,
-
-    /*
-    |--------------------------------------------------------------------------
-    | Attempt expiry
-    |--------------------------------------------------------------------------
-    | The number of minutes that a number would get locked for if there are too
-    | many verification attempts for that number.
-    */
-    'attempt_expiry' => 30, // minutes
-
-    /*
-    |--------------------------------------------------------------------------
-    | Resend interval
-    |--------------------------------------------------------------------------
-    | The number of seconds after which a verification code can be resent to
-    | the same mobile number.
-    */
-    'resend_interval' => 30, // seconds
-
-    /*
-    |--------------------------------------------------------------------------
-    | Verified
-    |--------------------------------------------------------------------------
-    | Whether the mobile number should be verified
-    */
-    'verified' => env('MOBILE_NUMBER_VERIFIED', true),
-
-    /*
-    |--------------------------------------------------------------------------
-    | Use Recaptcha
-    |--------------------------------------------------------------------------
-    | Whether the use Recaptcha to prevent SPAM OTP requests
-    */
-    'use_recaptcha' => env('MOBILE_NUMBER_USE_RECAPTCHA', true),
-];
+// AppServiceProvider::register()
+\Javaabu\MobileVerification\MobileVerification::ignoreMigrations();
 ```
+
+# The SMS provider
+
+Codes go out through [javaabu/sms-notifications](https://github.com/Javaabu/sms-notifications). Pick a provider in `.env` and install its channel:
+
+```bash
+composer require dash8x/dhiraagu-sms-notification   # SMS_DRIVER=dhiraagu
+# or
+composer require laravel-notification-channels/twilio   # SMS_DRIVER=twilio
+```
+
+In tests, `Notification::fake()` catches the SMS; see [The SMS](advanced-usage/sms.md).
+
+# The user model
+
+Each user model that has a mobile number implements `HasMobileNumber` with the `InteractsWithMobileNumbers` trait:
+
+```php
+namespace App\Models;
+
+use Javaabu\Auth\Models\User as BaseUser;
+use Javaabu\MobileVerification\Concerns\InteractsWithMobileNumbers;
+use Javaabu\MobileVerification\Contracts\HasMobileNumber;
+
+class User extends BaseUser implements HasMobileNumber
+{
+    use InteractsWithMobileNumbers;
+}
+```
+
+Numbers live in the `mobile_numbers` table, related to users by a morph, so admins and public users can each have the same number. See [The user model](basic-usage/user-models.md).
+
+Users who sign up with a mobile number have no password, and the default registration form doesn't require an email. Make both nullable on that table:
+
+```php
+use Javaabu\Auth\Schema\UserSchema;
+
+Schema::create('users', function (Blueprint $table) {
+    UserSchema::columns($table, password_required: false, email_required: false);
+});
+```
+
+# Turning on mobile login
+
+Add the login method to each user type that logs in with a mobile number:
+
+```php
+// config/javaabu-auth.php
+use Javaabu\MobileVerification\Auth\MobileLoginMethod;
+
+'user_types' => [
+    'user' => [
+        'guard' => 'web',
+        'route_name' => '',
+        'home' => '/dashboard',
+        'login_methods' => [MobileLoginMethod::class],
+    ],
+    'admin' => [
+        'guard' => 'web_admin',
+        'home' => '/admin',
+        'features' => ['registration' => false],
+        'login_methods' => [MobileLoginMethod::class],
+    ],
+],
+```
+
+Or in a service provider, before the routes load:
+
+```php
+use Javaabu\MobileVerification\MobileVerification;
+
+MobileVerification::enableFor('user', 'admin');
+```
+
+`Route::authRoutes()` then registers the mobile login (and, for types with javaabu/auth's `registration` feature, the mobile registration) with the type's other guest routes, and the login page links to it:
+
+```php
+// routes/web.php
+Route::authRoutes('user');
+Route::authRoutes('admin', ['prefix' => 'admin']);
+```
+
+Add the account page where signed-in users verify or change their number, and require a verified number where you need one:
+
+```php
+Route::mobileNumberRoutes('user');
+Route::mobileNumberRoutes('admin', ['prefix' => 'admin/settings']);
+
+Route::middleware(['auth.type:user', 'mobile.verified:user'])->group(function () {
+    Route::get('dashboard', DashboardController::class)->name('dashboard');
+});
+```
+
+That's all the common case needs: Maldivian numbers (+960), 6 digit codes valid for 10 minutes, a new code every 30 seconds, and a 30 minute lock after 5 wrong codes. Every default is in [Configuration](advanced-usage/configuration.md).
+
+# Pages
+
+The pages use the same stack and layouts as javaabu/auth's: Blade by default, Inertia React when the user type's `views` (or `javaabu-auth.views`) is `inertia`. Set `mobile-verification.views` to choose for this package alone. See [Pages](basic-usage/pages.md) for the React setup.
+
+# Publishing
+
+```bash
+php artisan vendor:publish --tag=mobile-verification-config
+php artisan vendor:publish --tag=mobile-verification-views
+php artisan vendor:publish --tag=mobile-verification-translations
+php artisan vendor:publish --tag=mobile-verification-migrations
+```
+
+# Permissions
+
+Admin actions on other users' numbers use javaabu/permissions. After installing, sync the permissions:
+
+```bash
+php artisan permissions:sync
+```
+
+See [Managing numbers](basic-usage/managing-numbers.md).
