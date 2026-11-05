@@ -55,7 +55,7 @@ class SendVerificationCode
         if ($purpose->needsOwner()) {
             $mobile_number = MobileVerification::find($type, $country_code, $number);
 
-            if (! $mobile_number?->hasOwner() || ! $mobile_number->user) {
+            if (! MobileVerification::userFor($type, $mobile_number)) {
                 throw ValidationException::withMessages([
                     $error_key => __('There is no account with this mobile number.'),
                 ]);

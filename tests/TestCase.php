@@ -4,12 +4,14 @@ namespace Javaabu\MobileVerification\Tests;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Notification;
+use Illuminate\Support\Facades\Route;
 use Javaabu\Auth\AuthServiceProvider;
 use Javaabu\Auth\UserType;
 use Javaabu\Auth\UserTypes;
 use Javaabu\Forms\FormsServiceProvider;
 use Javaabu\Manifest\Facades\Manifest;
 use Javaabu\Manifest\ManifestServiceProvider;
+use Javaabu\MobileVerification\Auth\MobileLoginMethod;
 use Javaabu\MobileVerification\MobileVerification;
 use Javaabu\MobileVerification\MobileVerificationServiceProvider;
 use Javaabu\MobileVerification\Notifications\VerificationCodeNotification;
@@ -82,12 +84,14 @@ abstract class TestCase extends BaseTestCase
                 'route_name' => '',
                 'home' => '/dashboard',
                 'features' => ['email_verification' => false],
+                'login_methods' => [MobileLoginMethod::class],
             ],
             'admin' => [
                 'guard' => 'web_admin',
                 'passwords' => 'admins',
                 'home' => '/admin',
                 'features' => ['registration' => false, 'email_verification' => false],
+                'login_methods' => [MobileLoginMethod::class],
             ],
         ]);
 
@@ -100,6 +104,23 @@ abstract class TestCase extends BaseTestCase
     protected function defineDatabaseMigrations(): void
     {
         $this->loadMigrationsFrom(__DIR__ . '/database');
+    }
+
+    protected function defineRoutes($router): void
+    {
+        $this->registerRoutes();
+    }
+
+    protected function registerRoutes(): void
+    {
+        Route::authRoutes('user');
+        Route::authRoutes('admin', ['prefix' => 'admin']);
+
+        Route::mobileNumberRoutes('user');
+        Route::mobileNumberRoutes('admin', ['prefix' => 'admin/settings']);
+
+        Route::middleware(['web', 'auth.type:user', 'mobile.verified:user'])->get('dashboard', fn () => 'user dashboard')->name('dashboard');
+        Route::middleware(['web', 'auth.type:admin', 'mobile.verified:admin'])->get('admin', fn () => 'admin dashboard')->name('admin.home');
     }
 
     protected function userType(string $name = 'user'): UserType

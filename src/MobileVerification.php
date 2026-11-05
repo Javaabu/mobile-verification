@@ -2,6 +2,7 @@
 
 namespace Javaabu\MobileVerification;
 
+use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Database\Eloquent\Model;
 use Javaabu\Auth\UserType;
 use Javaabu\Auth\UserTypes;
@@ -167,6 +168,22 @@ class MobileVerification
             'number' => static::normalizeNumber($number),
             'user_type' => static::morphClassFor($type),
         ]);
+    }
+
+    /**
+     * The user a number belongs to, loaded through the type's guard provider (the model that logs in)
+     */
+    public static function userFor(UserType $type, ?MobileNumber $mobile_number): ?Authenticatable
+    {
+        if (! $mobile_number?->hasOwner()) {
+            return null;
+        }
+
+        if ($mobile_number->user_type !== static::morphClassFor($type)) {
+            return null;
+        }
+
+        return $type->auth()->getProvider()->retrieveById($mobile_number->user_id);
     }
 
     public static function skipsTwoFactor(): bool
