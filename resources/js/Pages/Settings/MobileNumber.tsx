@@ -6,11 +6,11 @@ import { t } from "../../lib/strings";
 import type { MobileNumberSettingsPageProps } from "../../types";
 
 /** mobile-verification::Settings/MobileNumber — verify or change the signed-in user's number */
-export default function MobileNumber({ current_number, mobile, urls, strings, status }: MobileNumberSettingsPageProps) {
+export default function MobileNumber({ current_number, mobile, urls, account_links, strings, status }: MobileNumberSettingsPageProps) {
   const [before, after] = t(strings, "current_number").split(":number");
 
   return (
-    <AccountLayout title={t(strings, "settings_mobile_title")} page="mobile-number" urls={urls} strings={strings}>
+    <AccountLayout title={t(strings, "settings_mobile_title")} page="mobile-number" urls={urls} strings={strings} links={account_links}>
       <StatusAlert status={status} />
 
       <Card title={t(strings, "settings_mobile_title")}>

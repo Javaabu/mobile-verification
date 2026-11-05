@@ -120,6 +120,9 @@ class InertiaPagesTest extends TestCase
             ->assertInertia(fn (AssertableInertia $page) => $page
                 ->component('mobile-verification::Settings/MobileNumber', false)
                 ->where('current_number.formatted_number', '+9607771234')
+                ->where('account_links', fn ($links) => collect($links)->contains(fn ($link) => $link['key'] === 'mobile-number'
+                    && $link['url'] === url('/settings/mobile-number')
+                    && $link['active'] === true))
                 ->where('urls', fn ($urls) => $urls['mobile-number.store'] === url('/settings/mobile-number'))
                 ->etc());
     }

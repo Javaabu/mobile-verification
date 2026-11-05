@@ -9,7 +9,7 @@ A rewrite on top of javaabu/auth v3. See `docs/upgrading.md`.
 - PHP 8.4+ and Laravel 12+; javaabu/auth v3, javaabu/forms v2, javaabu/stencil, javaabu/permissions v3 and javaabu/manifest. javaabu/helpers, javaabu/activitylog and javaabu/laravel-recaptcha dropped; Passport optional
 - Mobile login as a javaabu/auth login method of any user type, finishing with `StartAuthenticatedSession` (two-factor still applies; `skip_two_factor`)
 - Mobile registration with a javaabu/stencil details form and a `CreatesUsersFromMobileNumbers` action
-- `Route::mobileNumberRoutes()` account page and the `mobile.verified` middleware
+- `Route::mobileNumberRoutes()` account page, linked from javaabu/auth's account navigation, and the `mobile.verified` middleware
 - `Route::mobileApiRoutes()` for Sanctum/Passport tokens; the Passport `mobile` grant picks the user type from the client's provider
 - `Route::mobileNumberActions()` admin actions behind `MobileNumberPolicy` and per-type javaabu/permissions permissions
 - Blade and Inertia React pages; Dhivehi and RTL

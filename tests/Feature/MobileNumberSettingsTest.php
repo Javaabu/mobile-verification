@@ -117,6 +117,42 @@ class MobileNumberSettingsTest extends TestCase
     }
 
     #[Test]
+    public function the_page_is_in_the_account_navigation_of_each_type(): void
+    {
+        config()->set('javaabu-auth.layouts', ['auth' => 'auth::layouts.auth', 'account' => 'auth::layouts.account']);
+
+        $this->actingAs(User::factory()->withMobileNumber('7771234')->create(), 'web')
+            ->get('/settings/profile')
+            ->assertOk()
+            ->assertSee('href="' . url('/settings/mobile-number') . '"', false);
+
+        $this->get('/settings/mobile-number')
+            ->assertOk()
+            ->assertSee('data-account-nav', false)
+            ->assertSee('aria-current="page"', false);
+
+        $this->actingAs(Admin::factory()->withMobileNumber('7771234')->create(), 'web_admin')
+            ->get('/admin/settings/profile')
+            ->assertOk()
+            ->assertSee('href="' . url('/admin/settings/mobile-number') . '"', false);
+    }
+
+    #[Test]
+    public function types_without_the_page_have_no_link(): void
+    {
+        config()->set('javaabu-auth.layouts', ['auth' => 'auth::layouts.auth', 'account' => 'auth::layouts.account']);
+
+        $this->app['router']->setRoutes(new RouteCollection);
+        Route::authRoutes('user');
+        $this->app['router']->getRoutes()->refreshNameLookups();
+
+        $this->actingAs(User::factory()->withMobileNumber('7771234')->create(), 'web')
+            ->get('/settings/profile')
+            ->assertOk()
+            ->assertDontSee('mobile-number', false);
+    }
+
+    #[Test]
     public function the_page_can_ask_for_the_password_first(): void
     {
         $this->app['router']->setRoutes(new RouteCollection);

@@ -121,6 +121,15 @@ describe("Settings/MobileNumber", () => {
     expect(document.querySelector("[data-account-nav]")).toBeTruthy();
   });
 
+  it("shows the account links, this page among them", () => {
+    render(<MobileNumber {...page} current_number={null} />);
+
+    const link = document.querySelector('[data-account-nav] a[href="/settings/mobile-number"]');
+    expect(link?.textContent).toBe("މޯބައިލް ނަންބަރު");
+    expect(link?.getAttribute("aria-current")).toBe("page");
+    expect(document.querySelector('[data-account-nav] a[href="/settings/profile"]')).toBeTruthy();
+  });
+
   it("warns users without a number", () => {
     render(<MobileNumber {...page} current_number={null} />);
 

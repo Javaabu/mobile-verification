@@ -32,11 +32,24 @@ Names get the type's prefix: `admin.mobile-number`. The pages use the type's `ac
 
 A number another user of the same type has can't be taken ("This mobile number is already registered."). Users of different types can share a number.
 
-Link to the page from your account navigation:
+# The account navigation
+
+The package adds "Mobile number" to javaabu/auth's account navigation, after Profile and Security (position 30), for every user type that has the page: the types you called `Route::mobileNumberRoutes()` for. javaabu/auth's account layout and its React `AccountLayout` show it, marked as the current page while users are on it. If your app has its own account layout, include auth's navigation there and the link comes with it:
 
 ```blade
-<a href="{{ $user_type->route('mobile-number') }}">{{ __('Mobile number') }}</a>
+@include('auth::partials.account-nav')
 ```
+
+Move the link, rename it or remove it per type with javaabu/auth's API:
+
+```php
+use Javaabu\Auth\UserTypes;
+
+UserTypes::get('admin')->accountLink('mobile-number', 'Phone', position: 15);
+UserTypes::get('user')->withoutAccountLink('mobile-number');
+```
+
+Its label is the English key "Mobile number" (Dhivehi in the package's `lang/dv.json`).
 
 # Requiring a verified number
 

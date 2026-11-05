@@ -67,7 +67,7 @@ $user->updateMobileNumber('9991234', causer: $admin);   // no code; null if anot
 $user->removeMobileNumber(causer: $admin);
 ```
 
-Users change their own number on the `mobile-number` page, which sends a code to the new number first. Admins use `Route::mobileNumberActions('user', ['prefix' => 'admin/users', 'middleware' => ['web', 'auth.type:admin']])`.
+Users change their own number on the `mobile-number` page, which sends a code to the new number first. The package already adds it to javaabu/auth's account navigation for every type with the route; don't add a link by hand (change it with `UserTypes::get('user')->accountLink(...)` or `withoutAccountLink('mobile-number')`). Custom React account pages pass `account_links` to `AccountLayout`'s `links`. Admins use `Route::mobileNumberActions('user', ['prefix' => 'admin/users', 'middleware' => ['web', 'auth.type:admin']])`.
 
 ## Codes in your own flows
 

@@ -21,6 +21,11 @@ export const urls = {
 export const page: MobilePageProps = {
   auth_type: { name: "user", features: { registration: true }, two_factor: "optional", username: "email", login_methods: [] },
   urls,
+  account_links: [
+    { key: "profile", label: "ޕްރޮފައިލް", url: "/settings/profile", active: false },
+    { key: "security", label: "ސެކިއުރިޓީ", url: "/settings/security", active: false },
+    { key: "mobile-number", label: "މޯބައިލް ނަންބަރު", url: "/settings/mobile-number", active: true },
+  ],
   strings,
   status: null,
   mobile: { country_codes: { "960": "+960" }, default_country_code: "960", number_prefix: "+", code_length: 6 },

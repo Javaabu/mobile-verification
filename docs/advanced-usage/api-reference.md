@@ -34,6 +34,8 @@ Namespaces are under `Javaabu\MobileVerification`.
 
 Middleware: `mobile.verified:{type}` (also `mobile-verified`).
 
+Account navigation: the service provider registers `UserTypes::accountLink('mobile-number', 'Mobile number', position: 30)` (javaabu/auth); it shows for types with the `mobile-number` route.
+
 # Auth\MobileLoginMethod
 
 javaabu/auth `LoginMethod` with key `mobile` (`MobileLoginMethod::KEY`), label "Log in with your mobile number", `routes()` and `url()` (the type's `login.mobile`).

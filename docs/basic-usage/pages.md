@@ -15,7 +15,7 @@ Every page exists in Blade ([javaabu/forms](https://github.com/Javaabu/forms) v2
 
 # Props
 
-Every page gets javaabu/auth's shared props (`auth_type`, `urls`, `status`) and:
+Every page gets javaabu/auth's shared props (`auth_type`, `urls`, `account_links`, `status`) and:
 
 ```ts
 mobile: {
@@ -80,7 +80,7 @@ createInertiaApp({
 });
 ```
 
-The pages import `@javaabu/auth` (for `AccountLayout`) and `@javaabu/stencil` (for `StencilForm`), which javaabu/manifest's Vite plugin resolves from the Composer packages. `php artisan manifest:check` lists missing npm packages.
+The account pages wrap themselves in javaabu/auth's `AccountLayout`, passing `account_links` as its `links`, so the navigation matches auth's own pages (see [the account navigation](verifying-numbers.md#the-account-navigation)). The pages import `@javaabu/auth` (for `AccountLayout`) and `@javaabu/stencil` (for `StencilForm`), which javaabu/manifest's Vite plugin resolves from the Composer packages. `php artisan manifest:check` lists missing npm packages.
 
 Replace a page with `php artisan manifest:override mobile-verification Pages/Login.tsx`, or in `resolvePage`. Apps can reuse the components:
 

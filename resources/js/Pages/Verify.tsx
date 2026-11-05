@@ -7,7 +7,7 @@ import { t } from "../lib/strings";
 import type { VerifyPageProps } from "../types";
 
 /** mobile-verification::Verify — the code page of every flow */
-export default function Verify({ purpose, title, mobile_number, verify_url, resend_url, change_url, mobile, urls, strings, status }: VerifyPageProps) {
+export default function Verify({ purpose, title, mobile_number, verify_url, resend_url, change_url, mobile, urls, account_links, strings, status }: VerifyPageProps) {
   const [before, after] = t(strings, "code_help", {
     length: mobile.code_length,
     minutes: Math.max(1, Math.ceil(mobile_number.expires_in / 60)),
@@ -62,7 +62,7 @@ export default function Verify({ purpose, title, mobile_number, verify_url, rese
 
   if (purpose === "update") {
     return (
-      <AccountLayout title={title} page="mobile-number-verify" urls={urls} strings={strings}>
+      <AccountLayout title={title} page="mobile-number-verify" urls={urls} strings={strings} links={account_links}>
         {content}
       </AccountLayout>
     );

@@ -78,6 +78,7 @@ class MobileVerificationServiceProvider extends ServiceProvider
         $this->registerRouteMacros();
         $this->registerRateLimiters();
         $this->registerAbilities();
+        $this->registerAccountLink();
 
         $this->app->booted(fn () => $this->registerPermissions());
     }
@@ -165,6 +166,14 @@ class MobileVerificationServiceProvider extends ServiceProvider
 
             $server->enableGrantType($grant, Passport::tokensExpireIn());
         });
+    }
+
+    /**
+     * The account page in javaabu/auth's account navigation, for every type with Route::mobileNumberRoutes()
+     */
+    protected function registerAccountLink(): void
+    {
+        UserTypes::accountLink('mobile-number', 'Mobile number', position: 30);
     }
 
     /**
