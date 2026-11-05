@@ -86,7 +86,8 @@ class ViewRenderer
 
         return Inertia::render($this->inertiaPage($page), [
             ...$data,
-            'strings' => Strings::translated(),
+            // javaabu/auth's strings too, for its AccountLayout
+            'strings' => [...$this->page_data->strings(), ...Strings::translated()],
         ]);
     }
 }
