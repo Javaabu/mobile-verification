@@ -2,333 +2,211 @@
 
 namespace Javaabu\MobileVerification\Models;
 
-use Carbon\Carbon;
-use Illuminate\Support\Str;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Notifications\Notifiable;
+use Carbon\CarbonInterface;
 use Illuminate\Database\Eloquent\Builder;
-use Javaabu\Activitylog\Traits\LogsActivity;
-use Javaabu\MobileVerification\MobileVerification;
-use Illuminate\Database\Eloquent\Relations\MorphTo;
-use Javaabu\SmsNotifications\Notifiable\HasSmsNumber;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Javaabu\MobileVerification\Contracts\HasMobileNumber;
-use Javaabu\MobileVerification\Factories\MobileNumberFactory;
-use Javaabu\MobileVerification\Support\VerificationCodeUpdater;
-use Javaabu\MobileVerification\Support\VerificationCodeGenerator;
-use Javaabu\MobileVerification\Contracts\MobileNumber as MobileNumberContract;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\MorphTo;
+use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
+use Javaabu\MobileVerification\Contracts\GeneratesVerificationCodes;
+use Javaabu\MobileVerification\Database\Factories\MobileNumberFactory;
+use Javaabu\MobileVerification\MobileVerification;
+use Javaabu\SmsNotifications\Notifiable\HasSmsNumber;
+use Javaabu\SmsNotifications\Notifiable\SmsNotifiable;
 
-class MobileNumber extends Model implements MobileNumberContract
+/**
+ * A mobile number, owned by a user once it's verified. It holds the current verification code
+ * (hashed), when it was sent, and the wrong attempts against it.
+ *
+ * @property int $id
+ * @property string $number
+ * @property string $country_code
+ * @property string $user_type
+ * @property int|string|null $user_id
+ * @property int $attempts
+ * @property ?string $verification_code
+ * @property ?CarbonInterface $verification_code_created_at
+ * @property ?string $verification_code_id
+ * @property-read string $formatted_number
+ * @property-read string $short_formatted_number
+ * @property-read string $prefix
+ * @property-read ?Model $user
+ */
+class MobileNumber extends Model implements SmsNotifiable
 {
     use HasFactory;
     use HasSmsNumber;
-    use LogsActivity;
     use Notifiable;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array
-     */
     protected $fillable = [
         'number',
         'country_code',
         'user_type',
     ];
 
-    /**
-     * Dates
-     *
-     * @var array
-     */
-    protected $casts = [
-        'verification_code_created_at' => 'datetime',
-    ];
-
-    /**
-     * Hidden
-     *
-     * @var array
-     */
     protected $hidden = [
         'verification_code',
     ];
 
-    /**
-     * Appends
-     *
-     * @var array
-     */
     protected $appends = [
         'formatted_number',
-        'verification_code_expires_in',
-        'resend_verification_code_in',
     ];
 
-    protected static array $logExceptAttributes = [
-        'verification_code',
-    ];
-
-    /**
-     * Create a new factory instance for the model.
-     *
-     * @return \Illuminate\Database\Eloquent\Factories\Factory<static>
-     */
-    protected static function newFactory()
+    public function getConnectionName(): ?string
     {
-        return new MobileNumberFactory();
+        return MobileVerification::config('database_connection') ?: parent::getConnectionName();
     }
 
-    /**
-     * A mobile number belongs to a user
-     *
-     * @return MorphTo
-     */
+    public function getTable(): string
+    {
+        return MobileVerification::config('table_name') ?: parent::getTable();
+    }
+
+    protected function casts(): array
+    {
+        return [
+            'attempts' => 'integer',
+            'verification_code_created_at' => 'datetime',
+        ];
+    }
+
+    protected static function newFactory(): MobileNumberFactory
+    {
+        return MobileNumberFactory::new();
+    }
+
     public function user(): MorphTo
     {
         return $this->morphTo('user');
     }
 
-
     /**
-     * A search scope
-     *
-     * @param $query
-     * @param $search
-     * @return
+     * Numbers containing the search, with the prefix and country code: `+9607771234`
      */
     public function scopeSearch(Builder $query, string $search): Builder
     {
-        return $query->where(DB::raw('CONCAT(\'' . MobileVerification::config('number_prefix') . '\', country_code, number)'), 'like', '%' . $search . '%');
+        $search = str_replace(['%', '_'], ['\%', '\_'], ltrim($search, MobileVerification::numberPrefix()));
+
+        return $query->where(function (Builder $query) use ($search) {
+            $query->where('number', 'like', "%{$search}%")
+                ->orWhereRaw($this->concatCountryCodeAndNumber() . ' like ?', ["%{$search}%"]);
+        });
     }
 
     /**
-     * Find mobile number without using country code.
-     * By default would assume it's using default country code,
-     * unless the number starts with a plus +.
-     *
-     * @param $query
-     * @param $search
+     * A number written the way users write it: with the prefix and country code (`+9607771234`),
+     * or without them for the default country code (`7771234`)
      */
     public function scopeHasNumber(Builder $query, string $search): Builder
     {
-        $prefix = self::config('number_prefix');
+        $prefix = MobileVerification::numberPrefix();
 
-        // check if starts with the country code
-        if (Str::startsWith($search, $prefix)) {
-            // extract the number without the prefix
-            $number = Str::after($search, $prefix);
-
-            return $query->where(DB::raw('CONCAT(country_code, number)'), $number);
+        if ($prefix !== '' && str_starts_with($search, $prefix)) {
+            return $query->whereRaw($this->concatCountryCodeAndNumber() . ' = ?', [Str::after($search, $prefix)]);
         }
 
-        // otherwise check against the default country code
-        return $query->where('number', $search)
-                     ->where('country_code', MobileVerification::defaultCountryCode());
+        return $query->where('number', MobileVerification::normalizeNumber($search))
+            ->where('country_code', MobileVerification::defaultCountryCode());
     }
 
-    public function scopeHasPhoneNumberWithOwner($query, string $country_code, string $number, string $user_type): void
+    public function scopeHasPhoneNumber(Builder $query, string $country_code, string $number, string $user_type): Builder
     {
-        $query->hasPhoneNumber($country_code, $number, $user_type)
-              ->where('user_id', '!=', null);
+        return $query->where('country_code', MobileVerification::normalizeCountryCode($country_code))
+            ->where('number', MobileVerification::normalizeNumber($number))
+            ->where('user_type', $user_type);
     }
 
-    public function scopeHasPhoneNumberWithoutOwner($query, string $country_code, string $number, string $user_type): void
+    public function scopeHasPhoneNumberWithOwner(Builder $query, string $country_code, string $number, string $user_type): Builder
     {
-        $query->hasPhoneNumber($country_code, $number, $user_type)
-              ->whereNull('user_id');
+        return $query->hasPhoneNumber($country_code, $number, $user_type)->whereNotNull('user_id');
     }
 
-    public function scopeHasPhoneNumber($query, string $country_code, string $number, string $user_type): void
+    public function scopeHasPhoneNumberWithoutOwner(Builder $query, string $country_code, string $number, string $user_type): Builder
     {
-        $number = MobileVerification::normalizeNumber($number);
-        $query->where('country_code', $country_code)
-              ->where('number', $number)
-              ->where('user_type', $user_type);
+        return $query->hasPhoneNumber($country_code, $number, $user_type)->whereNull('user_id');
     }
 
+    protected function number(): Attribute
+    {
+        return Attribute::make(
+            set: fn (?string $value) => MobileVerification::normalizeNumber($value),
+        );
+    }
+
+    protected function countryCode(): Attribute
+    {
+        return Attribute::make(
+            set: fn (?string $value) => MobileVerification::normalizeCountryCode($value),
+        );
+    }
 
     /**
-     * Convert dates to Carbon
-     * @param $date
+     * Codes are stored hashed
      */
-    public function setTokenCreatedAtAttribute($date)
+    protected function verificationCode(): Attribute
     {
-        $this->attributes['verification_code_created_at'] = empty($date) ? null : Carbon::parse($date);
+        return Attribute::make(
+            set: fn (?string $value) => $value ? Hash::make($value) : null,
+        );
+    }
+
+    protected function prefix(): Attribute
+    {
+        return Attribute::get(fn () => $this->country_code ? MobileVerification::numberPrefix() . $this->country_code : '');
+    }
+
+    protected function formattedNumber(): Attribute
+    {
+        return Attribute::get(fn () => $this->prefix . $this->number);
     }
 
     /**
-     * Normalize mobile numbers before saving
-     * @param $number
+     * The number without the country code when it has the default one
      */
-    public function setNumberAttribute($number)
+    protected function shortFormattedNumber(): Attribute
     {
-        $this->attributes['number'] = MobileVerification::normalizeNumber($number);
+        return Attribute::get(fn () => $this->country_code === MobileVerification::defaultCountryCode()
+            ? (string) $this->number
+            : $this->formatted_number);
+    }
+
+    public function hasOwner(): bool
+    {
+        return ! empty($this->user_id);
     }
 
     /**
-     * Default to the default country code
-     * @param $value
-     */
-    public function setCountryCodeAttribute($value)
-    {
-        $this->attributes['country_code'] = $value ?: MobileVerification::defaultCountryCode();
-    }
-
-    /**
-     * Hash the verification_code before saving
-     * @param $value
-     */
-    public function setVerificationCodeAttribute($value)
-    {
-        $this->attributes['verification_code'] = $value ? Hash::make($value) : null;
-    }
-
-    public function hasUnexpiredVerificationCode(): bool
-    {
-        return $this->verification_code && (! $this->is_verification_code_expired);
-    }
-
-    /**
-     * Generate the verification_code
-     */
-    public function randomVerificationCode(): string
-    {
-        return str_pad(rand(0, 999999), 6, 0, STR_PAD_LEFT);
-    }
-
-    /**
-     * Clear the verification_code fields
-     */
-    public function clearVerificationCode(): void
-    {
-        $this->attempts = 0;
-        $this->verification_code = null;
-        $this->verification_code_created_at = null;
-        $this->verification_code_id = null;
-    }
-
-    /**
-     * Generate the verification_code and save
+     * Generate a new code, save it (hashed) and return it, to send to the number
      */
     public function generateVerificationCode(): string
     {
-        /* @var VerificationCodeUpdater $verificationCodeUpdater */
-        $verificationCodeUpdater = app(VerificationCodeUpdater::class);
-        return $verificationCodeUpdater->handle($this);
+        $code = app(MobileVerification::config('code_generator', GeneratesVerificationCodes::class))->generate();
+
+        $this->attempts = 0;
+        $this->verification_code = $code;
+        $this->verification_code_created_at = now();
+        $this->verification_code_id = (string) Str::uuid();
+        $this->save();
+
+        return $code;
+    }
+
+    public function hasVerificationCode(): bool
+    {
+        return ! empty($this->getAttributes()['verification_code'] ?? null);
     }
 
     /**
-     * Check if was sent recently
-     * @return bool
+     * Check a code. A wrong one counts as an attempt.
      */
-    public function getWasSentRecentlyAttribute(): bool
+    public function checkVerificationCode(?string $code): bool
     {
-        return $this->verification_code_created_at && $this->verification_code_created_at->diffInSeconds() < MobileVerification::config('resend_interval');
-    }
+        $code = trim((string) $code);
 
-    public function getResendVerificationCodeInAttribute(): int
-    {
-        return $this->was_sent_recently
-            ? MobileVerification::config('resend_interval') - $this->verification_code_created_at->diffInSeconds()
-            : 0;
-    }
-
-    /**
-     * Check if verification_code is expired
-     */
-    public function getIsVerificationCodeExpiredAttribute(): bool
-    {
-        return ! $this->verification_code ||
-            ($this->verification_code_created_at &&
-                $this->verification_code_created_at->diffInMinutes() >= $this->verification_code_expires_in);
-    }
-
-    /**
-     * Get verification_code expires at time
-     */
-    public function getVerificationCodeExpiresAtAttribute(): Carbon
-    {
-        return $this->getVerificationCodeInitiatedTime()->addMinutes($this->verification_code_expires_in);
-    }
-
-    /**
-     * Get verification_code expiry in seconds
-     */
-    public function getVerificationCodeExpiryAttribute(): int
-    {
-        return $this->is_verification_code_expired ? 0 : now()->diffInSeconds($this->verification_code_expires_at);
-    }
-
-    /**
-     * Get verification_code expires in attribute
-     */
-    public function getVerificationCodeExpiresInAttribute(): int
-    {
-        return MobileVerification::config('verification_code_validity');
-    }
-
-    /**
-     * Check if number is locked
-     */
-    public function getIsLockedAttribute(): bool
-    {
-        return $this->attempts >= MobileVerification::config('max_attempts');
-    }
-
-    /**
-     * Get the verification_code created at time or the current time
-     * @return Carbon
-     */
-    public function getVerificationCodeInitiatedTime(): Carbon
-    {
-        return $this->verification_code_created_at ?: Carbon::now();
-    }
-
-    /**
-     * Check if can request for new code
-     */
-    public function getCanRequestCodeAttribute(): bool
-    {
-        return ! $this->is_locked ||
-            $this->getVerificationCodeInitiatedTime()->diffInMinutes() >= MobileVerification::config('attempt_expiry');
-    }
-
-    /**
-     * Attempts expiry at
-     */
-    public function getAttemptsExpiryAtAttribute(): Carbon
-    {
-        return ! $this->is_locked ? Carbon::now() :
-            $this->getVerificationCodeInitiatedTime()->addMinutes(MobileVerification::config('attempt_expiry'));
-    }
-
-    /**
-     * Get attempts expiry minutes
-     */
-    public function getAttemptsExpiryAttribute(): int
-    {
-        return $this->can_request_code ? 0 : $this->attempts_expiry_at->diffInMinutes();
-    }
-
-    public function getAttemptsExpirySecondsAttribute(): int
-    {
-        return $this->can_request_code ? 0 : $this->attempts_expiry_at->diffInSeconds();
-    }
-
-    /**
-     * Verify verification_code
-     */
-    public function verifyVerificationCode($verification_code, bool $should_reset = false): bool
-    {
-        if ($verification_code && $this->verification_code && Hash::check($verification_code, $this->verification_code)) {
-
-            if ($should_reset) {
-                $this->resetAttempts();
-            }
-
+        if ($code !== '' && $this->hasVerificationCode() && Hash::check($code, $this->getAttributes()['verification_code'])) {
             return true;
         }
 
@@ -338,117 +216,160 @@ class MobileNumber extends Model implements MobileNumberContract
         return false;
     }
 
-    public function resetAttempts(): void
+    /**
+     * Forget the code and the attempts, without saving
+     */
+    public function clearVerificationCode(): static
     {
         $this->attempts = 0;
         $this->verification_code = null;
         $this->verification_code_created_at = null;
         $this->verification_code_id = null;
-        $this->save();
+
+        return $this;
     }
 
     /**
-     * Get the prefix
-     * @return string
+     * Forget the code and the attempts, unlocking the number
      */
-    public function getPrefixAttribute(): string
+    public function resetAttempts(): void
     {
-        return $this->country_code ? MobileVerification::config('number_prefix') . $this->country_code : '';
+        $this->clearVerificationCode()->save();
     }
 
-    /**
-     * Get the formatted number
-     */
-    public function getFormattedNumberAttribute(): string
+    /** Minutes a code stays valid */
+    public function codeValidity(): int
     {
-        return $this->prefix . $this->number;
+        return (int) MobileVerification::config('verification_code_validity', 10);
     }
 
-    /**
-     * Get the short formatted number
-     */
-    public function getShortFormattedNumberAttribute(): string
+    public function verificationCodeExpiresAt(): ?CarbonInterface
     {
-        return $this->country_code == MobileVerification::defaultCountryCode() ?
-            $this->number :
-            $this->prefix . $this->number;
+        return $this->verification_code_created_at?->copy()->addMinutes($this->codeValidity());
+    }
+
+    public function isVerificationCodeExpired(): bool
+    {
+        if (! $this->hasVerificationCode()) {
+            return true;
+        }
+
+        $expires_at = $this->verificationCodeExpiresAt();
+
+        return ! $expires_at || $expires_at->lessThanOrEqualTo(now());
+    }
+
+    /** Seconds until the code expires */
+    public function verificationCodeExpiresIn(): int
+    {
+        return $this->isVerificationCodeExpired()
+            ? 0
+            : $this->secondsUntil($this->verificationCodeExpiresAt());
+    }
+
+    public function wasSentRecently(): bool
+    {
+        return $this->resendVerificationCodeIn() > 0;
+    }
+
+    /** Seconds before another code can be sent */
+    public function resendVerificationCodeIn(): int
+    {
+        if (! $this->verification_code_created_at) {
+            return 0;
+        }
+
+        return $this->secondsUntil(
+            $this->verification_code_created_at->copy()->addSeconds((int) MobileVerification::config('resend_interval', 30)),
+        );
     }
 
     /**
-     * The number to send SMSs to
-     *
-     * @return string
+     * Locked after too many wrong codes, until attempt_expiry minutes after the code was sent
      */
-    public function routeNotificationForSms(): array|string|null
+    public function isLocked(): bool
+    {
+        return $this->lockExpiresIn() > 0;
+    }
+
+    public function hasTooManyAttempts(): bool
+    {
+        return $this->attempts >= (int) MobileVerification::config('max_attempts', 5);
+    }
+
+    public function lockExpiresAt(): ?CarbonInterface
+    {
+        if (! $this->hasTooManyAttempts()) {
+            return null;
+        }
+
+        return ($this->verification_code_created_at ?? $this->updated_at ?? now())
+            ->copy()
+            ->addMinutes((int) MobileVerification::config('attempt_expiry', 30));
+    }
+
+    /** Seconds until the number unlocks */
+    public function lockExpiresIn(): int
+    {
+        $expires_at = $this->lockExpiresAt();
+
+        return $expires_at ? $this->secondsUntil($expires_at) : 0;
+    }
+
+    public function remainingAttempts(): int
+    {
+        return max(0, (int) MobileVerification::config('max_attempts', 5) - $this->attempts);
+    }
+
+    public function canRequestCode(): bool
+    {
+        return ! $this->isLocked() && ! $this->wasSentRecently();
+    }
+
+    public function isSame(MobileNumber $other): bool
+    {
+        return $this->country_code === $other->country_code
+            && $this->number === $other->number;
+    }
+
+    public function routeNotificationForSms(): string|array|null
     {
         return $this->formatted_number;
     }
 
     /**
-     * Check if is same
-     * @param MobileNumber $other
-     * @return bool
+     * What JSON responses say about the code
+     *
+     * @return array<string, mixed>
      */
-    public function isSame(\Javaabu\MobileVerification\Contracts\MobileNumber $other): bool
-    {
-        return $this->country_code == $other->country_code
-            && $this->number == $other->number;
-    }
-
-    /**
-     * Blank number
-     * @param $number
-     * @param string $country_code
-     * @param string $user_type
-     * @return MobileNumber|null
-     */
-    public static function blankPhone(string $number, string $country_code = '', string $user_type = 'user'): ?\Javaabu\MobileVerification\Contracts\MobileNumber
-    {
-        $country_code = $country_code ?: MobileVerification::defaultCountryCode();
-        $number = MobileVerification::normalizeNumber($number);
-
-        $model = MobileVerification::mobileNumberModel();
-        $phone = $model::firstOrCreate(compact(
-            'number',
-            'country_code',
-            'user_type'
-        ));
-
-        if (! $phone->user_id) {
-            return $phone;
-        }
-
-        return null;
-    }
-
-    public static function getUserByMobileNumber(string $number, string $country_code = '', string $user_type = 'user'): ?HasMobileNumber
-    {
-        $country_code = $country_code ?: MobileVerification::defaultCountryCode();
-        $number = MobileVerification::normalizeNumber($number);
-
-        $model = MobileVerification::mobileNumberModel();
-        $phone = $model::query()->where('number', $number)
-                       ->where('country_code', $country_code)
-                       ->where('user_type', $user_type)
-                       ->first();
-
-        return $phone->user;
-    }
-
     public function verificationCodeResponseData(): array
     {
         return [
+            'number' => $this->number,
+            'country_code' => $this->country_code,
+            'formatted_number' => $this->formatted_number,
             'verification_code_id' => $this->verification_code_id,
-            'user_type' => $this->user_type,
-            'is_registered' => (bool)$this->user_id,
-            'expires_at' => $this->verification_code_expires_at,
-            'expiry_duration' => $this->verification_code_expiry,
-            'expires_in' => $this->verification_code_expires_in,
-            'resend_interval' => MobileVerification::config('resend_interval'),
-            'resend_in' => $this->resend_verification_code_in,
+            'is_registered' => $this->hasOwner(),
+            'expires_at' => $this->verificationCodeExpiresAt()?->toIso8601String(),
+            'expires_in' => $this->verificationCodeExpiresIn(),
+            'resend_interval' => (int) MobileVerification::config('resend_interval', 30),
+            'resend_in' => $this->resendVerificationCodeIn(),
             'attempts' => $this->attempts,
-            'is_locked' => $this->is_locked,
-            'attempt_expiry' => $this->attempts_expiry,
+            'remaining_attempts' => $this->remainingAttempts(),
+            'is_locked' => $this->isLocked(),
+            'unlocks_in' => $this->lockExpiresIn(),
         ];
+    }
+
+    protected function secondsUntil(CarbonInterface $time): int
+    {
+        return max(0, (int) ceil(now()->diffInSeconds($time, false)));
+    }
+
+    protected function concatCountryCodeAndNumber(): string
+    {
+        return $this->getConnection()->getDriverName() === 'sqlite'
+            ? '(country_code || number)'
+            : 'CONCAT(country_code, number)';
     }
 }

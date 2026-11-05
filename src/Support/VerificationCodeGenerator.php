@@ -2,15 +2,18 @@
 
 namespace Javaabu\MobileVerification\Support;
 
-use Carbon\Carbon;
-use Illuminate\Support\Str;
-use Illuminate\Database\Eloquent\Model;
-use Javaabu\MobileVerification\Contracts\IsVerificationCodeGenerator;
+use Javaabu\MobileVerification\Contracts\GeneratesVerificationCodes;
+use Javaabu\MobileVerification\MobileVerification;
 
-class VerificationCodeGenerator implements IsVerificationCodeGenerator
+/**
+ * Random numeric codes of `mobile-verification.code_length` digits, from a cryptographically secure source
+ */
+class VerificationCodeGenerator implements GeneratesVerificationCodes
 {
-    public function handle(): string
+    public function generate(): string
     {
-        return str_pad(rand(0, 999999), 6, 0, STR_PAD_LEFT);
+        $length = max(4, (int) MobileVerification::config('code_length', 6));
+
+        return str_pad((string) random_int(0, (10 ** $length) - 1), $length, '0', STR_PAD_LEFT);
     }
 }

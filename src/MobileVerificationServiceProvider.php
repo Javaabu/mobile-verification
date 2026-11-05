@@ -2,109 +2,47 @@
 
 namespace Javaabu\MobileVerification;
 
-use Carbon\Carbon;
-use Illuminate\Support\Str;
-use Laravel\Passport\Passport;
 use Illuminate\Support\ServiceProvider;
-use League\OAuth2\Server\AuthorizationServer;
-use Laravel\Passport\Bridge\RefreshTokenRepository;
-use Javaabu\MobileVerification\GrantType\MobileGrant;
+use Javaabu\MobileVerification\Contracts\GeneratesVerificationCodes;
+use Javaabu\MobileVerification\Contracts\ValidatesNumberFormat;
+use Javaabu\MobileVerification\Support\NumberFormatValidator;
 use Javaabu\MobileVerification\Support\VerificationCodeGenerator;
-use Javaabu\MobileVerification\Middlewares\AllowMobileVerifiedUsersOnly;
 
 class MobileVerificationServiceProvider extends ServiceProvider
 {
-    /**
-     * The package migrations, in order of creation.
-     *
-     * @var array|string[]
-     */
-    protected array $migrations = [
-        'create_mobile_numbers_table'
-    ];
-
-    /**
-     * Bootstrap the application services.
-     */
-    public function boot()
+    public function register(): void
     {
-        // declare publishes
-        if ($this->app->runningInConsole()) {
-            // Publish migrations with current timestamp
-            foreach ($this->migrations as $migration) {
-                $vendorMigration = __DIR__ . '/../database/migrations/' . $migration . '.php';
-                $appMigration = $this->generateMigrationName($migration, now()->addSecond());
-
-                $this->publishes([
-                    $vendorMigration => $appMigration,
-                ], 'mobile-verification-migrations');
-            }
-
-            $this->publishes([
-                __DIR__ . '/../config/mobile-verification.php' => config_path('mobile-verification.php'),
-            ], 'mobile-verification-config');
-
-            $this->publishes([
-                __DIR__ . '/../lang' => lang_path('vendor/mobile-verification'),
-            ], 'mobile-verification-translations');
-
-        }
-
-        $this->loadTranslationsFrom(__DIR__.'/../lang', 'mobile-verification');
-    }
-
-    /**
-     * Register the application services.
-     */
-    public function register()
-    {
-        // merge package config with user defined config
         $this->mergeConfigFrom(__DIR__ . '/../config/mobile-verification.php', 'mobile-verification');
 
-        $this->app->resolving(AuthorizationServer::class, function (AuthorizationServer $server) {
-            $grant = $this->makeGrant();
-            $server->enableGrantType($grant, Passport::tokensExpireIn());
-        });
-
-        app('router')->aliasMiddleware('mobile-verified', AllowMobileVerifiedUsersOnly::class);
-
-        $this->app->bind(VerificationCodeGenerator::class, function () {
-            return new VerificationCodeGenerator();
-        });
+        $this->app->bindIf(GeneratesVerificationCodes::class, VerificationCodeGenerator::class);
+        $this->app->bindIf(ValidatesNumberFormat::class, NumberFormatValidator::class);
     }
 
-    protected function makeGrant(): MobileGrant
+    public function boot(): void
     {
-        $grant = new MobileGrant(
-            $this->app->make(RefreshTokenRepository::class)
-        );
+        if ($this->app->runningInConsole()) {
+            $this->registerPublishing();
+        }
 
-        $grant->setRefreshTokenTTL(Passport::refreshTokensExpireIn());
+        $this->loadJsonTranslationsFrom(__DIR__ . '/../lang');
 
-        return $grant;
+        if (MobileVerification::$runs_migrations) {
+            $this->loadMigrationsFrom(__DIR__ . '/../database/migrations');
+        }
     }
 
-    protected function generateMigrationName(string $migrationFileName, Carbon $now): string
+    protected function registerPublishing(): void
     {
-        $migrationsPath = 'migrations/' . dirname($migrationFileName) . '/';
-        $migrationFileName = basename($migrationFileName);
+        $this->publishes([
+            __DIR__ . '/../config/mobile-verification.php' => config_path('mobile-verification.php'),
+        ], 'mobile-verification-config');
 
-        $len = strlen($migrationFileName) + 4;
+        $this->publishes([
+            __DIR__ . '/../lang' => lang_path('vendor/mobile-verification'),
+        ], 'mobile-verification-translations');
 
-        if (Str::contains($migrationFileName, '/')) {
-            $migrationsPath .= Str::of($migrationFileName)->beforeLast('/')->finish('/');
-            $migrationFileName = Str::of($migrationFileName)->afterLast('/');
-        }
-
-        foreach (glob(database_path("{$migrationsPath}*.php")) as $filename) {
-            if ((substr($filename, -$len) === $migrationFileName . '.php')) {
-                return $filename;
-            }
-        }
-
-        $timestamp = $now->format('Y_m_d_His');
-        $migrationFileName = Str::of($migrationFileName)->snake()->finish('.php');
-
-        return database_path($migrationsPath . $timestamp . '_' . $migrationFileName);
+        $this->publishesMigrations([
+            __DIR__ . '/../database/migrations' => database_path('migrations'),
+        ], 'mobile-verification-migrations');
     }
 }

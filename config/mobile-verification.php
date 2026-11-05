@@ -1,142 +1,205 @@
 <?php
 
+use Javaabu\MobileVerification\Http\Controllers;
+use Javaabu\MobileVerification\Models\MobileNumber;
+use Javaabu\MobileVerification\Notifications\VerificationCodeNotification;
+use Javaabu\MobileVerification\Policies\MobileNumberPolicy;
+use Javaabu\MobileVerification\Stencil\MobileRegistrationForm;
+use Javaabu\MobileVerification\Support\NumberFormatValidator;
+use Javaabu\MobileVerification\Support\VerificationCodeGenerator;
+
 return [
+
     /*
     |--------------------------------------------------------------------------
-    | Mobile Number Database connection
+    | Views
     |--------------------------------------------------------------------------
-    | This is the database connection that will be used by the mobile numbers
-    | migration and the MobileNumber model shipped with this package. In case
-    | it's not set Laravel's database.default will be used instead.
+    |
+    | Which stack the pages render with: `blade` (javaabu/forms) or `inertia`
+    | (@javaabu/forms React pages shipped through javaabu/manifest). Null
+    | follows the javaabu/auth user type, so the mobile pages match the rest
+    | of its login pages. Requests that expect JSON always get JSON.
+    |
     */
+
+    'views' => env('MOBILE_VERIFICATION_VIEWS'),
+
+    /*
+    |--------------------------------------------------------------------------
+    | Mobile numbers table
+    |--------------------------------------------------------------------------
+    |
+    | The connection and table of the mobile numbers. The connection defaults
+    | to database.default. The model must extend the package's model.
+    |
+    */
+
     'database_connection' => env('MOBILE_NUMBER_DB_CONNECTION'),
 
-    /*
-    |--------------------------------------------------------------------------
-    | Mobile Numbers table name
-    |--------------------------------------------------------------------------
-    | This is the name of the table that will be created by the mobile numbers
-    | migration and used by the MobileNumber model shipped with this package.
-    */
     'table_name' => 'mobile_numbers',
 
-    /*
-    |--------------------------------------------------------------------------
-    | Mobile Number Model
-    |--------------------------------------------------------------------------
-    | This model will be used to save mobile numbers.
-    | It should implement the Javaabu\MobileVerification\Contracts\MobileNumber interface
-    | and extend Illuminate\Database\Eloquent\Model.
-    */
-    'mobile_number_model' => \Javaabu\MobileVerification\Models\MobileNumber::class,
+    'mobile_number_model' => MobileNumber::class,
 
     /*
     |--------------------------------------------------------------------------
-    | Default country code
+    | Country codes
     |--------------------------------------------------------------------------
-    | The country code to be used by default
+    |
+    | The country code numbers get when none is given, the ones users can
+    | choose from, and what goes before the country code when a number is
+    | shown (+960 7771234).
+    |
     */
+
     'default_country_code' => env('MOBILE_NUMBER_DEFAULT_COUNTRY_CODE', '960'),
 
-    /*
-    |--------------------------------------------------------------------------
-    | Allowed country codes
-    |--------------------------------------------------------------------------
-    | Which country codes are allowed
-    */
     'allowed_country_codes' => explode(',', env('MOBILE_NUMBER_ALLOWED_COUNTRY_CODES', '960')),
 
-    /*
-    |--------------------------------------------------------------------------
-    | Mobile grant allowed client providers
-    |--------------------------------------------------------------------------
-    | List of user providers that can be used to be authenticated using mobile number grant type
-     * */
-    'mobile_grant_allowed_providers' => ['users'],
-
-    /*
-    |--------------------------------------------------------------------------
-    | Number prefix
-    |--------------------------------------------------------------------------
-    | The prefix to add before fully qualified numbers
-    */
     'number_prefix' => '+',
 
     /*
-    |--------------------------------------------------------------------------
-    | Mobile Number Format Validator
-    |--------------------------------------------------------------------------
-    | This class that will be used to validate the mobile number format.
-     * */
-    'mobile_number_format_validator' => \Javaabu\MobileVerification\Support\MobileNumberFormatValidator::class,
+    | Checks a number's format for its country code. The default accepts 7
+    | digit Maldivian mobile numbers starting with 7 or 9, and any number of
+    | 4 to 15 digits for other country codes. Implements
+    | Javaabu\MobileVerification\Contracts\ValidatesNumberFormat.
+    */
+
+    'number_format_validator' => NumberFormatValidator::class,
 
     /*
     |--------------------------------------------------------------------------
-    | Verification code validity
+    | Verification codes
     |--------------------------------------------------------------------------
-    | The number of minutes that a mobile number verification code
-    | would be valid for.
+    |
+    | code_generator              implements Contracts\GeneratesVerificationCodes
+    | code_length                 digits in a code
+    | verification_code_validity  minutes a code stays valid
+    | max_attempts                wrong codes before the number is locked
+    | attempt_expiry              minutes a locked number stays locked
+    | resend_interval             seconds before another code can be sent
+    |
     */
-    'verification_code_validity' => 10, // minutes
 
-    /*
-    |--------------------------------------------------------------------------
-    | Maximum attempts
-    |--------------------------------------------------------------------------
-    | The maximum number of validation attempts that can be made before which
-    | the number would get locked for a specific length of time.
-    */
+    'code_generator' => VerificationCodeGenerator::class,
+
+    'code_length' => 6,
+
+    'verification_code_validity' => 10,
+
     'max_attempts' => 5,
 
-    /*
-    |--------------------------------------------------------------------------
-    | Attempt expiry
-    |--------------------------------------------------------------------------
-    | The number of minutes that a number would get locked for if there are too
-    | many verification attempts for that number.
-    */
-    'attempt_expiry' => 30, // mins
+    'attempt_expiry' => 30,
 
-    /*
-    |--------------------------------------------------------------------------
-    | Resend interval
-    |--------------------------------------------------------------------------
-    | The number of seconds after which a verification code can be resent to
-    | the same mobile number.
-    */
     'resend_interval' => 30,
 
     /*
     |--------------------------------------------------------------------------
-    | Verified
-    |--------------------------------------------------------------------------
-    | Whether the mobile number should be verified
-    */
-    'verified' => env('MOBILE_NUMBER_VERIFIED', true),
-
-    /*
-    |--------------------------------------------------------------------------
-    | Use Recaptcha
-    |--------------------------------------------------------------------------
-    | Whether the use Recaptcha to prevent SPAM OTP requests
-    */
-    'use_recaptcha' => env('MOBILE_NUMBER_USE_RECAPTCHA', true),
-
-    /*
-    |--------------------------------------------------------------------------
-    | Notifications
+    | Rate limits
     |--------------------------------------------------------------------------
     |
-     * */
-    'notifications' => [
-        'login' => \Javaabu\MobileVerification\Notifications\LoginVerificationTokenNotification::class,
-        'register' => \Javaabu\MobileVerification\Notifications\RegisterVerificationTokenNotification::class,
-        'verification_code' => \Javaabu\MobileVerification\Notifications\MobileNumberVerificationToken::class,
-        'update' => \Javaabu\MobileVerification\Notifications\MobileNumberVerificationToken::class,
+    | Requests per minute from one IP address, on top of the per-number
+    | limits above: `send` for requesting codes, `verify` for entering them.
+    |
+    */
+
+    'rate_limits' => [
+        'send' => 5,
+        'verify' => 10,
     ],
 
     /*
-     * Token generator class
-     */
-    'verification_code_generator' => \Javaabu\MobileVerification\Support\VerificationCodeGenerator::class,
+    | Extra validation rules for requesting a code, e.g. a captcha:
+    | ['g-recaptcha-response' => ['required', 'captcha']]
+    */
+
+    'request_code_rules' => [],
+
+    /*
+    |--------------------------------------------------------------------------
+    | The SMS
+    |--------------------------------------------------------------------------
+    |
+    | Sent through javaabu/sms-notifications (config/sms.php picks the
+    | provider). Extend the class to change the message.
+    |
+    */
+
+    'notification' => VerificationCodeNotification::class,
+
+    /*
+    |--------------------------------------------------------------------------
+    | Logging in
+    |--------------------------------------------------------------------------
+    |
+    | A code sent by SMS replaces the password, so users who turned on
+    | two-factor authentication still get its challenge. Set this to true to
+    | let the mobile login skip it.
+    |
+    */
+
+    'skip_two_factor' => false,
+
+    /*
+    |--------------------------------------------------------------------------
+    | Registration
+    |--------------------------------------------------------------------------
+    |
+    | Whether user types with mobile login and javaabu/auth's `registration`
+    | feature can also sign up with a mobile number, and the javaabu/stencil
+    | form that asks for their details once the number is verified.
+    |
+    */
+
+    'registration' => true,
+
+    'registration_form' => MobileRegistrationForm::class,
+
+    /*
+    |--------------------------------------------------------------------------
+    | Controllers
+    |--------------------------------------------------------------------------
+    |
+    | Replace any controller with your own, usually extending the package's.
+    |
+    */
+
+    'controllers' => [
+        'login' => Controllers\MobileLoginController::class,
+        'register' => Controllers\MobileRegistrationController::class,
+        'mobile_number' => Controllers\MobileNumberController::class,
+        'mobile_number_actions' => Controllers\MobileNumberActionsController::class,
+        'api' => Controllers\MobileApiController::class,
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Authorization
+    |--------------------------------------------------------------------------
+    |
+    | The policy behind the admin actions on other users' numbers
+    | (Route::mobileNumberActions()), and the permissions registered with
+    | javaabu/permissions for each user type: all types when
+    | managed_user_types is null.
+    |
+    */
+
+    'policy' => MobileNumberPolicy::class,
+
+    'register_permissions' => true,
+
+    'managed_user_types' => null,
+
+    /*
+    |--------------------------------------------------------------------------
+    | Passport
+    |--------------------------------------------------------------------------
+    |
+    | With laravel/passport installed, the package adds a `mobile` grant:
+    | an access token for a number and its code. Clients need the grant (or
+    | the password grant), and their provider must belong to a user type.
+    |
+    */
+
+    'passport_grant' => true,
+
 ];

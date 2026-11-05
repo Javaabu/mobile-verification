@@ -2,134 +2,181 @@
 
 namespace Javaabu\MobileVerification;
 
-use Illuminate\Http\Request;
-use Javaabu\MobileVerification\Contracts\MobileNumber;
+use Illuminate\Database\Eloquent\Model;
+use Javaabu\Auth\UserType;
+use Javaabu\Auth\UserTypes;
+use Javaabu\MobileVerification\Auth\MobileLoginMethod;
+use Javaabu\MobileVerification\Models\MobileNumber;
 
 class MobileVerification
 {
-    /**
-     * Get the configs
-     * @param string $key
-     * @return mixed
-     */
-    public static function config(string $key = '')
-    {
-        $key = $key ? '.'.$key : '';
-
-        return config('mobile-verification'.$key);
-    }
-
+    public static bool $runs_migrations = true;
 
     /**
-     * Whether to verify
-     *
-     * @return bool
+     * Stop the package from loading its migration, e.g. after publishing it
      */
-    public static function shouldVerify(): bool
+    public static function ignoreMigrations(): void
     {
-        return self::config('verified');
+        static::$runs_migrations = false;
     }
 
     /**
-     * Default country code
-     *
-     * @return string
+     * Add mobile login (and registration) to javaabu/auth user types. Call it before Route::authRoutes().
      */
+    public static function enableFor(string ...$types): void
+    {
+        foreach ($types as $type) {
+            UserTypes::get($type)->loginMethod(MobileLoginMethod::class);
+        }
+    }
+
+    /**
+     * Whether a user type logs in with a mobile number
+     */
+    public static function enabledFor(UserType|string $type): bool
+    {
+        $type = is_string($type) ? UserTypes::get($type) : $type;
+
+        foreach ($type->loginMethodsList() as $method) {
+            if ($method instanceof MobileLoginMethod) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public static function config(string $key = '', mixed $default = null): mixed
+    {
+        return config('mobile-verification' . ($key ? ".{$key}" : ''), $default);
+    }
+
+    /** @return class-string<MobileNumber> */
     public static function mobileNumberModel(): string
     {
-        return self::config('mobile_number_model');
+        return static::config('mobile_number_model', MobileNumber::class);
     }
 
-    public static function findMobileNumberById(string $id): ?MobileNumber
+    public static function newMobileNumber(): MobileNumber
     {
-        $model_class = self::mobileNumberModel();
+        $model = static::mobileNumberModel();
 
-        return $model_class::find($id);
+        return new $model;
     }
 
-    /**
-     * Default country code
-     *
-     * @return string
-     */
     public static function defaultCountryCode(): string
     {
-        return self::config('default_country_code');
+        return static::normalizeCountryCode((string) static::config('default_country_code', '960'), false);
     }
 
-    /**
-     * Allowed country codes
-     *
-     * @return string[]
-     */
+    /** @return array<int, string> */
     public static function allowedCountryCodes(): array
     {
-        return self::config('allowed_country_codes');
+        $codes = array_map(
+            fn ($code) => static::normalizeCountryCode((string) $code, false),
+            (array) static::config('allowed_country_codes', [static::defaultCountryCode()]),
+        );
+
+        return array_values(array_filter($codes));
+    }
+
+    public static function numberPrefix(): string
+    {
+        return (string) static::config('number_prefix', '+');
     }
 
     /**
-     * Default prefix
+     * The allowed country codes for a select: `['960' => '+960']`
      *
-     * @return string
+     * @return array<string, string>
      */
-    public static function defaultPrefix(): string
+    public static function countryCodeOptions(): array
     {
-        return self::config('number_prefix').self::defaultCountryCode();
+        $options = [];
+
+        foreach (static::allowedCountryCodes() as $code) {
+            $options[$code] = static::numberPrefix() . $code;
+        }
+
+        return $options;
     }
 
     /**
-     * List the allowed country codes
-     *
-     * @param ?array $allowed_codes
-     * @param ?string $number_prefix
-     * @return array
+     * A number as stored: digits only, without leading zeros
      */
-    public static function listAllowedCountryCodes(?array $allowed_codes = null, ?string $number_prefix = null): array
+    public static function normalizeNumber(?string $number): string
     {
-        if (is_null($allowed_codes)) {
-            $allowed_codes = self::allowedCountryCodes();
-        }
+        $number = preg_replace('/[\s\-().]/u', '', (string) $number);
 
-        if (is_null($number_prefix)) {
-            $number_prefix = self::config('number_prefix');
-        }
-
-        $list = [];
-
-        foreach ($allowed_codes as $code) {
-            $list[$code] = $number_prefix.$code;
-        }
-
-        return $list;
-    }
-
-    /**
-     * Normalize mobile number
-     *
-     * @param string $number
-     * @return string
-     */
-    public static function normalizeNumber(string $number): string
-    {
         return ltrim($number, '0');
     }
 
     /**
-     * Normalize mobile number
-     *
-     * @param Request $request
-     * @param string $key
-     * @return Request
+     * A country code as stored: `+960` and `00960` become `960`; empty gives the default
      */
-    public static function normalizePhoneNumberRequest(Request $request, string $key = 'phone'): Request
+    public static function normalizeCountryCode(?string $country_code, bool $use_default = true): string
     {
-        $number = $request->input($key);
+        $country_code = ltrim(trim((string) $country_code), '+0');
 
-        if ($number) {
-            $number = self::normalizeNumber($number);
-            $request->merge([$key => $number]);
+        if ($country_code === '' && $use_default) {
+            return static::defaultCountryCode();
         }
 
-        return $request;
+        return $country_code;
+    }
+
+    /**
+     * The value of the `user_type` column for a user type's numbers: its model's morph class
+     */
+    public static function morphClassFor(UserType|Model|string $type): string
+    {
+        if ($type instanceof Model) {
+            return $type->getMorphClass();
+        }
+
+        $type = is_string($type) ? UserTypes::get($type) : $type;
+
+        return $type->newModel()->getMorphClass();
+    }
+
+    /**
+     * The record of a number for a user type, if there is one
+     */
+    public static function find(UserType|Model|string $type, ?string $country_code, ?string $number): ?MobileNumber
+    {
+        $number = static::normalizeNumber($number);
+
+        if ($number === '') {
+            return null;
+        }
+
+        return static::mobileNumberModel()::query()
+            ->hasPhoneNumber(static::normalizeCountryCode($country_code), $number, static::morphClassFor($type))
+            ->first();
+    }
+
+    /**
+     * The record of a number for a user type, created without an owner when there is none
+     */
+    public static function findOrCreate(UserType|Model|string $type, ?string $country_code, string $number): MobileNumber
+    {
+        $model = static::mobileNumberModel();
+
+        return $model::query()->firstOrCreate([
+            'country_code' => static::normalizeCountryCode($country_code),
+            'number' => static::normalizeNumber($number),
+            'user_type' => static::morphClassFor($type),
+        ]);
+    }
+
+    public static function skipsTwoFactor(): bool
+    {
+        return (bool) static::config('skip_two_factor', false);
+    }
+
+    public static function allowsRegistration(UserType $type): bool
+    {
+        return static::config('registration', true)
+            && $type->hasFeature(UserType::REGISTRATION);
     }
 }

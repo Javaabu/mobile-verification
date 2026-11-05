@@ -1,49 +1,25 @@
 # Mobile Verification
 
-[![Latest Version on Packagist](https://img.shields.io/packagist/v/javaabu/mobile-verification.svg?style=flat-square)](https://packagist.org/packages/javaabu/mobile-verification)
-[![Test Status](../../actions/workflows/run-tests.yml/badge.svg)](../../actions/workflows/run-tests.yml)
-![Code Coverage Badge](./.github/coverage.svg)
-[![Total Downloads](https://img.shields.io/packagist/dt/javaabu/mobile-verification.svg?style=flat-square)](https://packagist.org/packages/javaabu/mobile-verification)
+[![Tests](https://github.com/Javaabu/mobile-verification/actions/workflows/tests.yml/badge.svg?branch=next-gen)](https://github.com/Javaabu/mobile-verification/actions/workflows/tests.yml?query=branch%3Anext-gen)
+[![codecov](https://codecov.io/gh/Javaabu/mobile-verification/branch/next-gen/graph/badge.svg)](https://codecov.io/gh/Javaabu/mobile-verification/tree/next-gen)
+[![Latest Version on Packagist](https://img.shields.io/packagist/v/javaabu/mobile-verification.svg)](https://packagist.org/packages/javaabu/mobile-verification)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE.md)
 
-Adds mobile number verification to Laravel projects.
+Log in, sign up and verify mobile numbers with one-time SMS codes in Laravel. Built on [javaabu/auth](https://github.com/Javaabu/auth): mobile login is a login method of any user type (admins, public users, …), two-factor authentication still applies, and the pages ship in Blade (javaabu/forms) and Inertia React (@javaabu/forms). Codes expire, wrong codes lock the number for a while, requests are rate limited, SMSs go through [javaabu/sms-notifications](https://github.com/Javaabu/sms-notifications), and everything is translated to Dhivehi.
 
 ## Documentation
 
-You'll find the documentation on [https://docs.javaabu.com/mobile-verification](https://docs.javaabu.com/mobile-verification).
+You'll find the documentation on [https://docs.javaabu.com/mobile-verification](https://docs.javaabu.com/mobile-verification), and in the [`docs`](docs) folder.
 
 Find yourself stuck using the package? Found a bug? Do you have general questions or suggestions for improving this package? Feel free to create an [issue](../../issues) on GitHub, we'll try to address it as soon as possible.
 
 If you've found a bug regarding security please mail [info@javaabu.com](mailto:info@javaabu.com) instead of using the issue tracker.
 
-## Installation
-
-You can install the package via composer:
-
-```bash
-composer require javaabu/mobile-verification
-```
-
-Publishing Migrations
-```bash
-php artisan vendor:publish --provider="Javaabu\MobileVerification\MobileVerificationServiceProvider" --tag="mobile-verification-migrations"
-```
-
-Publishing Config
-```bash
-php artisan vendor:publish --provider="Javaabu\MobileVerification\MobileVerificationServiceProvider" --tag="mobile-verification-config"
-```
-
-Publishing Translations
-```bash
-php artisan vendor:publish --provider="Javaabu\MobileVerification\MobileVerificationServiceProvider" --tag="mobile-verification-translations"
-```
-
 ## Testing
 
-You can run the tests with
-
-``` bash
-./vendor/bin/phpunit
+```bash
+composer test
+composer lint
 ```
 
 ## Changelog
