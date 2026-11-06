@@ -104,7 +104,8 @@ class MobileVerificationServiceProvider extends ServiceProvider
 
     /**
      * The Inertia pages (mobile-verification::Login, …) and the code apps can import as
-     * `@javaabu/mobile-verification`, through javaabu/manifest
+     * `@javaabu/mobile-verification`, through javaabu/manifest. The Blade pages register no
+     * assets, so every npm package is for the pages: Blade apps aren't asked to install React.
      */
     protected function registerFrontendAssets(): void
     {
@@ -119,7 +120,7 @@ class MobileVerificationServiceProvider extends ServiceProvider
                     'react' => '^18.3 || ^19.0',
                     'react-dom' => '^18.3 || ^19.0',
                     '@inertiajs/react' => '^2.0 || ^3.0',
-                ]);
+                ], for: 'pages');
         });
     }
 

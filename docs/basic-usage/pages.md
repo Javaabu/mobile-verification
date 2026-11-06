@@ -80,7 +80,7 @@ createInertiaApp({
 });
 ```
 
-The account pages wrap themselves in javaabu/auth's `AccountLayout`, passing `account_links` as its `links`, so the navigation matches auth's own pages (see [the account navigation](verifying-numbers.md#the-account-navigation)). The pages import `@javaabu/auth` (for `AccountLayout`) and `@javaabu/stencil` (for `StencilForm`), which javaabu/manifest's Vite plugin resolves from the Composer packages. `php artisan manifest:check` lists missing npm packages.
+The account pages wrap themselves in javaabu/auth's `AccountLayout`, passing `account_links` as its `links`, so the navigation matches auth's own pages (see [the account navigation](verifying-numbers.md#the-account-navigation)). The pages import `@javaabu/auth` (for `AccountLayout`) and `@javaabu/stencil` (for `StencilForm`), which javaabu/manifest's Vite plugin resolves from the Composer packages. `php artisan manifest:check` lists missing npm packages. It asks for the React packages only in apps with `@inertiajs/react` in their `package.json`; Blade-only apps install nothing from npm for this package.
 
 Replace a page with `php artisan manifest:override mobile-verification Pages/Login.tsx`, or in `resolvePage`. Apps can reuse the components:
 

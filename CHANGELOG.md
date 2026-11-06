@@ -12,7 +12,7 @@ A rewrite on top of javaabu/auth v3. See `docs/upgrading.md`.
 - `Route::mobileNumberRoutes()` account page, linked from javaabu/auth's account navigation, and the `mobile.verified` middleware
 - `Route::mobileApiRoutes()` for Sanctum/Passport tokens; the Passport `mobile` grant picks the user type from the client's provider
 - `Route::mobileNumberActions()` admin actions behind `MobileNumberPolicy` and per-type javaabu/permissions permissions
-- Blade and Inertia React pages; Dhivehi and RTL
+- Blade and Inertia React pages; Dhivehi and RTL. The npm packages are declared for the pages only, so `manifest:check` doesn't ask Blade-only apps for React
 - Codes from `random_int()`, configurable length, superseded by newer codes, named rate limiters, `request_code_rules`
 - One `VerificationCodeNotification`, translated
 - Docs, `llms.txt`, Laravel Boost guideline and skill

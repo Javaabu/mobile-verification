@@ -21,7 +21,7 @@ Paths are relative to this file. In a project, that's vendor/javaabu/mobile-veri
 ## Docs
 
 - [Introduction](docs/intro.md): what the package does
-- [Requirements](docs/requirements.md): PHP, Laravel, dependencies, optional packages, SMS channels
+- [Requirements](docs/requirements.md): PHP, Laravel, dependencies, optional packages, SMS channels, the npm packages (React pages only; Blade apps need none)
 - [Installation & Setup](docs/installation-and-setup.md): install, the SMS provider, the user model and table, turning on mobile login, routes, publishing, permissions
 - [Upgrading from v2](docs/upgrading.md): config, models, controllers, routes, rules, notifications and translations that changed
 - [The user model](docs/basic-usage/user-models.md): the trait and contract, reading and finding numbers, changing them in code, the MobileNumber model and factory

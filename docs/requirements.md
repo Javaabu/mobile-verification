@@ -24,4 +24,4 @@ Optional, each detected when installed:
 
 To send real SMSs, install the channel of your provider, as javaabu/sms-notifications explains: `dash8x/dhiraagu-sms-notification` for Dhiraagu or `laravel-notification-channels/twilio` for Twilio.
 
-The React pages need `react` and `react-dom` 18.3 or 19, `@inertiajs/react` 2 or 3, `@javaabu/forms` and `@javaabu/onu` in the app. `php artisan manifest:check` lists what's missing.
+The React pages need `react` and `react-dom` 18.3 or 19, `@inertiajs/react` 2 or 3, `@javaabu/forms` and `@javaabu/onu` in the app. `php artisan manifest:check` lists what's missing. The Blade pages need no npm packages: the package declares all of these for its pages only (javaabu/manifest's `for: 'pages'`), so `manifest:check` asks for them only when the app's `package.json` has an Inertia adapter.
