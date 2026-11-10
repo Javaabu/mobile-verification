@@ -1,0 +1,11 @@
+{
+    "position": 1.31,
+    "label": "Advanced Usage",
+    "collapsible": true,
+    "collapsed": false,
+    "link": {
+        "type": "generated-index",
+        "slug": "/mobile-verification/_categories/advanced-usage",
+        "description": "Every option, codes and rate limits, the SMS, overrides, events, translations and the API reference."
+    }
+}

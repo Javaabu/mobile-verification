@@ -1,5 +1,5 @@
 {
     "name": "Mobile Verification",
-    "description": "Adds mobile number verification to Laravel projects.",
-    "version": "1"
+    "description": "Mobile number login, registration and verification with one-time SMS codes, built on javaabu/auth user types",
+    "version": "3"
 }

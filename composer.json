@@ -1,35 +1,84 @@
 {
     "name": "javaabu/mobile-verification",
-    "description": "Adds mobile number verification to Laravel projects.",
+    "description": "Mobile number login, registration and verification with one-time SMS codes for Laravel, built on javaabu/auth: any number of user types, Blade and Inertia React pages, rate limiting and Dhivehi",
     "homepage": "https://github.com/Javaabu/mobile-verification",
     "license": "MIT",
+    "keywords": [
+        "javaabu",
+        "laravel",
+        "mobile",
+        "otp",
+        "sms",
+        "verification",
+        "multi-auth"
+    ],
     "authors": [
         {
             "name": "Arushad Ahmed",
             "email": "arushad@javaabu.com"
         }
     ],
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/n4ff4h/auth",
+            "no-api": true
+        },
+        {
+            "type": "vcs",
+            "url": "https://github.com/Javaabu/forms",
+            "no-api": true
+        },
+        {
+            "type": "vcs",
+            "url": "https://github.com/Javaabu/manifest",
+            "no-api": true
+        },
+        {
+            "type": "vcs",
+            "url": "https://github.com/Javaabu/permissions",
+            "no-api": true
+        },
+        {
+            "type": "vcs",
+            "url": "https://github.com/Javaabu/stencil",
+            "no-api": true
+        }
+    ],
     "require": {
-        "php": "^8.2",
-        "illuminate/support": "^11.0 || ^12.0 || ^13.0",
+        "php": "^8.4",
+        "illuminate/auth": "^12.0 || ^13.0",
+        "illuminate/database": "^12.0 || ^13.0",
+        "illuminate/http": "^12.0 || ^13.0",
+        "illuminate/notifications": "^12.0 || ^13.0",
+        "illuminate/routing": "^12.0 || ^13.0",
+        "illuminate/support": "^12.0 || ^13.0",
+        "illuminate/validation": "^12.0 || ^13.0",
+        "javaabu/auth": "^3.0@dev",
+        "javaabu/forms": "^2.0@dev",
+        "javaabu/manifest": "^1.0@dev",
+        "javaabu/permissions": "^3.0@dev",
         "javaabu/sms-notifications": "^1.3",
-        "javaabu/laravel-recaptcha": "^6.3",
-        "javaabu/helpers": "^1.71",
-        "javaabu/activitylog": "^1.6",
-        "laravel/passport": "^13.0"
+        "javaabu/stencil": "^1.0@dev"
     },
     "require-dev": {
-        "orchestra/testbench": "^9.16 || ^10.0 || ^10.0 || ^11.0",
-        "phpunit/phpunit": "^10.5 || ^11.5.3 || ^12.5.8 || ^13.0.3",
-        "laravel/pint": "^1.15",
-        "javaabu/auth": "^2.0"
+        "inertiajs/inertia-laravel": "^2.0 || ^3.0",
+        "javaabu/boost-javaabu-guidelines": "^1.0",
+        "laravel/passport": "^13.0",
+        "laravel/pint": "^1.24",
+        "laravel/sanctum": "^4.0",
+        "orchestra/testbench": "^10.0 || ^11.0",
+        "phpunit/phpunit": "^11.5.3 || ^12.5.8"
     },
     "suggest": {
-        "javaabu/auth": "Required for login and registration"
+        "inertiajs/inertia-laravel": "Renders the pages with Inertia React when the user type or mobile-verification.views is inertia (^2.0 || ^3.0)",
+        "laravel/passport": "The `mobile` OAuth2 grant: an access token for a mobile number and code (^13.0)",
+        "laravel/sanctum": "Personal access tokens for a mobile number and code, from Route::mobileApiRoutes() (^4.0)"
     },
     "autoload": {
         "psr-4": {
-            "Javaabu\\MobileVerification\\": "src/"
+            "Javaabu\\MobileVerification\\": "src/",
+            "Javaabu\\MobileVerification\\Database\\Factories\\": "database/factories/"
         }
     },
     "autoload-dev": {
@@ -37,15 +86,24 @@
             "Javaabu\\MobileVerification\\Tests\\": "tests/"
         }
     },
+    "scripts": {
+        "test": "vendor/bin/phpunit",
+        "test-coverage": "vendor/bin/phpunit --coverage-clover build/coverage.xml",
+        "lint": "vendor/bin/pint --test",
+        "format": "vendor/bin/pint"
+    },
     "extra": {
         "branch-alias": {
-            "dev-main": "1.0-dev"
+            "dev-next-gen": "3.x-dev"
         },
         "laravel": {
             "providers": [
                 "Javaabu\\MobileVerification\\MobileVerificationServiceProvider"
             ]
         }
+    },
+    "config": {
+        "sort-packages": true
     },
     "minimum-stability": "dev",
     "prefer-stable": true
